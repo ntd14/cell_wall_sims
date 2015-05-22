@@ -8,6 +8,6 @@
 #ifndef GET_INIT_DATA_H_
 #define GET_INIT_DATA_H_
 
-double average(double a, double b);
+double average();
 
 #endif /* GET_INIT_DATA_H_ */

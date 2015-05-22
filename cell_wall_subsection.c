@@ -16,12 +16,13 @@
 
 int main(void) /*this may change to take in arguments later*/
 {
+	printf("call to call_to_init.c \n");
+	double out = average();
+	printf("average %g \n", out);
+
 	double x, y;
 	x = 1;
 	y = 2;
-	printf("call to call_to_init.c \n");
-	double out = average(x,y);
-	printf("average %g \n", out);
 	printf("call to build_init_structre.c \n");
 	printf("sum %g \n", sum(x,y));
 	printf("call to function to do all the work, main_worker.c \n");

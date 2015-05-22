@@ -6,9 +6,9 @@
  */
 
 #include "get_init_data.h"
+#include "par_defs.h"
 
-
-double average(double a, double b)
+double average()
 {
 	printf("inside average function \n");
 	return(a+b)/2;
