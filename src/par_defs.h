@@ -11,8 +11,8 @@
 /* All parameters to define the problem are stored here */
 
 /* these are the physical space in nm that is modeled, currently assumes a cartesian R2 or R3 space */
-int length_of_problem_space = 100;
-int height_of_problem_space = 100;
+int length_of_problem_space = 1000;
+int height_of_problem_space = 1000;
 /* int depth_of_area = 0; will be included later */
 
 /* the MFA parameters, sd_MFA is the standard devation of the trendline directions BETWEEN MFs,
@@ -30,15 +30,16 @@ double MFA_sd = 0.01;
 int num_of_C_chains = 1;
 int num_of_ags = 2;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
-/* longest direction is goverened by getting to grid points and is calculated later
- * C_length_ratio is the ratio between the pos and neg radiouses in the length to be calced later
- * all in nm
- */
+
+/*redefine all of these as ratios with an R constant do control size*/
+
 int C_width_pos = 5;
 int C_width_neg = 5;
 int C_depth_pos = 5;
 int C_depth_neg = 5;
-double C_length_ratio = 1;
+int C_length_pos = 20;
+int C_length_neg = 20;
+double C_density = 1500; /*kg/m^3*/
 /*parameters to define the contact models*/
 
 /* lignin properties
@@ -52,8 +53,8 @@ int L_depth_pos = 10;
 int L_depth_neg = 10;
 int L_length_pos = 10;
 int L_length_neg = 10;
+double L_density = 500; /*kg/m^3*/
 /*parameters to define the contact models*/
-
 
 
 /* trial varables remove later */
