@@ -19,6 +19,7 @@ int height_of_problem_space = 1000;
  * MFA_sd is the standard devation of the normal distrib that is selected from during the growth of the MF
  * all in radians
  */
+
 double mean_MFA = 0.175;
 double sd_MFA = 0.35;
 double MFA_sd = 0.01;
@@ -30,15 +31,13 @@ double MFA_sd = 0.01;
 int num_of_C_chains = 1;
 int num_of_ags = 2;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
-
-/*redefine all of these as ratios with an R constant do control size*/
-
-int C_width_pos = 5;
-int C_width_neg = 5;
-int C_depth_pos = 5;
-int C_depth_neg = 5;
-int C_length_pos = 20;
-int C_length_neg = 20;
+double R_C = 10;
+double C_width_pos = 0.2;
+double C_width_neg = 0.2;
+double C_depth_pos = 0.2;
+double C_depth_neg = 0.2;
+double C_length_pos = 2;
+double C_length_neg = 2;
 double C_density = 1500; /*kg/m^3*/
 /*parameters to define the contact models*/
 
@@ -47,13 +46,13 @@ double C_density = 1500; /*kg/m^3*/
  */
 int num_lignin_clumps = 10;
 /*6 parameters to describe the lignin clumps as poly-elipsoids*/
-int L_width_pos = 10;
-int L_width_neg = 10;
-int L_depth_pos = 10;
-int L_depth_neg = 10;
-int L_length_pos = 10;
-int L_length_neg = 10;
-double L_density = 500; /*kg/m^3*/
+double L_width_pos = 1;
+double L_width_neg = 1;
+double L_depth_pos = 1;
+double L_depth_neg = 1;
+double L_length_pos = 1;
+double L_length_neg = 1;
+double L_density = 500; /* kg/m^3 */
 /*parameters to define the contact models*/
 
 
