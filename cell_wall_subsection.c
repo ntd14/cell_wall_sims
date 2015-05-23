@@ -19,7 +19,7 @@ int main(void) /*this may change to take in arguments later*/
 	printf("call to call_to_init.c \n");
 	double out = average();
 	printf("average %g \n", out);
-
+	/*init state matrix is returned*/
 	double x, y;
 	x = 1;
 	y = 2;

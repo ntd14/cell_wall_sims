@@ -13,7 +13,7 @@
 /* these are the physical space in nm that is modeled, currently assumes a cartesian R2 or R3 space */
 int length_of_problem_space = 1000;
 int height_of_problem_space = 1000;
-/* int depth_of_area = 0; will be included later */
+int depth_of_problem_space = 0;
 
 /* the MFA parameters, sd_MFA is the standard devation of the trendline directions BETWEEN MFs,
  * MFA_sd is the standard devation of the normal distrib that is selected from during the growth of the MF
