@@ -23,6 +23,7 @@ int height_of_problem_space = 1000;
 double mean_MFA = 0.175;
 double sd_MFA = 0.35;
 double MFA_sd = 0.01;
+double init_spacing_of_FA = 20; /*nm*/
 
 /* cellulose fibril agregate properties,
  * num_of_C_chains is the number of particals which are used to model each fibril agregit
