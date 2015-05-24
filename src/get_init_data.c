@@ -5,6 +5,7 @@
  *      Author: nick
  */
 #include <stdlib.h>
+#include <stdio.h>
 #include "get_init_data.h"
 #include "par_defs.h"
 
@@ -29,43 +30,55 @@ void make_FA_start_points(int ext_length, int init_spacing_of_FA, double* FA_sta
 	int ii = 0;
 	while (start_point < ext_length) /* later will have to add in the other direction */
 	{
-		++ii;
+		ii++;
 		start_point = start_point + init_spacing_of_FA;
 		FA_start_points[ii] = start_point;
 	}
 }
 
-/* uniform random numbers to normal random numbers mean of zero sd of 1.
-generate two uniform numbers and from those you get
-two normally distributed numbers. Return one, save the other
-for the next request of a random number.
 
-float x1, x2, w, y1, y2;
-while ( w >= 1.0 )
-{
-    x1 = 2.0 * ranf() - 1.0;
-    x2 = 2.0 * ranf() - 1.0;
-    w = x1 * x1 + x2 * x2;
-}
-w = sqrt( (-2.0 * log( w ) ) / w );
-y1 = x1 * w;
-y2 = x2 * w;
- *
-to get a normal distribution near what we want:
-y = y1*(sd we want) + (mean we want)
- */
 
 /* function to generate a vector of angles */
 /* function to generate new point poisitons based on
  * FA geometry (R_C*C_length_pos + R_C*C_length_neg)
- * from header and angle from function above */
+ * from header and angle from function above
+ *
+ * double C_L = R_C*C_length_pos + R_C*C_length_neg;
+ * double mfac = call to angle function
+ * x_new = C_L*sin(mfac) + x_old
+ * y_new = C_L*cos(mfac) + y_old
+ *
+ * */
+void new_point_pos(double* new_pos, double* old_s, double* new_s, int num_of_build_steps)
+{
+	double C_L = R_C*C_length_pos + R_C*C_length_neg;
+	/*call to norm_dist_gen to get angle to travel along
+	 * double mfac = call to angle function
+	 * new_s[1,ii] = C_L*sin(mfac[ii]) + old_s[1,ii]
+	 * new_s[2,ii] = C_L*cos(mfac[ii]) + old_s[2,ii]
+	 * test if old or new points are in ROI, if they are:
+	 * 		call function to calc the geometric centre of the
+	 * 		poly-elipsoid with the endpoints old_s and new_s
+	 * 		save geometric centres as new_pos
+	 * else test if have exited ROI, then kill loop
+	 * save new_s as old_s and del new_s
+	 */
+}
+
+/*old_t is the top position from the previous time step
+ * new_pos is the centre of the poly-elipsoid - might need an external function to do this at some stage,
+ * 					as geometries get more complicated will be harder
+ * num_of_build_steps is the number of FA clumps to produce in each chain
+ *
+ * */
 
 /*function
  * take in FA_start_points
  * loop
  * call fucntion to generate angles
  * call function to calc new point positions
- * update starting points and save
+ * update starting points
+ * if inside problem region > save points
  * loop end
  * return matrix of end/start points for each FA chunk
  */
@@ -73,7 +86,7 @@ y = y1*(sd we want) + (mean we want)
 /*function to calculate centre points and orenetiaon
  * for the poly-elipsoids using the end points from above
  * [[x1, y1, x1, R1, a1, b1, c1, theta1, thi1, gamma1]
- *  [x2, y2, z2, R1, a1, b1, c1, theta2, thi2, gamma2]]
+ *  [x2, y2, z2, R2, a2, b2, c2, theta2, thi2, gamma2]]
  *  x y and z are the global centre positions
  *  R is the length ratio constant, a, b, c are the length ratios.
  *  and theta thi and gamma are the orentation

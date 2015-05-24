@@ -21,7 +21,7 @@ int depth_of_problem_space = 0;
  */
 
 double mean_MFA = 0.175;
-double sd_MFA = 0.35;
+double sd_MFA = 0.035;
 double MFA_sd = 0.01;
 double init_spacing_of_FA = 20; /*nm*/
 

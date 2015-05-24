@@ -13,6 +13,7 @@
 #include "src/build_init_structure.h"
 #include "src/main_worker.h"
 #include "src/post_processing.h"
+#include "src/normal_dist_gen.h"
 
 int main(void) /*this may change to take in arguments later*/
 {
@@ -29,6 +30,18 @@ int main(void) /*this may change to take in arguments later*/
 	printf("multiply %g \n", mply(x,y));
 	printf("call to post_processing.c \n");
 	printf("subtract %g \n", subtract(x,y));
+
+	int length_of_vec = 100;
+	double vec_of_nums[length_of_vec];
+	double mean = 0.175;
+	double sd = 0.035;
+	norm_dist(vec_of_nums, length_of_vec, mean, sd);
+	int ii;
+	for(ii = 0; ii <= length_of_vec; ii++)
+	{
+		printf("%g \n", vec_of_nums[ii]);
+	}
+
 	return 0;
 }
 
