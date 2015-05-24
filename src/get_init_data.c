@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "get_init_data.h"
 #include "par_defs.h"
 
@@ -13,8 +14,7 @@
 
 /*make problem space bigger so that we get random arrangment of FA at the boundaries */
 /*caller function needs to define int* ext_dims[3]*/
-void ext_pspace(int length_of_problem_space, int height_of_problem_space,
-		int depth_of_problem_space, int* ext_dims)
+void ext_pspace(int length_of_problem_space, int height_of_problem_space, int depth_of_problem_space, int* ext_dims)
 {
 	ext_dims[0] = 1.2*length_of_problem_space;
 	ext_dims[1] = 1.2*height_of_problem_space;
@@ -49,9 +49,31 @@ void make_FA_start_points(int ext_length, int init_spacing_of_FA, double* FA_sta
  * y_new = C_L*cos(mfac) + y_old
  *
  * */
-void new_point_pos(double* new_pos, double* old_s, double* new_s, int num_of_build_steps)
+void new_point_pos(double* new_pos, double* old_s, int num_of_build_steps)
 {
-	double C_L = R_C*C_length_pos + R_C*C_length_neg;
+	double new_s[num_of_build_steps][2];
+	double C_L = R_C*C_length_pos + R_C*C_length_neg; /*length of poly-elip */
+	double mfac[num_of_build_steps];   /*init vector of angles for current FA */
+	norm_dist(mfac, num_of_build_steps, mean_MFA , sd_MFA); /*get angles for all of the current FA */
+	int ii;
+	for(ii = 0; ii<num_of_build_steps; ii++)
+	{
+		new_s[ii][0] = C_L*sin(mfac[ii]) + old_s[ii][0];
+		new_s[ii][1] = C_L*cos(mfac[ii]) + old_s[ii][1];
+		/*call to function to calc geometric centre*/
+		new_pos[ii][0] = new_s[ii][0] - old_s[ii][0];
+		new_pos[ii][1] = new_s[ii][1] - old_s[ii][1];
+		new_pos[ii][2] = 0;
+		new_pos[ii][3] = R_C;
+		new_pos[ii][4] = C_length_pos;
+		new_pos[ii][5] = C_width_pos;
+		new_pos[ii][6] = C_depth_pos;
+		new_pos[ii][7] = C_length_neg;
+		new_pos[ii][8] = C_width_neg;
+		new_pos[ii][9] = C_depth_neg;
+		new_pos[ii][10] = mfac[ii];
+		new_pos[ii][11] = 0;
+	}
 	/*call to norm_dist_gen to get angle to travel along
 	 * double mfac = call to angle function
 	 * new_s[1,ii] = C_L*sin(mfac[ii]) + old_s[1,ii]
