@@ -8,6 +8,6 @@
 #ifndef GET_INIT_DATA_H_
 #define GET_INIT_DATA_H_
 
-double average();
+void create_init_state();
 
 #endif /* GET_INIT_DATA_H_ */
