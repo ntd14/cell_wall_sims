@@ -33,8 +33,9 @@ void new_point_pos(double** new_pos, double start_point, part_defs p_name)
 	double particle_length = p_name.R_ratio*p_name.length_pos + p_name.R_ratio*p_name.length_neg; /*length of poly-elip */
 	double mfac[max_build_steps];   /*init vector of angles for current FA */
 	norm_dist(mfac, max_build_steps, mean_MFA , sd_MFA); /*get angles for all of the current FA */
-	int ii;
+	int ii = 0;
 	int left_ROI = 0;
+	printf("%i ",left_ROI);
 	while(left_ROI < 2 && ii < max_build_steps)
 	{
 		new_s[0] = particle_length*sin(mfac[ii]) + old_s[0];

@@ -43,5 +43,6 @@ typedef struct partical_types {
 
 } part_defs;
 
-
+part_defs FA1;
+part_defs LG1;
 #endif /* PAR_DEFS_H_ */
