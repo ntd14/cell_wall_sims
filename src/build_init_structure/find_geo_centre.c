@@ -4,7 +4,10 @@
  *  Created on: 26/05/2015
  *      Author: nick
  */
-
+#include <stdio.h>
+#include "../par_defs.h"
+#include "find_geo_centre.h"
+#include "../make_arrays.h"
 
 void calc_geo_centre(double* gc, double* new_s, double* old_s, part_defs p_name)
 {
