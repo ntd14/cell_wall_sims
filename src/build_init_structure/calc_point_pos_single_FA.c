@@ -13,13 +13,6 @@
 #include "calc_point_pos_single_FA.h"
 #include "../make_arrays.h"
 
-void calc_geo_centre(double* gc, double* new_s, double* old_s, part_defs p_name)
-{
-	gc[0] = new_s[0] - old_s[0];
-	gc[1] = new_s[1] - old_s[1];
-	gc[2] = 0;
-	/*needs updating to calc for generalised P-Es */
-}
 /* calc next point in positive direction */
 void point_pos(double* cur_point, double* next_point, double angle1, double angle2, double p_len)
 {
@@ -40,9 +33,8 @@ void point_neg(double* cur_point, double* next_point, double angle1, double angl
 	next_point[4] = angle2;
 }
 
-/* caller function needs to define: double new_pos[num_of_build_steps][5];
- * as well as generate old_s from make_FA_start_points*/
-void new_point_pos(double* pos, double* start_point, part_defs p_name)
+
+int new_point_pos(double* pos, double* start_point, part_defs p_name)
 {
 	double angle2 = 0;
 	double* vec_of_angles = make1Darray(2*max_build_steps);
@@ -51,7 +43,6 @@ void new_point_pos(double* pos, double* start_point, part_defs p_name)
 	int ii, jj;
 	double* tmp_pos = make2Darray(max_build_steps, 5);
 	double* tmp_neg = make2Darray(max_build_steps, 5);
-	/* note the start point is NOT stored at the start of either tmp_ vectors, need to add it from later*/
 	double* cur_point_pos = make1Darray(5);
 	double* cur_point_neg = make1Darray(5);
 	double* next_point_pos = make1Darray(5);
@@ -115,4 +106,5 @@ void new_point_pos(double* pos, double* start_point, part_defs p_name)
 		}
 	}
 	pos = tmp_array;
+	return tmp_pos_len+tmp_neg_len+1;
 }
