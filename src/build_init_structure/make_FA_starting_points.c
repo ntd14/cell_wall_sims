@@ -18,12 +18,6 @@ void make_start_point(double* start_point)
 	start_point[0] = (double) length_of_problem_space*(rand()/(double) RAND_MAX);
 	start_point[1] = (double) height_of_problem_space*(rand()/(double) RAND_MAX);
 	start_point[2] = (double) depth_of_problem_space*(rand()/(double) RAND_MAX);
-	int ii;
-	for(ii = 0; ii < 3; ii++)
-	{
-		printf("%f ", start_point[ii]);
-	}
-	printf("\n");
 }
 
 void starting_points(double* FA_starts)

@@ -17,6 +17,7 @@ void create_init_state()
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 	starting_points(FA_starting_points);
 	int ii, jj;
+	printf("starting points");
 	for(ii = 0; ii < 10; ii++)
 	{
 		printf("\n");
@@ -25,22 +26,7 @@ void create_init_state()
 			printf("%f ", FA_starting_points[ind2D(ii,jj,10,3)]);
 		}
 	}
+	printf("\n");
+
 }
-/*make problem space bigger so that we get random arrangment of FA at the boundaries
- * void ext_pspace(int* ext_dims)
- * caller function needs to define int* ext_dims[3]
- */
-
-/* make a vector of starting points for the FAs in the extended space*/
-/* caller function needs to define double FA_start_points[ext_length/init_spacing_of_FA]; */
-
-/*function to calculate the geometric centre of the partical*/
-
-/*function to check if currnet partical geometric centre is inside the ROI*/
-
-/* caller function needs to define: double new_pos[num_of_build_steps][5];
- * as well as generate old_s from make_FA_start_points*/
-
-
-/*main function to tie it all togeather here.*/
 
