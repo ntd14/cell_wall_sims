@@ -5,65 +5,106 @@
  *      Author: nick
  */
 #include <stdlib.h>
+#include <stdio.h>
 #include "make_arrays.h"
- /* needs checks added in as well as conversion functions to lapack*/
+ /* needs checks added in, realloc functions, free function and  conversion functions to lapack*/
 
-void free1Darray(double* array)
+int ind2D(int i, int j, int nrow, int ncol)
 {
+	int ind = nrow*j + i;
+	return ind;
+}
+
+int ind3D(int i,int j,int k, int nrow, int ncol, int ndep)
+{
+	int ind = nrow*ncol*k + nrow*j + i;
+	return ind;
+}
+
+
+double* make1Darray(int len)
+{
+	double* array = (double *)malloc(len*sizeof(double));
+	if(array == NULL)
+	{
+		printf("make1Darray failed in malloc");
+	}
+	return array;
+}
+
+double* make2Darray(int nrow, int ncol)
+{
+	int len = nrow*ncol;
+	double* array = (double *)malloc(len*sizeof(double));
+	if(array == NULL)
+	{
+		printf("make2Darray failed in malloc");
+	}
+	return array;
+}
+
+double* make3Darray(int nrow, int ncol, int ndep)
+{
+	int len = nrow*ncol*ndep;
+	double* array = (double *)malloc(len*sizeof(double));
+	if(array == NULL)
+	{
+		printf("make3Darray failed in malloc");
+	}
+	return array;
+}
+
+double* reduce1Darray(double* array, int new_len, int old_len)
+{
+	double* tmp_array = make1Darray(new_len);
+	int ii;
+	for(ii = 0; ii < new_len; ii++)
+	{
+			tmp_array[ii] = array[ii];
+	}
 	free(array);
+	return tmp_array;
 }
 
-void free2Darray(double** array, int nrow)
-{
-	int ii;
-	for(ii=0; ii < nrow; ii++)
-	{
-		free(array[ii]);
-	}
-}
 
-void free3Darray(double*** array, int nrow, int ncol)
+double* reduce2Darray(double* array, int old_nrow, int old_ncol, int new_nrow, int new_ncol)
 {
-	int ii;
-	int jj;
-	for(ii=0;ii<nrow;ii++)
+	/*split array into seperate 1D vectors of nrow and ncol length then call make2D array */
+	double* tmp_array = make2Darray(new_nrow, new_ncol);
+	int ii, jj;
+	for(ii = 0; ii < new_nrow; ii++)
 	{
-		for(jj=0; jj<nrow; jj++)
+		for(jj = 0; ii < new_ncol; jj++)
 		{
-			free(array[ii][jj]);
+			tmp_array[ind2D(ii, jj, new_nrow, new_ncol)] = array[ind2D(ii, jj, old_nrow, old_ncol)];
 		}
 	}
+	free(array);
+	return tmp_array;
 }
 
-double * make1Darray(int nrow)
+double* reduce3Darray(double* array, int old_nrow, int old_ncol, int old_ndep, int new_nrow, int new_ncol, int new_ndep)
 {
-	double* theArray = malloc(nrow*sizeof(double));
-    return theArray;
-}
-
-double** make2Darray(int nrow, int ncol)
-{
-	double** theArray;
-	int ii;
-	theArray = (double**) malloc(nrow*sizeof(double*));
-	for (ii = 0; ii < nrow; ii++)
-		theArray[ii] = (double*) malloc(ncol*sizeof(double));
-    return theArray;
-}
-
-double*** make3Darray(int nrow, int ncol, int ndep)
-{
-	double*** theArray;
-	int ii;
-	int jj;
-	theArray = (double***) malloc(nrow*sizeof(double**));
-	for (ii = 0; ii < nrow; ii++)
+	/*split array into seperate 1D vectors of nrow and ncol length then call make2D array */
+	double* tmp_array = make3Darray(new_nrow, new_ncol, new_ndep);
+	int ii, jj, kk;
+	for(ii = 0; ii < new_nrow; ii++)
 	{
-		theArray[ii] = (double**) malloc(ncol*sizeof(double*));
-		for(jj = 0; jj < ncol; jj++)
+		for(jj = 0; ii < new_ncol; jj++)
 		{
-			theArray[ii][jj] = (double*) malloc(ncol*sizeof(double));
+			for(kk = 0; kk < new_ndep; kk++)
+			{
+				tmp_array[ind3D(ii, jj, kk, new_nrow, new_ncol, new_ndep)] = array[ind3D(ii, jj, kk, old_nrow, old_ncol, old_ndep)];
+			}
 		}
 	}
-    return theArray;
+	free(array);
+	return tmp_array;
 }
+
+
+
+
+
+
+

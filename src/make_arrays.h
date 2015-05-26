@@ -8,12 +8,21 @@
 #ifndef MAKE_ARRAYS_H_
 #define MAKE_ARRAYS_H_
 
-void free1Darray(double* array);
-void free2Darray(double** array, int nrow);
-void free3Darray(double*** array, int nrow, int ncol);
+int ind2D(int i, int j, int nrow, int ncol);
 
-double* make1Darray(int nrow);
-double** make2Darray(int nrow, int ncol);
-double*** make3Darray(int nrow, int ncol, int ndep);
+int ind3D(int i,int j,int k, int nrow, int ncol, int ndep);
+
+double* make1Darray(int len);
+
+double* make2Darray(int nrow, int ncol);
+
+double* make3Darray(int nrow, int ncol, int ndep);
+
+double* reduce1Darray(double* array, int new_len, int old_len);
+
+double* reduce2Darray(double* array, int old_nrow, int old_ncol, int new_nrow, int new_ncol);
+
+double* reduce3Darray(double* array, int old_nrow, int old_ncol, int old_ndep, int new_nrow, int new_ncol, int new_ndep);
+
 
 #endif /* MAKE_ARRAYS_H_ */

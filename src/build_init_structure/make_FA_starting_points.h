@@ -9,6 +9,6 @@
 #define MAKE_FA_STARTING_POINTS_H_
 
 
-int make_FA_start_points(int* ext_dims, double* FA_start_points, int array_len);
+void starting_points(double* FA_starts);
 
 #endif /* MAKE_FA_STARTING_POINTS_H_ */
