@@ -30,10 +30,13 @@ void find_init_pos(double* init_pos, double* end_point_pos, int FA_steps, part_d
 			old_s[jj] = end_point_pos[ind2D(ii, jj, FA_steps+1, 5)];
 			new_s[jj] = end_point_pos[ind2D(ii+1, jj, FA_steps+1, 5)];
 		}
+
 		calc_geo_centre(tmp_gc, new_s, old_s, p_name);
 
 		init_pos[ind2D(ii,0, FA_steps, 5)] = tmp_gc[0];
 		init_pos[ind2D(ii,1, FA_steps, 5)] = tmp_gc[1];
 		init_pos[ind2D(ii,2, FA_steps, 5)] = tmp_gc[2];
+		init_pos[ind2D(ii,3, FA_steps, 5)] = end_point_pos[ind2D(ii, 3, FA_steps, 5)];
+		init_pos[ind2D(ii,4, FA_steps, 5)] = 0;
 	}
 }

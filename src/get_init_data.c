@@ -17,7 +17,7 @@ void create_init_state()
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 	starting_points(FA_starting_points);
 	int ii, jj;
-	printf("starting points");
+/*	printf("starting points");
 	for(ii = 0; ii < 10; ii++)
 	{
 		printf("\n");
@@ -25,8 +25,14 @@ void create_init_state()
 		{
 			printf("%f ", FA_starting_points[ind2D(ii,jj,10,3)]);
 		}
-	}
-	printf("\n");
+	}*/
+	double* tmp_sp = make1Darray(3);
+	tmp_sp[0] = FA_starting_points[ind2D(0,0,10,3)];
+	tmp_sp[1] = FA_starting_points[ind2D(0,1,10,3)];
+	tmp_sp[2] = FA_starting_points[ind2D(0,2,10,3)];
+	double* init_pos = make2Darray(2*max_build_steps, 5);
+	int len_pos = new_point_pos(init_pos, tmp_sp, FA1);
+
 
 }
 
