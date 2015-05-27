@@ -52,39 +52,32 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space)
 	{
 		point_pos(cur_point_pos, next_point_pos, vec_of_angles[ii], p_len);
-		printf("\n");
+
 		for(jj = 0; jj < 3; jj++)
 		{
 			tmp_pos[ind2D(ii, jj, max_build_steps, 5)] = next_point_pos[jj];
 		}
 		tmp_pos[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+1];
 		tmp_pos[ind2D(ii, 4, max_build_steps, 5)] = 0;
-		for(jj = 0; jj < 5; jj++)
-		{
-			printf("%g ", tmp_pos[ind2D(ii, jj, max_build_steps, 5)]);
-		}
+
 
 		cur_point_pos = next_point_pos;
 		ii++;
 	}
 	int tmp_pos_len = ii;
-	printf("\n");
+
 	/* update here for 3D */
 	ii = 0;
 	while(cur_point_neg[0] > 0 && cur_point_neg[1] > 0)
 	{
 		point_neg(cur_point_neg, next_point_neg, vec_of_angles[ii+max_build_steps], p_len);
-		printf("\n");
 		for(jj = 0; jj < 3; jj++)
 		{
 			tmp_neg[ind2D(ii, jj, max_build_steps, 5)] = next_point_neg[jj];
 		}
 		tmp_neg[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+max_build_steps];
 		tmp_neg[ind2D(ii, 4, max_build_steps, 5)] = 0;
-		for(jj = 0; jj < 5; jj++)
-		{
-			printf("%g ", tmp_neg[ind2D(ii, jj, max_build_steps, 5)]);
-		}
+
 		cur_point_neg = next_point_neg;
 		ii++;
 	}
@@ -100,7 +93,10 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		}
 		kk++;
 	}
-
+	for(jj = 0; jj < 5; jj++)
+	{
+		printf("%g ", tmp_neg[ind2D(ii, 1, max_build_steps, 5)]);
+	}
 	tmp_array[ind2D(tmp_neg_len+1, 0, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[0];
 	tmp_array[ind2D(tmp_neg_len+1, 1, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[1];
 	tmp_array[ind2D(tmp_neg_len+1, 2, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[2];
