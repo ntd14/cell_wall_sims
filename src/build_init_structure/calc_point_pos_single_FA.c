@@ -5,7 +5,6 @@
  *      Author: nick
  */
 
-
 #include <math.h>
 #include <stdio.h>
 #include "../normal_dist_gen.h"
@@ -57,10 +56,9 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		{
 			tmp_pos[ind2D(ii, jj, max_build_steps, 5)] = next_point_pos[jj];
 		}
+
 		tmp_pos[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+1];
 		tmp_pos[ind2D(ii, 4, max_build_steps, 5)] = 0;
-
-
 		cur_point_pos = next_point_pos;
 		ii++;
 	}
@@ -77,44 +75,51 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		}
 		tmp_neg[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+max_build_steps];
 		tmp_neg[ind2D(ii, 4, max_build_steps, 5)] = 0;
-
+		/*printf("%g ",tmp_neg[ind2D(ii, 0, max_build_steps, 5)]);
+		printf("%g ",tmp_neg[ind2D(ii, 1, max_build_steps, 5)]);
+		printf("%g ",tmp_neg[ind2D(ii, 2, max_build_steps, 5)]);
+		printf("%g ",tmp_neg[ind2D(ii, 3, max_build_steps, 5)]);
+		printf("%g ",tmp_neg[ind2D(ii, 4, max_build_steps, 5)]);
+		printf("\n");*/
 		cur_point_neg = next_point_neg;
 		ii++;
 	}
+	int tc = 0;
 	int tmp_neg_len = ii;
-	double* tmp_array = make2Darray(tmp_pos_len+tmp_neg_len+1, 5);
 	int kk = 0;
 	for(ii = tmp_neg_len-1; ii >= 0; ii--)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			tmp_array[ind2D(kk, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_neg[ind2D(ii, jj, tmp_pos_len, 5)];
-		 	jj++;
+			pos[ind2D(kk, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_neg[ind2D(ii, jj, max_build_steps, 5)];
 		}
+		tc++;
 		kk++;
 	}
-	for(jj = 0; jj < 5; jj++)
-	{
-		printf("%g ", tmp_neg[ind2D(ii, 1, max_build_steps, 5)]);
-	}
-	tmp_array[ind2D(tmp_neg_len+1, 0, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[0];
-	tmp_array[ind2D(tmp_neg_len+1, 1, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[1];
-	tmp_array[ind2D(tmp_neg_len+1, 2, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[2];
-	tmp_array[ind2D(tmp_neg_len+1, 3, tmp_pos_len+tmp_neg_len+1, 5)] = vec_of_angles[0];
-	tmp_array[ind2D(tmp_neg_len+1, 4, tmp_pos_len+tmp_neg_len+1, 5)] = 0;
 
-	for(ii = tmp_neg_len+2; ii < tmp_pos_len+tmp_neg_len+1; ii++)
+	pos[ind2D(tmp_neg_len, 0, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[0];
+	pos[ind2D(tmp_neg_len, 1, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[1];
+	pos[ind2D(tmp_neg_len, 2, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[2];
+	pos[ind2D(tmp_neg_len, 3, tmp_pos_len+tmp_neg_len+1, 5)] = vec_of_angles[0];
+	pos[ind2D(tmp_neg_len, 4, tmp_pos_len+tmp_neg_len+1, 5)] = 0;
+	tc++;
+
+	for(ii = tmp_neg_len+1; ii < tmp_pos_len+tmp_neg_len+1; ii++)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			tmp_array[ind2D(ii, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_pos[ind2D(ii, jj, tmp_pos_len, 5)];
-			jj++;
+			pos[ind2D(ii, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_pos[ind2D(ii-tmp_neg_len-1, jj, max_build_steps, 5)];
 		}
+		tc++;
 	}
-/*	for(ii=0; ii < tmp_neg_len+tmp_pos_len+1;ii++)
+
+	/*for(ii=0; ii < tmp_neg_len+tmp_pos_len+1; ii++)
 	{
-		printf("%f \n", tmp_array[ind2D(ii, jj, tmp_pos_len+tmp_neg_len+1, 5)]);
+		printf("%f ",pos[ind2D(ii, 0, tmp_pos_len+tmp_neg_len+1, 5)]);
+		printf("%f ",pos[ind2D(ii, 1, tmp_pos_len+tmp_neg_len+1, 5)]);
+		printf("%f ",pos[ind2D(ii, 2, tmp_pos_len+tmp_neg_len+1, 5)]);
+		printf("%f ",pos[ind2D(ii, 3, tmp_pos_len+tmp_neg_len+1, 5)]);
+		printf("%f \n",pos[ind2D(ii, 4, tmp_pos_len+tmp_neg_len+1, 5)]);
 	}*/
-	pos = tmp_array;
 	return tmp_pos_len+tmp_neg_len+1;
 }

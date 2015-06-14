@@ -15,9 +15,9 @@ int depth_of_problem_space = 0;
  * all in radians
  */
 
-double mean_MFA = 0.175;
-double sd_MFA = 0.035;
-double MFA_sd = 0.01;
+double mean_MFA = -0.2;
+double sd_MFA = 0.02;
+double MFA_sd = 0.02;
 
 /* cellulose fibril agregate properties,
  * num_of_C_chains is the number of particals which are used to model each fibril agregit
