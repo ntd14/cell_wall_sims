@@ -29,7 +29,7 @@ void point_neg(double* cur_point, double* next_point, double angle, double p_len
 }
 
 
-int new_point_pos(double* pos, double* start_point, part_defs p_name)
+int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
 {
 	double* vec_of_angles = make1Darray(2*max_build_steps);
 	norm_dist(vec_of_angles, 2*max_build_steps, mean_MFA, sd_MFA);
@@ -84,33 +84,29 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		cur_point_neg = next_point_neg;
 		ii++;
 	}
-	int tc = 0;
 	int tmp_neg_len = ii;
 	int kk = 0;
 	for(ii = tmp_neg_len-1; ii >= 0; ii--)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			pos[ind2D(kk, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_neg[ind2D(ii, jj, max_build_steps, 5)];
+			pos[ind2D(kk, jj, 2*max_build_steps, 5)] = tmp_neg[ind2D(ii, jj, max_build_steps, 5)];
 		}
-		tc++;
 		kk++;
 	}
 
-	pos[ind2D(tmp_neg_len, 0, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[0];
-	pos[ind2D(tmp_neg_len, 1, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[1];
-	pos[ind2D(tmp_neg_len, 2, tmp_pos_len+tmp_neg_len+1, 5)] = start_point[2];
-	pos[ind2D(tmp_neg_len, 3, tmp_pos_len+tmp_neg_len+1, 5)] = vec_of_angles[0];
-	pos[ind2D(tmp_neg_len, 4, tmp_pos_len+tmp_neg_len+1, 5)] = 0;
-	tc++;
+	pos[ind2D(tmp_neg_len, 0, 2*max_build_steps, 5)] = start_point[0];
+	pos[ind2D(tmp_neg_len, 1, 2*max_build_steps, 5)] = start_point[1];
+	pos[ind2D(tmp_neg_len, 2, 2*max_build_steps, 5)] = start_point[2];
+	pos[ind2D(tmp_neg_len, 3, 2*max_build_steps, 5)] = vec_of_angles[0];
+	pos[ind2D(tmp_neg_len, 4, 2*max_build_steps, 5)] = 0;
 
 	for(ii = tmp_neg_len+1; ii < tmp_pos_len+tmp_neg_len+1; ii++)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			pos[ind2D(ii, jj, tmp_pos_len+tmp_neg_len+1, 5)] = tmp_pos[ind2D(ii-tmp_neg_len-1, jj, max_build_steps, 5)];
+			pos[ind2D(ii, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii-tmp_neg_len-1, jj, max_build_steps, 5)];
 		}
-		tc++;
 	}
 
 	/*for(ii=0; ii < tmp_neg_len+tmp_pos_len+1; ii++)
@@ -121,5 +117,5 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		printf("%f ",pos[ind2D(ii, 3, tmp_pos_len+tmp_neg_len+1, 5)]);
 		printf("%f \n",pos[ind2D(ii, 4, tmp_pos_len+tmp_neg_len+1, 5)]);
 	}*/
-	return tmp_pos_len+tmp_neg_len+1;
+	return tmp_neg_len+tmp_pos_len+1;
 }

@@ -8,6 +8,6 @@
 #ifndef CALC_POINT_POS_SINGLE_FA_H_
 #define CALC_POINT_POS_SINGLE_FA_H_
 
-int new_point_pos(double* pos, double* start_point, part_defs p_name);
+int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name);
 
 #endif /* CALC_POINT_POS_SINGLE_FA_H_ */
