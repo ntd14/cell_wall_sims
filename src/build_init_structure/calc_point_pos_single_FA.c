@@ -48,7 +48,7 @@ int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
 	}
 	/* update here for 3D*/
 	ii = 0;
-	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space)
+	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space && cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && ii < max_build_steps)
 	{
 		point_pos(cur_point_pos, next_point_pos, vec_of_angles[ii], p_len);
 
@@ -66,7 +66,7 @@ int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
 
 	/* update here for 3D */
 	ii = 0;
-	while(cur_point_neg[0] > 0 && cur_point_neg[1] > 0)
+	while(cur_point_neg[0] < length_of_problem_space && cur_point_neg[1] < height_of_problem_space && cur_point_neg[0] > 0 && cur_point_neg[1] > 0 && ii < max_build_steps)
 	{
 		point_neg(cur_point_neg, next_point_neg, vec_of_angles[ii+max_build_steps], p_len);
 		for(jj = 0; jj < 3; jj++)
@@ -75,12 +75,6 @@ int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
 		}
 		tmp_neg[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+max_build_steps];
 		tmp_neg[ind2D(ii, 4, max_build_steps, 5)] = 0;
-		/*printf("%g ",tmp_neg[ind2D(ii, 0, max_build_steps, 5)]);
-		printf("%g ",tmp_neg[ind2D(ii, 1, max_build_steps, 5)]);
-		printf("%g ",tmp_neg[ind2D(ii, 2, max_build_steps, 5)]);
-		printf("%g ",tmp_neg[ind2D(ii, 3, max_build_steps, 5)]);
-		printf("%g ",tmp_neg[ind2D(ii, 4, max_build_steps, 5)]);
-		printf("\n");*/
 		cur_point_neg = next_point_neg;
 		ii++;
 	}
@@ -105,17 +99,9 @@ int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			pos[ind2D(ii, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii-tmp_neg_len-1, jj, max_build_steps, 5)];
+			pos[ind2D(ii, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii-tmp_neg_len, jj, max_build_steps, 5)];
 		}
 	}
 
-	/*for(ii=0; ii < tmp_neg_len+tmp_pos_len+1; ii++)
-	{
-		printf("%f ",pos[ind2D(ii, 0, tmp_pos_len+tmp_neg_len+1, 5)]);
-		printf("%f ",pos[ind2D(ii, 1, tmp_pos_len+tmp_neg_len+1, 5)]);
-		printf("%f ",pos[ind2D(ii, 2, tmp_pos_len+tmp_neg_len+1, 5)]);
-		printf("%f ",pos[ind2D(ii, 3, tmp_pos_len+tmp_neg_len+1, 5)]);
-		printf("%f \n",pos[ind2D(ii, 4, tmp_pos_len+tmp_neg_len+1, 5)]);
-	}*/
 	return tmp_neg_len+tmp_pos_len+1;
 }
