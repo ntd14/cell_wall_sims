@@ -32,6 +32,8 @@ void create_init_state()
 			len_FA_old = len_FA;
 		}
 	}
+
+	/* this section should be calling function in make_arrays.c*/
 	len_FA = len_FA -1;
 	double* init_coords = make3Darray(len_FA, 5, num_of_FAs);
 	for(ii=0; ii < len_FA; ii++)
