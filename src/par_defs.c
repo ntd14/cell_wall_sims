@@ -24,7 +24,7 @@ double MFA_sd = 0.02;
  * num_of_ags is the number of fibril agregits in the model
  */
 int num_of_C_chains = 1;
-int max_build_steps = 200; /* note this is in each direction so *2 to get total*/
+int max_build_steps = 500; /* note this is in each direction so *2 to get total*/
 int num_of_FAs = 5;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
 
