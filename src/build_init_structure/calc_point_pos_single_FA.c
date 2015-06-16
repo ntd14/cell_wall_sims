@@ -47,7 +47,6 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 		cur_point_pos[ii] = start_point[ii];
 		cur_point_neg[ii] = start_point[ii];
 	}
-	/* update here for 3D*/
 	ii = 0;
 	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space && cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && ii < max_build_steps)
 	{
@@ -81,6 +80,7 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	}
 	int tmp_neg_len = ii;
 	int kk = 0;
+
 	for(ii = tmp_neg_len-1; ii >= 0; ii--)
 	{
 		for(jj = 0; jj < 5; jj++)
@@ -96,13 +96,17 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	pos[ind2D(tmp_neg_len, 3, 2*max_build_steps, 5)] = vec_of_theta[0];
 	pos[ind2D(tmp_neg_len, 4, 2*max_build_steps, 5)] = vec_of_thi[0];
 
-	for(ii = tmp_neg_len+1; ii < tmp_pos_len+tmp_neg_len+1; ii++)
+	/* issues is here somewhere */
+	for(ii = tmp_neg_len+1; ii < 2*max_build_steps; ii++)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
 			pos[ind2D(ii, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii-tmp_neg_len, jj, max_build_steps, 5)];
+			printf("%f ",pos[ind2D(ii, jj, 2*max_build_steps, 5)]);
 		}
+		printf("\n");
 	}
+	printf("\n");
 
 	return tmp_neg_len+tmp_pos_len+1;
 }
