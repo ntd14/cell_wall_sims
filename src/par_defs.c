@@ -25,7 +25,7 @@ double MFA_sd = 0.02;
  */
 int num_of_C_chains = 1;
 int max_build_steps = 500; /* note this is in each direction so *2 to get total*/
-int num_of_FAs = 5;
+int num_of_FAs = 10;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
 
 

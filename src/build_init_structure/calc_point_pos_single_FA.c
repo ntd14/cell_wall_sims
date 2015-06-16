@@ -29,7 +29,7 @@ void point_neg(double* cur_point, double* next_point, double angle, double p_len
 }
 
 
-int new_point_pos(double* pos, double* start_point, int lFA, part_defs p_name)
+int new_point_pos(double* pos, double* start_point, part_defs p_name)
 {
 	double* vec_of_angles = make1Darray(2*max_build_steps);
 	norm_dist(vec_of_angles, 2*max_build_steps, mean_MFA, sd_MFA);

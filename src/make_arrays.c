@@ -83,23 +83,21 @@ double* reduce2Darray(double* array, int old_nrow, int old_ncol, int new_nrow, i
 	return tmp_array;
 }
 
-double* reduce3Darray(double* array, int old_nrow, int old_ncol, int old_ndep, int new_nrow, int new_ncol, int new_ndep)
+void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep)
 {
 	/*split array into seperate 1D vectors of nrow and ncol length then call make2D array */
-	double* tmp_array = make3Darray(new_nrow, new_ncol, new_ndep);
 	int ii, jj, kk;
-	for(ii = 0; ii < new_nrow; ii++)
-	{
-		for(jj = 0; ii < new_ncol; jj++)
+	for(ii=0; ii < new_nrow; ii++)
 		{
-			for(kk = 0; kk < new_ndep; kk++)
+			for(jj=0; jj < new_ncol; jj++)
 			{
-				tmp_array[ind3D(ii, jj, kk, new_nrow, new_ncol, new_ndep)] = array[ind3D(ii, jj, kk, old_nrow, old_ncol, old_ndep)];
+				for(kk = 0; kk < new_ndep; kk++)
+				{
+					new_array[ind3D(ii,jj,kk,new_nrow,new_ncol,new_ndep)] = old_array[ind3D(ii,jj,kk,old_nrow, old_ncol, old_ndep)];
+				}
 			}
 		}
-	}
-	free(array);
-	return tmp_array;
+	free(old_array);
 }
 
 

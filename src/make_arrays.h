@@ -22,7 +22,6 @@ double* reduce1Darray(double* array, int new_len, int old_len);
 
 double* reduce2Darray(double* array, int old_nrow, int old_ncol, int new_nrow, int new_ncol);
 
-double* reduce3Darray(double* array, int old_nrow, int old_ncol, int old_ndep, int new_nrow, int new_ncol, int new_ndep);
-
+void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep);
 
 #endif /* MAKE_ARRAYS_H_ */
