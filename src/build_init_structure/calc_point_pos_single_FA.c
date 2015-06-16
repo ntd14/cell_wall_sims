@@ -13,26 +13,27 @@
 #include "../make_arrays.h"
 
 /* calc next point in positive direction */
-void point_pos(double* cur_point, double* next_point, double angle, double p_len)
+void point_pos(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*sin(angle) + cur_point[0];
-	next_point[1] = p_len*cos(angle) + cur_point[1];
-	next_point[2] = 0;
+	next_point[0] = p_len*cos(theta)*sin(thi)+ cur_point[0];/*p_len*sin(thi)*cos(theta) + cur_point[0];*/
+	next_point[1] = p_len*sin(theta)*sin(thi) + cur_point[1];/*p_len*sin(thi)*sin(theta) + cur_point[1];*/
+	next_point[2] = p_len*cos(thi) + cur_point[2];
 	/* 3D will change these */
 }
 /* calc next point in negitive direction */
-void point_neg(double* cur_point, double* next_point, double angle, double p_len)
+void point_neg(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*sin(angle + M_PI) + cur_point[0];
-	next_point[1] = p_len*cos(angle + M_PI) + cur_point[1];
-	next_point[2] = 0;
+	next_point[0] = p_len*cos(theta + M_PI)*sin(thi)+ cur_point[0];/*p_len*sin(thi)*cos(theta + M_PI) + cur_point[0];*/
+	next_point[1] = p_len*sin(theta + M_PI)*sin(thi)+ cur_point[1];/*p_len*sin(thi)*sin(theta + M_PI) + cur_point[1];*/
+	next_point[2] = p_len*cos(thi) + cur_point[2];
 }
-
 
 int new_point_pos(double* pos, double* start_point, part_defs p_name)
 {
-	double* vec_of_angles = make1Darray(2*max_build_steps);
-	norm_dist(vec_of_angles, 2*max_build_steps, mean_MFA, sd_MFA);
+	double* vec_of_theta = make1Darray(2*max_build_steps);
+	norm_dist(vec_of_theta, 2*max_build_steps, mean_MFA, sd_MFA);
+	double* vec_of_thi = make1Darray(2*max_build_steps);
+	norm_dist(vec_of_thi, 2*max_build_steps, mean_wall_interaction, sd_wall_interaction);
 	double p_len = p_name.length_pos + p_name.length_neg;
 	int ii, jj;
 	double* tmp_pos = make2Darray(max_build_steps, 5);
@@ -50,15 +51,15 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	ii = 0;
 	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space && cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && ii < max_build_steps)
 	{
-		point_pos(cur_point_pos, next_point_pos, vec_of_angles[ii], p_len);
+		point_pos(cur_point_pos, next_point_pos, vec_of_theta[ii], vec_of_thi[ii], p_len);
 
 		for(jj = 0; jj < 3; jj++)
 		{
 			tmp_pos[ind2D(ii, jj, max_build_steps, 5)] = next_point_pos[jj];
 		}
 
-		tmp_pos[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+1];
-		tmp_pos[ind2D(ii, 4, max_build_steps, 5)] = 0;
+		tmp_pos[ind2D(ii, 3, max_build_steps, 5)] = vec_of_theta[ii+1];
+		tmp_pos[ind2D(ii, 4, max_build_steps, 5)] = vec_of_thi[ii+1];
 		cur_point_pos = next_point_pos;
 		ii++;
 	}
@@ -68,13 +69,13 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	ii = 0;
 	while(cur_point_neg[0] < length_of_problem_space && cur_point_neg[1] < height_of_problem_space && cur_point_neg[0] > 0 && cur_point_neg[1] > 0 && ii < max_build_steps)
 	{
-		point_neg(cur_point_neg, next_point_neg, vec_of_angles[ii+max_build_steps], p_len);
+		point_neg(cur_point_neg, next_point_neg, vec_of_theta[ii+max_build_steps],vec_of_thi[ii+max_build_steps], p_len);
 		for(jj = 0; jj < 3; jj++)
 		{
 			tmp_neg[ind2D(ii, jj, max_build_steps, 5)] = next_point_neg[jj];
 		}
-		tmp_neg[ind2D(ii, 3, max_build_steps, 5)] = vec_of_angles[ii+max_build_steps];
-		tmp_neg[ind2D(ii, 4, max_build_steps, 5)] = 0;
+		tmp_neg[ind2D(ii, 3, max_build_steps, 5)] = vec_of_theta[ii+max_build_steps];
+		tmp_neg[ind2D(ii, 4, max_build_steps, 5)] = vec_of_thi[ii+max_build_steps];;
 		cur_point_neg = next_point_neg;
 		ii++;
 	}
@@ -92,8 +93,8 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	pos[ind2D(tmp_neg_len, 0, 2*max_build_steps, 5)] = start_point[0];
 	pos[ind2D(tmp_neg_len, 1, 2*max_build_steps, 5)] = start_point[1];
 	pos[ind2D(tmp_neg_len, 2, 2*max_build_steps, 5)] = start_point[2];
-	pos[ind2D(tmp_neg_len, 3, 2*max_build_steps, 5)] = vec_of_angles[0];
-	pos[ind2D(tmp_neg_len, 4, 2*max_build_steps, 5)] = 0;
+	pos[ind2D(tmp_neg_len, 3, 2*max_build_steps, 5)] = vec_of_theta[0];
+	pos[ind2D(tmp_neg_len, 4, 2*max_build_steps, 5)] = vec_of_thi[0];
 
 	for(ii = tmp_neg_len+1; ii < tmp_pos_len+tmp_neg_len+1; ii++)
 	{

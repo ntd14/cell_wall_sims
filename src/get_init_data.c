@@ -14,9 +14,9 @@
 
 void create_init_state()
 {
+	int ii, jj;
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 	starting_points(FA_starting_points);
-	int ii, jj, kk;
 	double* tmp_sp = make1Darray(3);
 	double* init_pos = make3Darray(2*max_build_steps, 5, num_of_FAs);
 	int len_FA = 2*max_build_steps;
@@ -36,7 +36,7 @@ void create_init_state()
 	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_coords, len_FA_max, 5, num_of_FAs);
 	for(ii = 0; ii < num_of_FAs; ii++)
 	{
-		for(jj = len_FA_max-3; jj < len_FA_max; jj++)
+		for(jj = 0; jj < len_FA_max; jj++)
 		{
 			printf("%f, ",  init_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
 			printf("%f, ",  init_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);

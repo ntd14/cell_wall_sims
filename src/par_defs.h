@@ -18,8 +18,9 @@ int depth_of_problem_space;
  */
 
 double mean_MFA;
+double mean_wall_interaction;
 double sd_MFA;
-double MFA_sd;
+double sd_wall_interaction;
 
 /* cellulose fibril agregate properties,
  * num_of_C_chains is the number of particals which are used to model each fibril agregit
