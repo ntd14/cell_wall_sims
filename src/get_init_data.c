@@ -14,6 +14,7 @@
 
 void create_init_state()
 {
+	printf("starting get init data");
 	int ii, jj;
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 	starting_points(FA_starting_points);
@@ -66,6 +67,9 @@ void create_init_state()
 		}
 	}
 	fclose(f);
+	/* call to a set of functions to distribute water particles*/
+	/* pass init hydrated state to main function */
+
 	printf("finished get_init_data");
 }
 

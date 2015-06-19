@@ -16,6 +16,14 @@
 int main(void) /*this may change to take in arguments later*/
 {
 	create_init_state();
+	/* returns init hydrated state */
+	/* call to worker functions to minamise hydrated init state energy */
+	/* loop:
+	 * call to functions to add a bit of lignin
+	 * call to worker functions to calculate new min energy state
+	 * exit loop when cell wall is fully lignified
+	 */
+	/* post processing */
 	return 0;
 }
 
