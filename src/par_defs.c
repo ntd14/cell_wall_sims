@@ -16,9 +16,9 @@ int depth_of_problem_space = 1000;
  * all in radians
  */
 
-double mean_MFA = 0.2 - M_PI/2;
+double mean_MFA = -0.2 + M_PI/2;
 double mean_wall_interaction = M_PI/2;
-double sd_MFA = 0.1;
+double sd_MFA = M_PI/4;
 double sd_wall_interaction = 0.1;
 
 /* cellulose fibril agregate properties,
@@ -26,10 +26,11 @@ double sd_wall_interaction = 0.1;
  * num_of_ags is the number of fibril agregits in the model
  */
 int num_of_C_chains = 1;
-int max_build_steps = 50; /* note this is in each direction so *2 to get total*/
-int num_of_FAs = 100;
+int max_build_steps = 500; /* note this is in each direction so *2 to get total*/
+int num_of_FAs = 133;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
 
 
-part_defs FA1 = {10.0, 0.2, 0.2, 0.2, 0.2, 10.0, 10.0, 1500.0};
+part_defs FA1 = {10.0, 0.2, 0.2, 0.2, 0.2, 1.5, 1.5, 1500.0};
 part_defs LG1 = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  500.0};
+part_defs H2O = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1000.0};
