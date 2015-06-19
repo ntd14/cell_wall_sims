@@ -32,19 +32,40 @@ void create_init_state()
 			len_FA_max = len_FA;
 		}
 	}
-/*	double* init_coords = make3Darray(len_FA_max, 5, num_of_FAs);
-	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_coords, len_FA_max, 5, num_of_FAs);*/
+	double* init_coords = make3Darray(len_FA_max, 5, num_of_FAs);
+	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_coords, len_FA_max, 5, num_of_FAs);
 /*	for(ii = 0; ii < num_of_FAs; ii++)
 	{
 		for(jj = 0; jj < len_FA_max; jj++)
 		{
-			printf("%f, ",  init_pos[ind3D(jj, 0, ii, 2*max_build_steps, 5, num_of_FAs)]);
-			printf("%f, ",  init_pos[ind3D(jj, 1, ii, 2*max_build_steps, 5, num_of_FAs)]);
-			printf("%f, ",  init_pos[ind3D(jj, 2, ii, 2*max_build_steps, 5, num_of_FAs)]);
-			printf("%f, ",  init_pos[ind3D(jj, 3, ii, 2*max_build_steps, 5, num_of_FAs)]);
-			printf("%f, \n",init_pos[ind3D(jj, 4, ii, 2*max_build_steps, 5, num_of_FAs)]);
+			printf("%f, ",  init_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, \n",init_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
 		}
 		printf("\n");
 	}*/
+	FILE *f = fopen("file.vtk", "w");
+	if (f == NULL)
+	{
+	    printf("Error opening file!\n");
+	    exit(1);
+	}
+	fprintf(f, "x, y, z, theta, thi, FA_num \n");
+	for(ii = 0; ii < num_of_FAs; ii++)
+	{
+		for(jj = 0; jj < len_FA_max; jj++)
+		{
+			fprintf(f, "%f, ",  init_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",init_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%i, \n", ii);
+		}
+	}
+	fclose(f);
+	printf("finished get_init_data");
 }
 

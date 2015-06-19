@@ -97,16 +97,13 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	pos[ind2D(tmp_neg_len, 4, 2*max_build_steps, 5)] = vec_of_thi[0];
 
 	/* issues is here somewhere */
-	for(ii = tmp_neg_len+1; ii < 2*max_build_steps; ii++)
+	for(ii = 0; ii < tmp_pos_len; ii++)
 	{
 		for(jj = 0; jj < 5; jj++)
 		{
-			pos[ind2D(ii, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii-tmp_neg_len, jj, max_build_steps, 5)];
-			printf("%f ",pos[ind2D(ii, jj, 2*max_build_steps, 5)]);
+			pos[ind2D(ii+tmp_neg_len+1, jj, 2*max_build_steps, 5)] = tmp_pos[ind2D(ii, jj, max_build_steps, 5)];
 		}
-		printf("\n");
 	}
-	printf("\n");
 
 	return tmp_neg_len+tmp_pos_len+1;
 }
