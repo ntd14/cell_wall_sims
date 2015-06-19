@@ -47,7 +47,7 @@ void create_init_state()
 		}
 		printf("\n");
 	}*/
-	FILE *f = fopen("file.vtk", "w");
+/*	FILE *f = fopen("file.vtk", "w");
 	if (f == NULL)
 	{
 	    printf("Error opening file!\n");
@@ -66,8 +66,9 @@ void create_init_state()
 			fprintf(f, "%i, \n", ii);
 		}
 	}
-	fclose(f);
-	/* call to a set of functions to distribute water particles*/
+	fclose(f);*/
+	/* call to a set of functions to distribute water particles
+	 * randomly distribute particles over entrie domain*/
 	/* pass init hydrated state to main function */
 
 	printf("finished get_init_data");
