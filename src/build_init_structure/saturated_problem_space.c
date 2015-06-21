@@ -10,25 +10,27 @@
 #include "../make_arrays.h"
 #include "../par_defs.h"
 
-void sat_problem_space(double* pos, part_defs particle, int len)
+void sat_problem_space(double* pos, part_defs pl, int len)
 	{
 		printf("entering sat_problem_space \n");
-		int ii, jj, kk;
-		/* sat_problem_space(init_H2O_coords, part_defs H2O, num_of_H2Os);
-		 * check partical is spherical, and print warning if not
-		 * start at 000
-		 * add length neg in x
-		 * add height neg in y
-		 * add depth neg in z
-		 * put first point
-		 *
-		 * loop
-		 * add length neg + pos in x
-		 * 	loop
-		 * 		add height neg + pos in y
-		 * 		loop
-		 * 			add depth neg + pos in z
-		 * 			put point
-		 */
+		int ii, jj, kk, li;
+		if(pl.length_pos != pl.length_neg || pl.length_pos != pl.depth_pos || pl.length_pos != pl.depth_neg || pl.length_pos != pl.height_neg || pl.length_pos != pl.height_pos)
+		{
+			printf("\n warning particle is not a sphere \n");
+		}
+		li = 0;
+		for(ii=0; ii < (length_of_problem_space/(H2O.R_ratio*(H2O.length_pos+H2O.length_neg)) - 1); ii++)
+		{
+			for(jj=0;jj < (height_of_problem_space/(H2O.R_ratio*(H2O.height_pos+H2O.height_neg)) - 1); jj++)
+			{
+				for(kk=0; kk < (depth_of_problem_space/(H2O.R_ratio*(H2O.depth_pos+H2O.depth_neg)) - 1); kk++)
+				{
+					pos[ind2D(li,0,len,3)] = (ii+1)*pl.R_ratio*(pl.length_neg + pl.length_pos);
+					pos[ind2D(li,1,len,3)] = (jj+1)*pl.R_ratio*(pl.height_neg + pl.height_pos);
+					pos[ind2D(li,2,len,3)] = (kk+1)*pl.R_ratio*(pl.depth_neg + pl.depth_pos);
+					li++;
+				}
+			}
+		}
 		printf("exiting sat_problem_space \n");
 	}
