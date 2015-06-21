@@ -11,11 +11,18 @@
 #include "par_defs.h"
 #include "build_init_structure/make_FA_starting_points.h"
 #include "build_init_structure/calc_point_pos_single_FA.h"
+#include "build_init_structure/saturated_problem_space.h"
 
 void create_init_state()
 {
-	printf("starting get init data");
+	printf("starting get init data \n");
 	int ii, jj;
+	int num_of_H2Os = (length_of_problem_space/(H2O.R_ratio*(H2O.length_pos+H2O.length_neg)) - 1) /* because we dont want water on the boundaries, this would just add computation */
+			*(height_of_problem_space/(H2O.R_ratio*(H2O.height_pos+H2O.height_neg)) - 1)
+			*(depth_of_problem_space/(H2O.R_ratio*(H2O.depth_pos+H2O.depth_neg)) - 1);
+	double* init_H2O_coords = make2Darray(num_of_H2Os, 3); /* note the call we make here assumes H20 is spherical would need to change the function to relax this*/
+	sat_problem_space(init_H2O_coords, H2O, num_of_H2Os);
+
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 	starting_points(FA_starting_points);
 	double* tmp_sp = make1Darray(3);
@@ -33,17 +40,17 @@ void create_init_state()
 			len_FA_max = len_FA;
 		}
 	}
-	double* init_coords = make3Darray(len_FA_max, 5, num_of_FAs);
-	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_coords, len_FA_max, 5, num_of_FAs);
+	double* init_FA_coords = make3Darray(len_FA_max, 5, num_of_FAs);
+	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_FA_coords, len_FA_max, 5, num_of_FAs);
 /*	for(ii = 0; ii < num_of_FAs; ii++)
 	{
 		for(jj = 0; jj < len_FA_max; jj++)
 		{
-			printf("%f, ",  init_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, \n",init_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, \n",init_FA_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
 		}
 		printf("\n");
 	}*/
@@ -58,18 +65,18 @@ void create_init_state()
 	{
 		for(jj = 0; jj < len_FA_max; jj++)
 		{
-			fprintf(f, "%f, ",  init_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",init_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
 			fprintf(f, "%i, \n", ii);
 		}
 	}
 	fclose(f);
-	/* call to a set of functions to distribute water particles*/
+	/* call to a set of functions to distribute water particles among the FAs*/
 	/* pass init hydrated state to main function */
 
-	printf("finished get_init_data");
+	printf("finished get_init_data \n");
 }
 

@@ -30,7 +30,6 @@ int max_build_steps = 500; /* note this is in each direction so *2 to get total*
 int num_of_FAs = 133;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
 
-
-part_defs FA1 = {10.0, 0.2, 0.2, 0.2, 0.2, 1.5, 1.5, 1500.0};
+part_defs FA1 = {10.0, 0.2, 0.2, 1.5, 1.5, 0.2, 0.2, 1500.0};
 part_defs LG1 = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  500.0};
 part_defs H2O = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1000.0};

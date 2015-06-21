@@ -34,7 +34,7 @@ int new_point_pos(double* pos, double* start_point, part_defs p_name)
 	norm_dist(vec_of_theta, 2*max_build_steps, mean_MFA, sd_MFA);
 	double* vec_of_thi = make1Darray(2*max_build_steps);
 	norm_dist(vec_of_thi, 2*max_build_steps, mean_wall_interaction, sd_wall_interaction);
-	double p_len = p_name.length_pos + p_name.length_neg;
+	double p_len = p_name.height_pos + p_name.height_neg;
 	int ii, jj;
 	double* tmp_pos = make2Darray(max_build_steps, 5);
 	double* tmp_neg = make2Darray(max_build_steps, 5);

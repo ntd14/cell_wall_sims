@@ -34,16 +34,17 @@ int num_of_FAs;
 
 typedef struct partical_types {
 	double R_ratio;
-	double width_pos;
-	double width_neg;
-	double depth_pos ;
-	double depth_neg;
 	double length_pos;
 	double length_neg;
+	double height_pos ;
+	double height_neg;
+	double depth_pos;
+	double depth_neg;
 	double density;
 
 } part_defs;
 
 part_defs FA1;
 part_defs LG1;
+part_defs H2O;
 #endif /* PAR_DEFS_H_ */
