@@ -11,8 +11,8 @@
 #include "../make_arrays.h"
 #include "make_FA_starting_points.h"
 #include "../par_defs.h"
-/* make a vector of starting points for the FAs in the extended space*/
-/* caller function needs to define double FA_start_points[ext_length/init_spacing_of_FA]; */
+
+/* make a starting point which has a random position inside the problem space */
 void make_start_point(double* start_point)
 {
 	start_point[0] = (double) length_of_problem_space*(rand()/(double) RAND_MAX);
@@ -20,6 +20,7 @@ void make_start_point(double* start_point)
 	start_point[2] = (double) depth_of_problem_space*(rand()/(double) RAND_MAX);
 }
 
+/* use above to calc the starting points for each FA */
 void starting_points(double* FA_starts)
 {
 	int ii, jj;
@@ -29,6 +30,7 @@ void starting_points(double* FA_starts)
 		make_start_point(start_point);
 		for(jj = 0; jj < 3; jj++)
 		{
+			/* save the starting points for each FA into the FA_starts vector, defined in the get_init_data function */
 			FA_starts[ind2D(ii, jj, num_of_FAs, 3)] = start_point[jj];
 		}
 	}

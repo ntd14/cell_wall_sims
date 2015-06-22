@@ -15,16 +15,16 @@
 /* calc next point in positive direction */
 void point_pos(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(theta)*sin(thi)+ cur_point[0];/*p_len*sin(thi)*cos(theta) + cur_point[0];*/
-	next_point[1] = p_len*sin(theta)*sin(thi) + cur_point[1];/*p_len*sin(thi)*sin(theta) + cur_point[1];*/
+	next_point[0] = p_len*cos(theta)*sin(thi)+ cur_point[0];
+	next_point[1] = p_len*sin(theta)*sin(thi) + cur_point[1];
 	next_point[2] = p_len*cos(thi) + cur_point[2];
 	/* 3D will change these */
 }
 /* calc next point in negitive direction */
 void point_neg(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(theta + M_PI)*sin(thi)+ cur_point[0];/*p_len*sin(thi)*cos(theta + M_PI) + cur_point[0];*/
-	next_point[1] = p_len*sin(theta + M_PI)*sin(thi)+ cur_point[1];/*p_len*sin(thi)*sin(theta + M_PI) + cur_point[1];*/
+	next_point[0] = p_len*cos(theta + M_PI)*sin(thi)+ cur_point[0];
+	next_point[1] = p_len*sin(theta + M_PI)*sin(thi)+ cur_point[1];
 	next_point[2] = p_len*cos(thi) + cur_point[2];
 }
 

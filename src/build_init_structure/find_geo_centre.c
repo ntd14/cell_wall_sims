@@ -9,6 +9,10 @@
 #include "find_geo_centre.h"
 #include "../make_arrays.h"
 
+
+/* CURRENTLY NOT USED  will take some work to be usefull*/
+
+
 void calc_geo_centre(double* gc, double* new_s, double* old_s, part_defs p_name)
 {
 	gc[0] = new_s[0] - old_s[0];
