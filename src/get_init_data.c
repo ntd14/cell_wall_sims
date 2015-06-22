@@ -27,11 +27,7 @@ void create_init_state()
 	int ii, jj;
 
 	/* createing the problem space full of water */
-	/* because we dont want water on the boundaries we subract 1, this would just add computation otherwise*/
-	int num_of_H2Os = (length_of_problem_space/(H2O.R_ratio*(H2O.length_pos+H2O.length_neg)) - 1)
-			*(height_of_problem_space/(H2O.R_ratio*(H2O.height_pos+H2O.height_neg)) - 1)
-			*(depth_of_problem_space/(H2O.R_ratio*(H2O.depth_pos+H2O.depth_neg)) - 1);
-
+	int num_of_H2Os = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
 	double* init_H2O_coords = make2Darray(num_of_H2Os, 3);
 
 	/*note the call we make here assumes orentaion of the partical is the same as the problem space, ie depth of p is in the dep dir*/

@@ -8,9 +8,9 @@
 #include <math.h>
 
 /* define size of problem space in nm */
-int length_of_problem_space = 100;
-int height_of_problem_space = 100;
-int depth_of_problem_space = 100;
+int length_of_problem_space = 1000;
+int height_of_problem_space = 1000;
+int depth_of_problem_space = 1000;
 
 /* define properties of the FAs, mean_MFA is the trend line angle what the FAs follow */
 double mean_MFA = -0.2 + M_PI/2;
@@ -30,6 +30,6 @@ int max_build_steps = 500; /* note this is in each direction so *2 to get total*
 int num_of_FAs = 33;
 
 /*6 parameters to describe the cellulose chains for poly-elipsoids, see header file for def of each entry*/
-part_defs FA1 = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1500.0};
-part_defs LG1 = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  500.0};
-part_defs H2O = {10.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1000.0};
+part_defs FA1 = {10.0, 1500.0};
+part_defs LG1 = {10.0,  500.0};
+part_defs H2O = {10.0, 1000.0};

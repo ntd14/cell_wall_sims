@@ -33,13 +33,7 @@ int num_of_FAs;
 /*6 parameters to describe the cellulose chains for poly-elipsoids*/
 
 typedef struct partical_types {
-	double R_ratio; /* this is the number all of the dims are multiplied by to get their absolute value */
-	double length_pos; /* length of the particle in the positive x direction, when alligned with the problem space coords */
-	double length_neg; /* length in the -x dir */
-	double height_pos ; /* as above for height (y) */
-	double height_neg;
-	double depth_pos; /*as above for depth (z) */
-	double depth_neg;
+	double R; /* radius of particles */
 	double density; /* the desity of the particle type */
 
 } part_defs;
