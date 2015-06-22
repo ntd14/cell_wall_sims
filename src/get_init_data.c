@@ -28,23 +28,25 @@ void create_init_state()
 
 	/* createing the problem space full of water */
 	int num_of_H2Os = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
+
+	/*intit array to store h2o coords*/
 	double* init_H2O_coords = make2Darray(num_of_H2Os, 3);
 
-	/*note the call we make here assumes orentaion of the partical is the same as the problem space, ie depth of p is in the dep dir*/
+	/*init_H2O_coords houses the init coords of the water. */
 	sat_problem_space(init_H2O_coords, H2O, num_of_H2Os);
 
-	/*init_H2O_coords houses the init coords of the water. NOTE that it does not contain orentations, these are assumed to be 0 */
 	/* starting to build FAs*/
 	double* FA_starting_points = make2Darray(num_of_FAs, 3);
 
-	/* call to randomly scattor FA builder starting points matrix called FA_starting_points*/
+	/* call to randomly scatter FA builder starting points matrix called FA_starting_points*/
 	starting_points(FA_starting_points);
 
 	/* init temp array to store the starting point for the current FA */
 	double* tmp_sp = make1Darray(3);
 
-	/* init an array to store the centre points, orentations and FA_nums of all FA particals, not is "large enough" */
-	double* init_pos = make3Darray(2*max_build_steps, 5, num_of_FAs);
+	/* init an array to store the centre points of all FA particles, note is "large enough" */
+	double* init_pos = make3Darray(2*max_build_steps, 3, num_of_FAs);
+	/* seting counters to find the maximum used length  in init_pos */
 	int len_FA = 2*max_build_steps;
 	int len_FA_max = 0;
 
@@ -56,7 +58,7 @@ void create_init_state()
 		tmp_sp[2] = FA_starting_points[ind2D(ii,2,num_of_FAs,3)];
 
 		/* return the coordinates for each FA chunk in curent FA */
-		len_FA = new_point_pos((init_pos+ind3D(0,0,ii, 2*max_build_steps, 5, num_of_FAs)), tmp_sp, FA1);
+		len_FA = new_point_pos((init_pos+ind3D(0,0,ii, 2*max_build_steps, 3, num_of_FAs)), tmp_sp, FA1);
 
 		/* update the max length that a created FA has */
 		if(len_FA > len_FA_max)
@@ -66,10 +68,10 @@ void create_init_state()
 	}
 
 	/* init a new array that is only as large as is needed */
-	double* init_FA_coords = make3Darray(len_FA_max, 5, num_of_FAs);
+	double* init_FA_coords = make3Darray(len_FA_max, 3, num_of_FAs);
 
 	/* resize the positions/orentations array to be as short as the longest FA */
-	reduce3Darray(init_pos, 2*max_build_steps, 5, num_of_FAs, init_FA_coords, len_FA_max, 5, num_of_FAs);
+	reduce3Darray(init_pos, 2*max_build_steps, 3, num_of_FAs, init_FA_coords, len_FA_max, 3, num_of_FAs);
 	/* NOTE here somewhere could implement the ability to have multiple chains inside each FA chunk
 	 * along with HCs etc inside the chains. Will try to code the project so that this is posable in the future
 	 */
@@ -88,11 +90,9 @@ void create_init_state()
 	{
 		for(jj = 0; jj < len_FA_max; jj++)
 		{
-			printf("%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, ",  init_FA_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
-			printf("%f, \n",init_FA_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 3, num_of_FAs)]);
+			printf("%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 3, num_of_FAs)]);
+			printf("%f, \n",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 3, num_of_FAs)]);
 		}
 		printf("\n");
 	}*/
@@ -102,16 +102,14 @@ void create_init_state()
 	    printf("Error opening file!\n");
 	    exit(1);
 	}
-	fprintf(f, "x, y, z, theta, thi, FA_num \n");
+	fprintf(f, "x, y, z, FA_num \n");
 	for(ii = 0; ii < num_of_FAs; ii++)
 	{
 		for(jj = 0; jj < len_FA_max; jj++)
 		{
-			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 3, ii, len_FA_max, 5, num_of_FAs)]);
-			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 4, ii, len_FA_max, 5, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 0, ii, len_FA_max, 3, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 1, ii, len_FA_max, 3, num_of_FAs)]);
+			fprintf(f, "%f, ",  init_FA_coords[ind3D(jj, 2, ii, len_FA_max, 3, num_of_FAs)]);
 			fprintf(f, "%i, \n", ii);
 		}
 	}
