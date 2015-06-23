@@ -28,16 +28,16 @@ void point_neg(double* cur_point, double* next_point, double theta, double thi, 
 	next_point[2] = p_len*cos(thi) + cur_point[2];
 }
 
-int new_point_pos(double* pos, double* start_point, part_defs p_name)
+int new_point_pos(double* pos, double* start_point, part_defs pl)
 {
 	double* vec_of_theta = make1Darray(2*max_build_steps);
-	norm_dist(vec_of_theta, 2*max_build_steps, mean_MFA, sd_MFA); /* note because norm_dist produces 2 random numbers
+	norm_dist(vec_of_theta, 2*max_build_steps, pl.angle_lh, pl.sd_lh); /* note because norm_dist produces 2 random numbers
 																	this is 2x more cpu efficant than calling each time,
 																	trade of is that it uses more memory*/
 	double* vec_of_thi = make1Darray(2*max_build_steps);
-	norm_dist(vec_of_thi, 2*max_build_steps, mean_wall_interaction, sd_wall_interaction);
+	norm_dist(vec_of_thi, 2*max_build_steps, pl.angle_ld, pl.sd_ld);
 
-	double p_len = 2*p_name.R;
+	double p_len = 2*pl.R;
 	int ii, jj;
 	double* tmp_pos = make2Darray(max_build_steps, 3);
 	double* tmp_neg = make2Darray(max_build_steps, 3);

@@ -27,7 +27,9 @@ void create_init_state()
 	int ii, jj;
 
 	/* createing the problem space full of water */
-	int num_of_H2Os = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
+	int num_of_H2Os = (int)(length_of_problem_space/(H2O.R*2) + 1)*
+						(int)(height_of_problem_space/(H2O.R*2) + 1)*
+						(int)(depth_of_problem_space/(H2O.R*2) + 1);
 
 	/*intit array to store h2o coords*/
 	double* init_H2O_coords = make2Darray(num_of_H2Os, 3);
@@ -70,7 +72,7 @@ void create_init_state()
 	/* init a new array that is only as large as is needed */
 	double* init_FA_coords = make3Darray(len_FA_max, 3, num_of_FAs);
 
-	/* resize the positions/orentations array to be as short as the longest FA */
+	/* resize the positions array to be as short as the longest FA */
 	reduce3Darray(init_pos, 2*max_build_steps, 3, num_of_FAs, init_FA_coords, len_FA_max, 3, num_of_FAs);
 	/* NOTE here somewhere could implement the ability to have multiple chains inside each FA chunk
 	 * along with HCs etc inside the chains. Will try to code the project so that this is posable in the future
@@ -83,7 +85,7 @@ void create_init_state()
 	 */
 
 	/* at this point have init_H2O_coords which has the 3d coordinates for all of the water particles in the problem space before
-	 * FAs are deposited. Also have init_FA_coords which has the coordinates and orentations for each of the FA chunks TO BE deposited
+	 * FAs are deposited. Also have init_FA_coords which has the coordinates for each of the FA chunks TO BE deposited
 	 * NEXT need to deposit the FAs into the water and remove the displaced water
 	 */
 /*	for(ii = 0; ii < num_of_FAs; ii++)

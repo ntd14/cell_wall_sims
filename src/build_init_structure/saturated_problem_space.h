@@ -8,6 +8,6 @@
 #ifndef SATURATED_PROBLEM_SPACE_H_
 #define SATURATED_PROBLEM_SPACE_H_
 
-void sat_problem_space(double* pos, part_defs particle, int len);
+void sat_problem_space(double* pos, part_defs pl, int len);
 
 #endif /* SATURATED_PROBLEM_SPACE_H_ */
