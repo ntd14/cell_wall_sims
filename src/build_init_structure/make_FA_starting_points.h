@@ -9,6 +9,6 @@
 #define MAKE_FA_STARTING_POINTS_H_
 
 
-void starting_points(double* FA_starts);
+void starting_points(double* FA_starts, part_defs pl);
 
 #endif /* MAKE_FA_STARTING_POINTS_H_ */

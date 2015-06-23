@@ -12,7 +12,6 @@
 
 void sat_problem_space(double* pos, part_defs pl, int len)
 {
-	printf("entering sat_problem_space \n");
 	int ii, jj, kk, li;
 	li = 0;
 	for(ii=0; ii < (int)(length_of_problem_space/(pl.R*2.0) + 1); ii++)
@@ -28,5 +27,4 @@ void sat_problem_space(double* pos, part_defs pl, int len)
 			}
 		}
 	}
-	printf("exiting sat_problem_space \n");
 }
