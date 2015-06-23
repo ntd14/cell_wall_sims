@@ -13,8 +13,6 @@ int length_of_problem_space;
 int height_of_problem_space;
 int depth_of_problem_space;
 
-/*6 parameters to describe the cellulose chains for poly-elipsoids*/
-
 typedef struct partical_types {
 	double R; /* radius of particles */
 	double density; /* the desity of the particle type */
@@ -32,4 +30,6 @@ part_defs FA1;
 part_defs HC1;
 part_defs LG1;
 part_defs H2O;
+
+
 #endif /* PAR_DEFS_H_ */

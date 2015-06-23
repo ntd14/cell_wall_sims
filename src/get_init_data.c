@@ -60,21 +60,11 @@ void create_init_state()
 	/* resize the positions array to be as short as the longest FA */
 	reduce3Darray(init_posHC, 2*HC1.max_build_steps, 3, HC1.num_of, init_HC_coords, len_HC_max, 3, HC1.num_of);
 
-	/* NOTE here somewhere could implement the ability to have multiple chains inside each FA chunk
-	 * along with HCs etc inside the chains. Will try to code the project so that this is posable in the future
-	 */
-	/* NOTE could include HCs bridging FAs here as descrete particles, but using a signifcantly long attraction force to other FAs
-	 * should similate their presents implicetly. Draw the geometry with the forces to visuallise. Should even account for
-	 * the slip stick mechanisum of clemens, with one or two H bonds holding the FAs from parting, but lots holding from shear.
-	 * NOTE johns book pg 41-42 length of xylose 100-200 repeate units he stats xylose is most important. B-D 1,4'xylopyranose backbone units,
-	 * is predominantly O-acetyl-4-O-methylglucuronoxylan
-	 */
+	/* make hydrated state from above  */
+	/* pass init hydrated state to main function */
 
-	/* at this point have init_H2O_coords which has the 3d coordinates for all of the water particles in the problem space before
-	 * FAs are deposited. Also have init_FA_coords which has the coordinates for each of the FA chunks TO BE deposited
-	 * NEXT need to deposit the FAs into the water and remove the displaced water
-	 */
 
+	/* writing the different particle types to files in working dir */
 	FILE *h2o = fopen("h2o.vtk", "w");
 	if (h2o == NULL)
 	{
@@ -128,9 +118,6 @@ void create_init_state()
 		}
 	}
 	fclose(hc1);
-
-	/* make hydrated state from above  */
-	/* pass init hydrated state to main function */
 
 	printf("finished get_init_data \n");
 }
