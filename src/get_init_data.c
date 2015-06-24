@@ -23,7 +23,7 @@
 void create_init_state()
 {
 	printf("starting get init data \n");
-	int ii, jj;
+	int ii, jj, kk;
 
 	/* call to box making function note to truncate a value devide by 10 then type cast to an int eg want 34.32452 to go to box 3, (int)(34.32452/10) = 3
 	 * can then call the ind3D function with each value and the number of boxes in each direction to get a box id
@@ -76,7 +76,6 @@ void create_init_state()
 
 	for(ii = 0; ii < num_of_H2Os; ii++)
 	{
-		/* call some function to get the nlists */
 		p_ptr[ii] = malloc(sizeof(struct particle));
 		p_ptr[ii]->uid = ii;
 		p_ptr[ii]->x = &init_H2O_coords[ind2D(ii,0,num_of_H2Os,3)];
@@ -84,7 +83,43 @@ void create_init_state()
 		p_ptr[ii]->z = &init_H2O_coords[ind2D(ii,2,num_of_H2Os,3)];
 		p_ptr[ii]->ptype = &H2O;
 	}
-
+	printf("%i a\n", ii);
+	ii++;
+	int ii_out = ii;
+	for(kk = 0; kk < FA1.num_of; kk++)
+	{
+		for(jj = 0; jj < len_FA_max; jj++)
+		{
+			p_ptr[ii] = malloc(sizeof(struct particle));
+			p_ptr[ii]->uid = ii;
+			p_ptr[ii]->x = &init_FA_coords[ind3D(jj,0,kk,len_FA_max,FA1.num_of,3)];
+			p_ptr[ii]->y = &init_FA_coords[ind3D(jj,1,kk,len_FA_max,FA1.num_of,3)];
+			p_ptr[ii]->z = &init_FA_coords[ind3D(jj,2,kk,len_FA_max,FA1.num_of,3)];
+			p_ptr[ii]->ptype = &FA1;
+			ii++;
+		}
+	}
+	printf("%i b\n", ii);
+	ii_out = ii;
+	for(kk = 0; kk < HC1.num_of; kk++)
+	{
+		for(jj = 0; jj < len_HC_max; jj++)
+		{
+			p_ptr[ii] = malloc(sizeof(struct particle));
+			p_ptr[ii]->uid = ii;
+			p_ptr[ii]->x = &init_HC_coords[ind3D(jj,0,kk,len_HC_max,FA1.num_of,3)];
+			p_ptr[ii]->y = &init_HC_coords[ind3D(jj,1,kk,len_HC_max,FA1.num_of,3)];
+			p_ptr[ii]->z = &init_HC_coords[ind3D(jj,2,kk,len_HC_max,FA1.num_of,3)];
+			p_ptr[ii]->ptype = &HC1;
+			ii++;
+		}
+	}
+	int p_ptr_len = ii;
+	printf("%i c\n", p_ptr_len);
+	printf("%i \n", p_ptr[ii_out + 20]->uid);
+	printf("%f \n", *p_ptr[ii_out + 20]->x);
+	printf("%f \n", *p_ptr[ii_out + 20]->y);
+	printf("%f \n", *p_ptr[ii_out + 20]->z);
 
 	/* writing the different particle types to files in working dir */
 	FILE *h2o = fopen("h2o.vtk", "w");
