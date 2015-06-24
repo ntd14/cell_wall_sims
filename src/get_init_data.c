@@ -137,8 +137,6 @@ void create_init_state()
 		particles_list[ii] = p_ptr[ii];
 	}
 
-
-
 	for(ii = 0; ii < p_ptr_len; ii++)
 	{
 		printf("%f ", *particles_list[ii]->x);
