@@ -17,8 +17,8 @@ int box_hei = 50;
 int box_dep = 50;
 
 /*see header file for def of each entry*/
-part_defs FA1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, 0.1, 500, 15}; /* aprox 35% */
-part_defs HC1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, M_PI/4, 10, 30}; /* aprox 20% */
+part_defs FA1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, 0.1, 500, 100}; /* aprox 35% */
+part_defs HC1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, M_PI/4, 10, 200}; /* aprox 20% */
 part_defs H2O = {7.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 30% */
 part_defs LG1 = {7.0,  500.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 15% */
 

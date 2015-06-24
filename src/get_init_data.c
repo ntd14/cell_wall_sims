@@ -77,6 +77,10 @@ void create_init_state()
 	for(ii = 0; ii < num_of_H2Os; ii++)
 	{
 		p_ptr[ii] = malloc(sizeof(struct particle));
+		if(p_ptr[ii] == NULL)
+		{
+			printf("particle pointer creation failed in malloc");
+		}
 		p_ptr[ii]->uid = ii;
 		p_ptr[ii]->x = &init_H2O_coords[ind2D(ii,0,num_of_H2Os,3)];
 		p_ptr[ii]->y = &init_H2O_coords[ind2D(ii,1,num_of_H2Os,3)];
@@ -95,6 +99,10 @@ void create_init_state()
 					&& init_FA_coords[ind3D(jj,2,kk,len_FA_max,3,FA1.num_of)] >tol)
 			{
 				p_ptr[ii] = malloc(sizeof(struct particle));
+				if(p_ptr[ii] == NULL)
+				{
+					printf("particle pointer creation failed in malloc");
+				}
 				p_ptr[ii]->uid = ii;
 				p_ptr[ii]->x = &init_FA_coords[ind3D(jj,0,kk,len_FA_max,3,FA1.num_of)];
 				p_ptr[ii]->y = &init_FA_coords[ind3D(jj,1,kk,len_FA_max,3,FA1.num_of)];
@@ -111,16 +119,20 @@ void create_init_state()
 	{
 		for(jj = 0; jj < len_HC_max; jj++)
 		{
-			if(init_HC_coords[ind3D(jj,0,kk,len_HC_max,3,FA1.num_of)] > tol
-					&& init_HC_coords[ind3D(jj,1,kk,len_HC_max,3,FA1.num_of)] >tol
-					&& init_HC_coords[ind3D(jj,2,kk,len_HC_max,3,FA1.num_of)] >tol)
+			if(init_HC_coords[ind3D(jj,0,kk,len_HC_max,3,HC1.num_of)] > tol
+					&& init_HC_coords[ind3D(jj,1,kk,len_HC_max,3,HC1.num_of)] >tol
+					&& init_HC_coords[ind3D(jj,2,kk,len_HC_max,3,HC1.num_of)] >tol)
 			{
 
 			p_ptr[ii] = malloc(sizeof(struct particle));
+			if(p_ptr[ii] == NULL)
+			{
+				printf("particle pointer creation failed in malloc");
+			}
 			p_ptr[ii]->uid = ii;
-			p_ptr[ii]->x = &init_HC_coords[ind3D(jj,0,kk,len_HC_max,3,FA1.num_of)];
-			p_ptr[ii]->y = &init_HC_coords[ind3D(jj,1,kk,len_HC_max,3,FA1.num_of)];
-			p_ptr[ii]->z = &init_HC_coords[ind3D(jj,2,kk,len_HC_max,3,FA1.num_of)];
+			p_ptr[ii]->x = &init_HC_coords[ind3D(jj,0,kk,len_HC_max,3,HC1.num_of)];
+			p_ptr[ii]->y = &init_HC_coords[ind3D(jj,1,kk,len_HC_max,3,HC1.num_of)];
+			p_ptr[ii]->z = &init_HC_coords[ind3D(jj,2,kk,len_HC_max,3,HC1.num_of)];
 			p_ptr[ii]->ptype = &HC1;
 			p_ptr[ii]->nlistlen = 3;
 			ii++;
@@ -128,23 +140,23 @@ void create_init_state()
 		}
 	}
 	printf("%i c\n", ii);
-	int p_ptr_len = ii;
+	int plist_len = ii;
 
-	struct particle *particles_list[p_ptr_len];
+	struct particle *particles_list[plist_len];
 
-	for(ii=0; ii < p_ptr_len; ii++)
+	for(ii=0; ii < plist_len; ii++)
 	{
 		particles_list[ii] = p_ptr[ii];
 	}
-
-	for(ii = 0; ii < p_ptr_len; ii++)
+	free(*p_ptr);
+	for(ii = 0; ii < plist_len; ii++)
 	{
 		printf("%f ", *particles_list[ii]->x);
 		printf("%f ", *particles_list[ii]->y);
 		printf("%f ", *particles_list[ii]->z);
 		printf("%i \n", particles_list[ii]->nlistlen);
 	}
-
+	printf("finsished building, writing state to file \n");
 	FILE *allp = fopen("allp.vtk", "w");
 	if (allp == NULL)
 	{
@@ -152,7 +164,7 @@ void create_init_state()
 		    exit(1);
 	}
 	fprintf(allp, "x, y, z, type,\n");
-	for(ii = 0; ii < p_ptr_len; ii++)
+	for(ii = 0; ii < plist_len; ii++)
 	{
 		fprintf(allp, "%f, ",  *particles_list[ii]->x);
 		fprintf(allp, "%f, ",  *particles_list[ii]->y);
@@ -162,7 +174,6 @@ void create_init_state()
 	}
 	fclose(allp);
 
-	/* writing the different particle types to files in working dir */
 /*	FILE *h2o = fopen("h2o.vtk", "w");
 	if (h2o == NULL)
 	{
@@ -215,8 +226,8 @@ void create_init_state()
 			fprintf(hc1, "%i, \n", ii);
 		}
 	}
-	fclose(hc1);
-*/
+	fclose(hc1);*/
+
 	printf("finished get_init_data \n");
 }
 

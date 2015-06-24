@@ -51,7 +51,9 @@ int new_point_pos(double* pos, double* start_point, part_defs pl)
 		cur_point_neg[ii] = start_point[ii];
 	}
 	ii = 0;
-	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space && cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && ii < pl.max_build_steps)
+	while(cur_point_pos[0] < length_of_problem_space-2*pl.R && cur_point_pos[1] < height_of_problem_space-2*pl.R && cur_point_pos[2] < depth_of_problem_space-2*pl.R
+			&& cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && cur_point_pos[2] > 0
+			&& ii < pl.max_build_steps)
 	{
 		point_pos(cur_point_pos, next_point_pos, vec_of_theta[ii], vec_of_thi[ii], p_len);
 
@@ -66,7 +68,9 @@ int new_point_pos(double* pos, double* start_point, part_defs pl)
 
 	/* update here for 3D */
 	ii = 0;
-	while(cur_point_neg[0] < length_of_problem_space && cur_point_neg[1] < height_of_problem_space && cur_point_neg[0] > 0 && cur_point_neg[1] > 0 && ii < pl.max_build_steps)
+	while(cur_point_neg[0] < length_of_problem_space-2*pl.R && cur_point_neg[1] < height_of_problem_space-2*pl.R && cur_point_neg[2] < depth_of_problem_space-2*pl.R
+			&& cur_point_neg[0] > 0 && cur_point_neg[1] > 0 && cur_point_neg[2] > 0
+			&& ii < pl.max_build_steps)
 	{
 		point_neg(cur_point_neg, next_point_neg, vec_of_theta[ii+pl.max_build_steps],vec_of_thi[ii+pl.max_build_steps], p_len);
 		for(jj = 0; jj < 3; jj++)
