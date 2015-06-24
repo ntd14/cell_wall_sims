@@ -18,7 +18,7 @@ double* make2Darray(int nrow, int ncol);
 
 double* make3Darray(int nrow, int ncol, int ndep);
 
-double* reduce1Darray(double* array, int new_len, int old_len);
+void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len);
 
 double* reduce2Darray(double* array, int old_nrow, int old_ncol, int new_nrow, int new_ncol);
 

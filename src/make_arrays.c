@@ -54,16 +54,14 @@ double* make3Darray(int nrow, int ncol, int ndep)
 	return array;
 }
 
-double* reduce1Darray(double* array, int new_len, int old_len)
+void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len)
 {
-	double* tmp_array = make1Darray(new_len);
 	int ii;
 	for(ii = 0; ii < new_len; ii++)
 	{
-			tmp_array[ii] = array[ii];
+			new_array[ii] = old_array[ii];
 	}
-	free(array);
-	return tmp_array;
+	free(old_array);
 }
 
 

@@ -8,9 +8,9 @@
 #include <math.h>
 
 /* define size of problem space in nm */
-int length_of_problem_space = 1000;
-int height_of_problem_space = 1000;
-int depth_of_problem_space = 1000;
+int length_of_problem_space = 100;
+int height_of_problem_space = 100;
+int depth_of_problem_space = 100;
 
 int box_len = 50; /*NOTE the problem space dims must be devidable to ints by the box sizes, these are truncation values*/
 int box_hei = 50;
