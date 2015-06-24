@@ -12,6 +12,9 @@ int length_of_problem_space = 1000;
 int height_of_problem_space = 1000;
 int depth_of_problem_space = 1000;
 
+int box_len = 10; /*NOTE the problem space dims must be devidable to ints by the box sizes*/
+int box_hei = 10;
+int box_dep = 10;
 
 /*see header file for def of each entry*/
 part_defs FA1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, 0.1, 500, 15}; /* aprox 35% */

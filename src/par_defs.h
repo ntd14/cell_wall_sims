@@ -13,6 +13,10 @@ int length_of_problem_space;
 int height_of_problem_space;
 int depth_of_problem_space;
 
+int box_len;
+int box_hei;
+int box_dep;
+
 typedef struct partical_types {
 	double R; /* radius of particles */
 	double density; /* the desity of the particle type */

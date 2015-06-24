@@ -46,3 +46,5 @@ int bchain(double* init_pos, part_defs pl)
 	/* return the length of the longest chain */
 	return(len_max);
 }
+/* Will probably put in the ability to build chains of multiple particle thicknesses and types here some where later on */
+

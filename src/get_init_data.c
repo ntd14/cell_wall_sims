@@ -17,8 +17,6 @@
 #include <stdlib.h>
 #include "make_arrays.h"
 #include "par_defs.h"
-#include "build_init_structure/make_FA_starting_points.h"
-#include "build_init_structure/calc_point_pos_single_FA.h"
 #include "build_init_structure/saturated_problem_space.h"
 #include "build_init_structure/build_chains.h"
 
@@ -26,6 +24,13 @@ void create_init_state()
 {
 	printf("starting get init data \n");
 	int ii, jj;
+	int uid = 1;
+
+	/* call to box making function note to truncate a value devide by 10 then type cast to an int eg want 34.32452 to go to box 3, (int)(34.32452/10) = 3
+	 * can then call the ind3D function with each value and the number of boxes in each direction to get a box id
+	 * Another advantage of this is can use ind3D(x+-1,y+-1,z+-1) to get sorunding box ids and shouldnt ever need to store a list of them
+	 * just a nabour list of uids, and poentually a seach short list of uids in further away boxes.
+	 */
 
 	/* createing the problem space full of water */
 	int num_of_H2Os = (int)(length_of_problem_space/(H2O.R*2) + 1)*
@@ -37,6 +42,8 @@ void create_init_state()
 
 	/*init_H2O_coords houses the init coords of the water. */
 	sat_problem_space(init_H2O_coords, H2O, num_of_H2Os);
+
+	/* call to function to store particles in boxes with uids, NOTE uid needs to be passed to and from functions, maybe as int* */
 
 	/* starting to build FAs and HCs*/
 
