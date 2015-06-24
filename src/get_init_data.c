@@ -24,7 +24,6 @@ void create_init_state()
 {
 	printf("starting get init data \n");
 	int ii, jj;
-	int uid = 1;
 
 	/* call to box making function note to truncate a value devide by 10 then type cast to an int eg want 34.32452 to go to box 3, (int)(34.32452/10) = 3
 	 * can then call the ind3D function with each value and the number of boxes in each direction to get a box id
@@ -69,6 +68,22 @@ void create_init_state()
 
 	/* make hydrated state from above  */
 	/* pass init hydrated state to main function */
+
+
+	/* call to function to create the particles */
+	int total_num_pls = num_of_H2Os + len_FA_max*FA1.num_of + len_HC_max*HC1.num_of;
+	struct particle *p_ptr[total_num_pls];
+
+	for(ii = 0; ii < num_of_H2Os; ii++)
+	{
+		/* call some function to get the nlists */
+		p_ptr[ii] = malloc(sizeof(struct particle));
+		p_ptr[ii]->uid = ii;
+		p_ptr[ii]->x = &init_H2O_coords[ind2D(ii,0,num_of_H2Os,3)];
+		p_ptr[ii]->y = &init_H2O_coords[ind2D(ii,1,num_of_H2Os,3)];
+		p_ptr[ii]->z = &init_H2O_coords[ind2D(ii,2,num_of_H2Os,3)];
+		p_ptr[ii]->ptype = &H2O;
+	}
 
 
 	/* writing the different particle types to files in working dir */

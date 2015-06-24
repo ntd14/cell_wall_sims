@@ -36,4 +36,39 @@ part_defs LG1;
 part_defs H2O;
 
 
+typedef struct connection_types {
+	double mint; /* min distance over which tension acts  */
+	double maxt; /* max distance over which tension acts */
+	double forcet; /* tensile force */
+	double minc;
+	double maxc;
+	double forcec;
+} con_defs;
+
+con_defs FA1FA1strong;
+con_defs FA1FA1weak;
+con_defs HC1HC1strong;
+con_defs HC1HC1weak;
+con_defs H2OH2O;
+
+con_defs FA1HC1;
+con_defs FA1H2O;
+con_defs FA1LG1;
+con_defs HC1H2O;
+con_defs HC1LG1;
+con_defs H2OLG1;
+
+
+struct particle {
+	int uid;
+	double* x;
+	double* y;
+	double* z;
+	part_defs* ptype;
+	int nlistlen;
+	int* nlist;
+	con_defs* nltype;
+};
+
+
 #endif /* PAR_DEFS_H_ */
