@@ -8,6 +8,6 @@
 #ifndef BUILD_CHAINS_H_
 #define BUILD_CHAINS_H_
 
-int bchain(double* init_posFA, part_defs pl);
+void bchain(double* init_posFA, part_defs pl);
 
 #endif /* BUILD_CHAINS_H_ */

@@ -15,7 +15,7 @@
 #include "calc_point_pos_single_FA.h"
 
 /* build all chains of particle type pl */
-int bchain(double* init_pos, part_defs pl)
+void bchain(double* init_pos, part_defs pl)
 {
 	/* init an array to hold the starting points for all of the chains */
 	double* spa = make2Darray(pl.num_of, 3);
@@ -44,7 +44,6 @@ int bchain(double* init_pos, part_defs pl)
 		}
 	}
 	/* return the length of the longest chain */
-	return(len_max);
 }
 /* Will probably put in the ability to build chains of multiple particle thicknesses and types here some where later on */
 

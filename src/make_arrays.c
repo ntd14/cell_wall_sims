@@ -24,7 +24,7 @@ int ind3D(int i,int j,int k, int nrow, int ncol, int ndep)
 
 double* make1Darray(int len)
 {
-	double* array = (double *)malloc(len*sizeof(double));
+	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
 		printf("make1Darray failed in malloc");
@@ -35,7 +35,7 @@ double* make1Darray(int len)
 double* make2Darray(int nrow, int ncol)
 {
 	int len = nrow*ncol;
-	double* array = (double *)malloc(len*sizeof(double));
+	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
 		printf("make2Darray failed in malloc");
@@ -46,7 +46,7 @@ double* make2Darray(int nrow, int ncol)
 double* make3Darray(int nrow, int ncol, int ndep)
 {
 	int len = nrow*ncol*ndep;
-	double* array = (double *)malloc(len*sizeof(double));
+	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
 		printf("make3Darray failed in malloc");
