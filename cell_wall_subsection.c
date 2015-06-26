@@ -25,33 +25,27 @@ int main(void) /*this may change to take in arguments later*/
 	/* calc total potentiual number of particles */
 	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + 2*HC1.max_build_steps*HC1.num_of;
 
-	/*init a block of mem for the structure that will be filled, note the predetermined max size. */
-	struct particle* p_ptr = calloc(total_num_pls,sizeof(struct particle));
-	if(p_ptr == NULL)
-	{
-		printf("calloc failed when init partical* p_ptr in cell_wall_subsection \n");
-	}
+	/* init 2D array of coords */
+	double* init_coor_array = make2Darray(total_num_pls, 4);
 
-	/* filling the p_ptr struct with all of the inital particle states and returning the number of particles acually created*/
-	int plist_len = create_init_state(H2O.num_of, total_num_pls, p_ptr);
-	printf("Number of particles: %i \n", plist_len);
+	/* call function to fill with init coords */
+	int plist_len = create_init_state(init_coor_array, total_num_pls);
 
-	/* init a new array of strcuts to hold each particle that was created */
+	/* reduce array size to only used elements */
+	double* init_coors = make2Darray(plist_len, 4);
+	reduce2Darray(init_coor_array, total_num_pls, 4, init_coors, plist_len, 4);
+
+	/* init a new array of strcuts to hold each particle that was created
+	 *
 	struct particle* all_particles = calloc(plist_len,sizeof(struct particle));
 	if(all_particles == NULL)
 	{
 		printf("calloc failed when init partical* all_particles in cell_wall_subsection \n");
-	}
+	}*/
 
-	/* fill the new particle strut array with the created particles Note this substatually reduces the mem used to hold the particle states as is not padded to max num*/
-	for(ii = 0;ii<plist_len;ii++)
-	{
-		all_particles[ii] = p_ptr[ii];
-	}
+	/* call to function to fill struct with everything */
 
-	/* free up the mem from the old structs and set the pointer to NULL*/
-	free(p_ptr);
-	p_ptr = NULL;
+
 	/* at this point have an array of structs "all_particles" in there init positions, before any work is done*/
 
 

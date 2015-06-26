@@ -8,6 +8,6 @@
 #ifndef GET_INIT_DATA_H_
 #define GET_INIT_DATA_H_
 
-int create_init_state(int num_of_H2Os, int total_num_pls, struct particle* p_ptr);
+int create_init_state(double * coor_array, int ca_len);
 
 #endif /* GET_INIT_DATA_H_ */

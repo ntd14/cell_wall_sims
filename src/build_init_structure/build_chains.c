@@ -34,8 +34,8 @@ void bchain(double* init_pos, part_defs pl)
 		tmp_sp[1] = spa[ind2D(ii,1,pl.num_of,3)];
 		tmp_sp[2] = spa[ind2D(ii,2,pl.num_of,3)];
 
-		/* return the coordinates for each chunk in current chain */
-		len = new_point_pos((init_pos+ind3D(0,0,ii, 2*pl.max_build_steps, 3, pl.num_of)), tmp_sp, pl);
+		/* return the coordinates for each chunk in current chain
+		len = new_point_pos((init_pos+ind3D(0,0,ii, 2*pl.max_build_steps, 3, pl.num_of)), tmp_sp, pl);*/
 
 		/* update the max length that a created FA has */
 		if(len > len_max)

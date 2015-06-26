@@ -28,7 +28,7 @@ void point_neg(double* cur_point, double* next_point, double theta, double thi, 
 	next_point[2] = p_len*cos(thi) + cur_point[2];
 }
 
-int new_point_pos(double* pos, double* start_point, part_defs pl)
+int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int alen)
 {
 	double* vec_of_theta = make1Darray(2*pl.max_build_steps);
 	norm_dist(vec_of_theta, 2*pl.max_build_steps, pl.angle_lh, pl.sd_lh); /* note because norm_dist produces 2 random numbers
@@ -87,29 +87,26 @@ int new_point_pos(double* pos, double* start_point, part_defs pl)
 	{
 		for(jj = 0; jj < 3; jj++)
 		{
-			pos[ind2D(kk, jj, 2*pl.max_build_steps, 3)] = tmp_neg[ind2D(ii, jj, pl.max_build_steps, 3)];
+			pos[ind2D(kk + li, jj, alen, 4)] = tmp_neg[ind2D(ii, jj, pl.max_build_steps, 3)];
 		}
 		kk++;
 	}
 
-	pos[ind2D(tmp_neg_len, 0, 2*pl.max_build_steps, 3)] = start_point[0];
-	pos[ind2D(tmp_neg_len, 1, 2*pl.max_build_steps, 3)] = start_point[1];
-	pos[ind2D(tmp_neg_len, 2, 2*pl.max_build_steps, 3)] = start_point[2];
+	pos[ind2D(tmp_neg_len + li, 0, alen, 4)] = start_point[0];
+	pos[ind2D(tmp_neg_len + li, 1, alen, 4)] = start_point[1];
+	pos[ind2D(tmp_neg_len + li, 2, alen, 4)] = start_point[2];
 
-	/* issues is here somewhere */
 	for(ii = 0; ii < tmp_pos_len; ii++)
 	{
 		for(jj = 0; jj < 3; jj++)
 		{
-			pos[ind2D(ii+tmp_neg_len+1, jj, 2*pl.max_build_steps, 3)] = tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)];
+			pos[ind2D(ii+tmp_neg_len+1 + li, jj, alen, 4)] = tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)];
 		}
 	}
-/*	for(ii=0;ii< tmp_neg_len+tmp_pos_len+1; ii++)
+	for(ii=0;ii<tmp_neg_len+tmp_pos_len+1;ii++)
 	{
-		printf("%f ", pos[ind2D(ii, 0, 2*FA1.max_build_steps, 3)]);
-		printf("%f ", pos[ind2D(ii, 1, 2*FA1.max_build_steps, 3)]);
-		printf("%f \n", pos[ind2D(ii, 2, 2*FA1.max_build_steps, 3)]);
+		pos[ind2D(li, 3, alen, 4)] = (double)li;
+		li++;
 	}
-	printf("\n                     \n");*/
-	return tmp_neg_len+tmp_pos_len+1;
+	return li;
 }
