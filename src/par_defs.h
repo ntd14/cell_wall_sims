@@ -18,6 +18,7 @@ int box_hei;
 int box_dep;
 
 typedef struct partical_types {
+	char* name;
 	double R; /* radius of particles */
 	double density; /* the desity of the particle type */
 	double angle_lh; /* MFA */
@@ -37,6 +38,8 @@ part_defs H2O;
 
 
 typedef struct connection_types {
+	char* p1_name; /* name of one particle in connection */
+	char* p2_name; /* name of second particle in connection */
 	double mint; /* min distance over which tension acts  */
 	double maxt; /* max distance over which tension acts */
 	double forcet; /* tensile force */
@@ -61,10 +64,10 @@ con_defs H2OLG1;
 
 struct particle {
 	int uid;
-	double* x;
-	double* y;
-	double* z;
-	part_defs* ptype;
+	double x;
+	double y;
+	double z;
+	part_defs ptype;
 	int nlistlen;
 	int* nlist;
 	con_defs* nltype;

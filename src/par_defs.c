@@ -17,21 +17,21 @@ int box_hei = 50;
 int box_dep = 50;
 
 /*see header file for def of each entry*/
-part_defs FA1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, 0.1, 500, 100}; /* aprox 35% */
-part_defs HC1 = {7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, M_PI/4, 10, 500}; /* aprox 20% */
-part_defs H2O = {7.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 30% */
-part_defs LG1 = {7.0,  500.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 15% */
+part_defs FA1 = {"FA1", 7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, 0.1, 500, 10}; /* aprox 35% */
+part_defs HC1 = {"HC1", 7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, M_PI/4, 10, 50}; /* aprox 20% */
+part_defs H2O = {"H2O", 7.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 30% */
+part_defs LG1 = {"LG1", 7.0,  500.0, 0.0, 0.0, 0.0, 0.0, 0, 0}; /* aprox 15% */
 
 
-con_defs FA1FA1strong = {14, 100, -1000, 0, 14, 1000};
-con_defs FA1FA1weak = {14, 100, -1000, 0, 14, 1000};
-con_defs HC1HC1strong = {14, 100, -1000, 0, 14, 1000};
-con_defs HC1HC1weak = {14, 100, -1000, 0, 14, 1000};
-con_defs H2OH20 = {14, 100, -1000, 0, 14, 1000};
+con_defs FA1FA1strong = {"FA1", "FA1", 14, 100, -1000, 0, 14, 1000};
+con_defs FA1FA1weak = {"FA1", "FA1", 14, 100, -1000, 0, 14, 1000};
+con_defs HC1HC1strong = {"HC1", "HC1", 14, 100, -1000, 0, 14, 1000};
+con_defs HC1HC1weak = {"HC1", "HC1", 14, 100, -1000, 0, 14, 1000};
+con_defs H2OH2O = {"H2O", "H2O", 14, 100, -1000, 0, 14, 1000};
 
-con_defs FA1HC1 = {14, 100, -1000, 0, 14, 1000};
-con_defs FA1H20 = {14, 100, -1000, 0, 14, 1000};
-con_defs FA1LG1 = {14, 100, -1000, 0, 14, 1000};
-con_defs HC1H2O = {14, 100, -1000, 0, 14, 1000};
-con_defs HC1LG1 = {14, 100, -1000, 0, 14, 1000};
-con_defs H20LG1 = {14, 100, -1000, 0, 14, 1000};
+con_defs FA1HC1 = {"FA1", "HC1", 14, 100, -1000, 0, 14, 1000};
+con_defs FA1H2O = {"FA1", "H2O", 14, 100, -1000, 0, 14, 1000};
+con_defs FA1LG1 = {"FA1", "LG1", 14, 100, -1000, 0, 14, 1000};
+con_defs HC1H2O = {"HC1", "H2O", 14, 100, -1000, 0, 14, 1000};
+con_defs HC1LG1 = {"HC1", "LG1", 14, 100, -1000, 0, 14, 1000};
+con_defs H2OLG1 = {"H2O", "LG1", 14, 100, -1000, 0, 14, 1000};

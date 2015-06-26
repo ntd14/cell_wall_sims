@@ -21,10 +21,15 @@
 #include "build_init_structure/build_chains.h"
 
 
-int create_init_state(int num_of_H2Os, double* init_H2O_coords, double* init_posFA, double* init_posHC, int total_num_pls, struct particle* p_ptr)
+int create_init_state(int num_of_H2Os, int total_num_pls, struct particle* p_ptr)
 {
 	printf("in get init data \n");
 	int ii, jj, kk;
+	/* init arrays to store coords */
+	double* init_H2O_coords = make2Darray(num_of_H2Os, 3);
+	double* init_posFA = make3Darray(2*FA1.max_build_steps, 3, FA1.num_of);
+	double* init_posHC = make3Darray(2*HC1.max_build_steps, 3, HC1.num_of);
+
 	/* create all of the coords for the water particles */
 	sat_problem_space(init_H2O_coords, H2O, num_of_H2Os);
 	/* make the 3d arrays for the coordinates of chains */
@@ -35,10 +40,10 @@ int create_init_state(int num_of_H2Os, double* init_H2O_coords, double* init_pos
 	for(ii = 0; ii < num_of_H2Os; ii++)
 	{
 		p_ptr[ii].uid = ii;
-		p_ptr[ii].x = &init_H2O_coords[ind2D(ii,0,num_of_H2Os,3)];
-		p_ptr[ii].y = &init_H2O_coords[ind2D(ii,1,num_of_H2Os,3)];
-		p_ptr[ii].z = &init_H2O_coords[ind2D(ii,2,num_of_H2Os,3)];
-		p_ptr[ii].ptype = &H2O;
+		p_ptr[ii].x = init_H2O_coords[ind2D(ii,0,num_of_H2Os,3)];
+		p_ptr[ii].y = init_H2O_coords[ind2D(ii,1,num_of_H2Os,3)];
+		p_ptr[ii].z = init_H2O_coords[ind2D(ii,2,num_of_H2Os,3)];
+		p_ptr[ii].ptype = H2O;
 		/* need to some how create a vector of NN particles, and the length of that vector */
 
 		/* call function takes in int x, y, z and array for box ids, and num of layers returns array of bids
@@ -59,10 +64,10 @@ int create_init_state(int num_of_H2Os, double* init_H2O_coords, double* init_pos
 					&& init_posFA[ind3D(jj,2,kk,2*FA1.max_build_steps,3,FA1.num_of)] >tol)
 			{
 				p_ptr[ii].uid = ii;
-				p_ptr[ii].x = &init_posFA[ind3D(jj,0,kk,2*FA1.max_build_steps,3,FA1.num_of)];
-				p_ptr[ii].y = &init_posFA[ind3D(jj,1,kk,2*FA1.max_build_steps,3,FA1.num_of)];
-				p_ptr[ii].z = &init_posFA[ind3D(jj,2,kk,2*FA1.max_build_steps,3,FA1.num_of)];
-				p_ptr[ii].ptype = &FA1;
+				p_ptr[ii].x = init_posFA[ind3D(jj,0,kk,2*FA1.max_build_steps,3,FA1.num_of)];
+				p_ptr[ii].y = init_posFA[ind3D(jj,1,kk,2*FA1.max_build_steps,3,FA1.num_of)];
+				p_ptr[ii].z = init_posFA[ind3D(jj,2,kk,2*FA1.max_build_steps,3,FA1.num_of)];
+				p_ptr[ii].ptype = FA1;
 				/* need to some how create a vector of NN particles, and the length of that vector */
 				ii++;
 			}
@@ -78,10 +83,10 @@ int create_init_state(int num_of_H2Os, double* init_H2O_coords, double* init_pos
 					&& init_posHC[ind3D(jj,2,kk,2*HC1.max_build_steps,3,HC1.num_of)] >tol)
 			{
 			p_ptr[ii].uid = ii;
-			p_ptr[ii].x = &init_posHC[ind3D(jj,0,kk,2*HC1.max_build_steps,3,HC1.num_of)];
-			p_ptr[ii].y = &init_posHC[ind3D(jj,1,kk,2*HC1.max_build_steps,3,HC1.num_of)];
-			p_ptr[ii].z = &init_posHC[ind3D(jj,2,kk,2*HC1.max_build_steps,3,HC1.num_of)];
-			p_ptr[ii].ptype = &HC1;
+			p_ptr[ii].x = init_posHC[ind3D(jj,0,kk,2*HC1.max_build_steps,3,HC1.num_of)];
+			p_ptr[ii].y = init_posHC[ind3D(jj,1,kk,2*HC1.max_build_steps,3,HC1.num_of)];
+			p_ptr[ii].z = init_posHC[ind3D(jj,2,kk,2*HC1.max_build_steps,3,HC1.num_of)];
+			p_ptr[ii].ptype = HC1;
 			/* need to some how create a vector of NN particles, and the length of that vector */
 			ii++;
 			}
@@ -90,6 +95,11 @@ int create_init_state(int num_of_H2Os, double* init_H2O_coords, double* init_pos
 	/* from here calc and store Slist and Nlists */
 	/* storing the number of particles and passing it out to the main function */
 	int plist_len = ii;
+
+	free(init_H2O_coords);init_H2O_coords = NULL;
+	free(init_posFA);init_posFA = NULL;
+	free(init_posHC);init_posHC = NULL;
+
 	printf("leaving get_init_data \n");
 	return(plist_len);
 }
