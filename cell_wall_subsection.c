@@ -35,13 +35,28 @@ int main(void) /*this may change to take in arguments later*/
 	double* init_coors = make2Darray(plist_len, 4);
 	reduce2Darray(init_coor_array, total_num_pls, 4, init_coors, plist_len, 4);
 
-	/* init a new array of strcuts to hold each particle that was created
-	 *
-	struct particle* all_particles = calloc(plist_len,sizeof(struct particle));
-	if(all_particles == NULL)
+	/* init a new array of strcuts to hold each particle that was created */
+	struct particle* old_particles = calloc(plist_len,sizeof(struct particle));
+	if(old_particles == NULL)
 	{
-		printf("calloc failed when init partical* all_particles in cell_wall_subsection \n");
-	}*/
+		printf("calloc failed when init particle* old_particles in cell_wall_subsection \n");
+	}
+
+	/* start filling the structure. still need to create NN lists. strong bonds, probably just check if
+	 * the next point in the series is within some dist and if it is, and it is the same type, strong bond it.
+	 * For other bonds, universal upward diag search, and create two? lists, NN and shortlist. probably just store
+	 * pointers to there struct entries
+	 */
+
+/*
+	for(ii=0;ii<plist_len;ii++)
+	{
+		printf("%f ", init_coors[ind2D(ii,0,plist_len,4)]);
+		printf("%f ", init_coors[ind2D(ii,1,plist_len,4)]);
+		printf("%f ", init_coors[ind2D(ii,2,plist_len,4)]);
+		printf("%f \n", init_coors[ind2D(ii,3,plist_len,4)]);
+	}
+*/
 
 	/* call to function to fill struct with everything */
 

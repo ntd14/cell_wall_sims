@@ -61,11 +61,11 @@ con_defs H2OLG1;
 
 
 struct particle {
-	int uid;
-	double x;
-	double y;
-	double z;
-	part_defs ptype;
+	int* uid;
+	double* x;
+	double* y;
+	double* z;
+	part_defs* ptype;
 	int nlistlen;
 	int* nlist[30]; /* note the length is the max number of connections any particle can have at one time */
 	con_defs* nltype[30];
