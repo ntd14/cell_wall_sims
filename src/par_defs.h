@@ -13,9 +13,7 @@ int length_of_problem_space;
 int height_of_problem_space;
 int depth_of_problem_space;
 
-int box_len;
-int box_hei;
-int box_dep;
+double max_ndist;
 
 typedef struct partical_types {
 	char* name;
@@ -25,7 +23,7 @@ typedef struct partical_types {
 	double angle_ld; /* angle of travel in depth direction, this is for mixing in radial direction */
 	double sd_lh; /* MFA standard devation, sd between each particle position in distribution with mean MFA */
 	double sd_ld; /* standard devation for the depth/radial interaction */
-	int max_build_steps; /* the maximum number of FA chunks to be used in the positive and negative directions. this is the limit of how many chunks can be in each FA */
+	int max_build_steps; /* the maximum number of chunks to be used in the positive and negative directions. this is the limit of how many chunks can be in each FA */
 	int num_of; /* number of chains of that particle to create */
 
 } part_defs;
@@ -69,8 +67,8 @@ struct particle {
 	double z;
 	part_defs ptype;
 	int nlistlen;
-	int* nlist;
-	con_defs* nltype;
+	int* nlist[30]; /* note the length is the max number of connections any particle can have at one time */
+	con_defs* nltype[30];
 };
 
 

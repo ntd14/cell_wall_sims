@@ -43,6 +43,24 @@ void bchain(double* init_pos, part_defs pl)
 			len_max = len;
 		}
 	}
+	int jj, kk;
+	double tol = 0.0000000001;
+	for(kk = 0; kk < pl.num_of; kk++)
+		{
+			for(jj = 0; jj < 2*pl.max_build_steps; jj++)
+			{
+				if(init_pos[ind3D(jj,0,kk,2*pl.max_build_steps,3,pl.num_of)] > tol
+						&& init_pos[ind3D(jj,1,kk,2*pl.max_build_steps,3,pl.num_of)] >tol
+						&& init_pos[ind3D(jj,2,kk,2*pl.max_build_steps,3,pl.num_of)] >tol)
+				{
+
+					printf("%f ", init_pos[ind3D(jj,0,kk,2*pl.max_build_steps,3,pl.num_of)]);
+					printf("%f ", init_pos[ind3D(jj,1,kk,2*pl.max_build_steps,3,pl.num_of)]);
+					printf("%f \n", init_pos[ind3D(jj,2,kk,2*pl.max_build_steps,3,pl.num_of)]);
+
+				}
+			}
+		}
 	/* return the length of the longest chain */
 }
 /* Will probably put in the ability to build chains of multiple particle thicknesses and types here some where later on */

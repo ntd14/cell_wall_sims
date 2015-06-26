@@ -27,7 +27,7 @@ double* make1Darray(int len)
 	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
-		printf("make1Darray failed in malloc");
+		printf("make1Darray failed in calloc");
 	}
 	return array;
 }
@@ -38,7 +38,7 @@ double* make2Darray(int nrow, int ncol)
 	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
-		printf("make2Darray failed in malloc");
+		printf("make2Darray failed in calloc");
 	}
 	return array;
 }
@@ -49,7 +49,7 @@ double* make3Darray(int nrow, int ncol, int ndep)
 	double* array = (double *)calloc(len,sizeof(double));
 	if(array == NULL)
 	{
-		printf("make3Darray failed in malloc");
+		printf("make3Darray failed in calloc");
 	}
 	return array;
 }
