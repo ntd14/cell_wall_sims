@@ -8,6 +8,6 @@
 #ifndef SATURATED_PROBLEM_SPACE_H_
 #define SATURATED_PROBLEM_SPACE_H_
 
-int sat_problem_space(double* pos, int li, part_defs pl, int len);
+int sat_problem_space(double* pos, int li, part_defs pl, int alen);
 
 #endif /* SATURATED_PROBLEM_SPACE_H_ */

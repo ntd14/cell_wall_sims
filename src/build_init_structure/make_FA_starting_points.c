@@ -23,6 +23,7 @@ void make_start_point(double* start_point)
 /* use above to calc the starting points for each FA */
 void starting_points(double* FA_starts, part_defs pl)
 {
+	printf("in starting_points \n");
 	int ii, jj;
 	for(ii = 0; ii < pl.num_of; ii++)
 	{
@@ -34,4 +35,5 @@ void starting_points(double* FA_starts, part_defs pl)
 			FA_starts[ind2D(ii, jj, pl.num_of, 3)] = start_point[jj];
 		}
 	}
+	printf("exiting starting points \n");
 }

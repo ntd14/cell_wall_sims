@@ -19,7 +19,7 @@
 
 int main(void) /*this may change to take in arguments later*/
 {
-	printf("starting get init data \n");
+	printf("entering main \n");
 	int ii;
 
 	/* calc total potentiual number of particles */
@@ -29,7 +29,9 @@ int main(void) /*this may change to take in arguments later*/
 	double* init_coor_array = make2Darray(total_num_pls, 4);
 
 	/* call function to fill with init coords */
+	printf("entering init data \n");
 	int plist_len = create_init_state(init_coor_array, total_num_pls);
+	printf("exiting init data \n");
 
 	/* reduce array size to only used elements */
 	double* init_coors = make2Darray(plist_len, 4);
@@ -92,7 +94,7 @@ int main(void) /*this may change to take in arguments later*/
 	}
 	fclose(allp);*/
 
-	printf("write to file finished");
+	printf("end of main \n");
 	return 0;
 }
 

@@ -17,8 +17,7 @@
 /* build all chains of particle type pl */
 int bchain(double* coor_array, part_defs pl, int alen, int li)
 {
-
-
+	printf("in bchain \n");
 	/* init an array to hold the starting points for all of the chains */
 	double* spa = make2Darray(pl.num_of, 3);
 	/* get starting points */
@@ -36,6 +35,7 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 
 		li = new_point_pos(coor_array, tmp_sp, pl, li, alen);
 	}
+	printf("leaving bchain \n");
 	return(li);
 }
 /* Will probably put in the ability to build chains of multiple particle thicknesses and types here some where later on */
