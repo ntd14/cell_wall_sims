@@ -20,10 +20,9 @@ int sat_problem_space(double* pos, int li, part_defs pl, int alen)
 		{
 			for(kk=0; kk < (int)(depth_of_problem_space/(pl.R*2.0) + 1) ; kk++)
 			{
-				pos[ind2D(li, 0, alen, 4)] = ii*pl.R*2.0;
-				pos[ind2D(li, 1, alen, 4)] = jj*pl.R*2.0;
-				pos[ind2D(li, 2, alen, 4)] = kk*pl.R*2.0;
-				pos[ind2D(li, 3, alen, 4)] = (double) li;
+				pos[ind2D(li, 0, alen, 3)] = ii*pl.R*2.0;
+				pos[ind2D(li, 1, alen, 3)] = jj*pl.R*2.0;
+				pos[ind2D(li, 2, alen, 3)] = kk*pl.R*2.0;
 				li++;
 			}
 		}

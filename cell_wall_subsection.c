@@ -26,7 +26,7 @@ int main(void) /*this may change to take in arguments later*/
 	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + 2*HC1.max_build_steps*HC1.num_of;
 
 	/* init 2D array of coords */
-	double* init_coor_array = make2Darray(total_num_pls, 4);
+	double* init_coor_array = make2Darray(total_num_pls, 3);
 
 	/* call function to fill with init coords */
 	printf("entering init data \n");
@@ -34,14 +34,28 @@ int main(void) /*this may change to take in arguments later*/
 	printf("exiting init data \n");
 
 	/* reduce array size to only used elements */
-	double* init_coors = make2Darray(plist_len, 4);
-	reduce2Darray(init_coor_array, total_num_pls, 4, init_coors, plist_len, 4);
+	double* init_coors = make2Darray(plist_len, 3);
+	reduce2Darray(init_coor_array, total_num_pls, 3, init_coors, plist_len, 3);
 
 	/* init a new array of strcuts to hold each particle that was created */
 	struct particle* old_particles = calloc(plist_len,sizeof(struct particle));
 	if(old_particles == NULL)
 	{
 		printf("calloc failed when init particle* old_particles in cell_wall_subsection \n");
+	}
+	/* init an array to hold updated particle positions. Do this here so that memory is partitioned */
+	struct particle* new_particles = calloc(plist_len,sizeof(struct particle));
+	if(new_particles == NULL)
+	{
+		printf("calloc failed when init particle* new_particles in cell_wall_subsection \n");
+	}
+
+	for(ii = 0; ii < plist_len; ii++)
+	{
+		old_particles[ii].uid = ii;
+		old_particles[ii].x = &init_coors[ind2D(ii,0, plist_len, 3)];
+		old_particles[ii].y = &init_coors[ind2D(ii,1, plist_len, 3)];
+		old_particles[ii].z = &init_coors[ind2D(ii,2, plist_len, 3)];
 	}
 
 	/* start filling the structure. still need to create NN lists. strong bonds, probably just check if
@@ -50,15 +64,22 @@ int main(void) /*this may change to take in arguments later*/
 	 * pointers to there struct entries
 	 */
 
-/*
 	for(ii=0;ii<plist_len;ii++)
+	{
+		printf("%i ", old_particles[ii].uid);
+		printf("%f ", *old_particles[ii].x);
+		printf("%f ", *old_particles[ii].y);
+		printf("%f \n", *old_particles[ii].z);
+	}
+
+/*	printf("\n");
+	for(ii=plist_len-5;ii<plist_len;ii++)
 	{
 		printf("%f ", init_coors[ind2D(ii,0,plist_len,4)]);
 		printf("%f ", init_coors[ind2D(ii,1,plist_len,4)]);
-		printf("%f ", init_coors[ind2D(ii,2,plist_len,4)]);
-		printf("%f \n", init_coors[ind2D(ii,3,plist_len,4)]);
-	}
-*/
+		printf("%f \n", init_coors[ind2D(ii,2,plist_len,4)]);
+	}*/
+
 
 	/* call to function to fill struct with everything */
 

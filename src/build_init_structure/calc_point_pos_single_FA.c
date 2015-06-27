@@ -87,26 +87,21 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 	{
 		for(jj = 0; jj < 3; jj++)
 		{
-			pos[ind2D(kk + li, jj, alen, 4)] = tmp_neg[ind2D(ii, jj, pl.max_build_steps, 3)];
+			pos[ind2D(kk + li, jj, alen, 3)] = tmp_neg[ind2D(ii, jj, pl.max_build_steps, 3)];
 		}
 		kk++;
 	}
 
-	pos[ind2D(tmp_neg_len + li, 0, alen, 4)] = start_point[0];
-	pos[ind2D(tmp_neg_len + li, 1, alen, 4)] = start_point[1];
-	pos[ind2D(tmp_neg_len + li, 2, alen, 4)] = start_point[2];
+	pos[ind2D(tmp_neg_len + li, 0, alen, 3)] = start_point[0];
+	pos[ind2D(tmp_neg_len + li, 1, alen, 3)] = start_point[1];
+	pos[ind2D(tmp_neg_len + li, 2, alen, 3)] = start_point[2];
 
 	for(ii = 0; ii < tmp_pos_len; ii++)
 	{
 		for(jj = 0; jj < 3; jj++)
 		{
-			pos[ind2D(ii+tmp_neg_len+1 + li, jj, alen, 4)] = tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)];
+			pos[ind2D(ii+tmp_neg_len+1 + li, jj, alen, 3)] = tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)];
 		}
 	}
-	for(ii=0;ii<tmp_neg_len+tmp_pos_len+1;ii++)
-	{
-		pos[ind2D(li, 3, alen, 4)] = (double)li;
-		li++;
-	}
-	return li;
+	return li+tmp_neg_len + 1 + tmp_pos_len;
 }

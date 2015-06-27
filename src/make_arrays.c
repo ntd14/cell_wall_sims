@@ -77,6 +77,7 @@ void reduce2Darray(double* old_array, int old_nrow, int old_ncol, double* new_ar
 			}
 		}
 	free(old_array);
+	old_array = NULL;
 }
 
 
@@ -95,6 +96,7 @@ void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, 
 			}
 		}
 	free(old_array);
+	old_array = NULL;
 }
 
 

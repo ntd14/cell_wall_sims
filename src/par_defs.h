@@ -61,7 +61,7 @@ con_defs H2OLG1;
 
 
 struct particle {
-	int* uid;
+	int uid;
 	double* x;
 	double* y;
 	double* z;
