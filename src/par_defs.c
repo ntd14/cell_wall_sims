@@ -8,9 +8,9 @@
 #include <math.h>
 
 /* define size of problem space in nm */
-int length_of_problem_space = 100;
-int height_of_problem_space = 100;
-int depth_of_problem_space = 100;
+int length_of_problem_space = 200;
+int height_of_problem_space = 160;
+int depth_of_problem_space = 200;
 
 double max_ndist = 45;
 

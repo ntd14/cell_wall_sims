@@ -32,9 +32,10 @@ int main(void) /*this may change to take in arguments later*/
 	printf("entering init data \n");
 	int plist_len = create_init_state(init_coor_array, total_num_pls);
 	printf("exiting init data \n");
-
+	printf("%i \n", plist_len);
 	/* reduce array size to only used elements */
 	double* init_coors = make2Darray(plist_len, 3);
+/*double free or corruption (!prev) happens here */
 	reduce2Darray(init_coor_array, total_num_pls, 3, init_coors, plist_len, 3);
 
 	/* init a new array of strcuts to hold each particle that was created */
@@ -49,13 +50,29 @@ int main(void) /*this may change to take in arguments later*/
 	{
 		printf("calloc failed when init particle* new_particles in cell_wall_subsection \n");
 	}
-
+	/* put below into a function probably in the get init data file*/
 	for(ii = 0; ii < plist_len; ii++)
 	{
 		old_particles[ii].uid = ii;
 		old_particles[ii].x = &init_coors[ind2D(ii,0, plist_len, 3)];
 		old_particles[ii].y = &init_coors[ind2D(ii,1, plist_len, 3)];
 		old_particles[ii].z = &init_coors[ind2D(ii,2, plist_len, 3)];
+		if(ii >= H2O.uid_start && ii < H2O.uid_end)
+		{
+			old_particles[ii].ptype = &H2O;
+		}
+		else if(ii >= FA1.uid_start && ii < FA1.uid_end)
+		{
+			old_particles[ii].ptype = &FA1;
+		}
+		else if(ii >= HC1.uid_start && ii < HC1.uid_end)
+		{
+			old_particles[ii].ptype = &HC1;
+		}
+		else
+		{
+			printf("WARNING particle type not found \n");
+		}
 	}
 
 	/* start filling the structure. still need to create NN lists. strong bonds, probably just check if

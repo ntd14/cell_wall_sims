@@ -29,16 +29,20 @@ int create_init_state(double* coor_array, int ca_len)
 
 	/* distribute the water in the problem space */
 	printf("entering sat problem space \n");
+	H2O.uid_start = li;
 	li = sat_problem_space(coor_array, li, H2O, ca_len);
-	printf("exited sat problem space, created %i H2O\n", li);
-	int li_tmp = li;
+	H2O.uid_end = li;
+	printf("exited sat problem space, created %i H2O\n", H2O.uid_end - H2O.uid_start);
 	/* call to bchains to create the FAs and HCs */
 	printf("entering bchain \n");
+	FA1.uid_start = li;
 	li = bchain(coor_array, FA1, ca_len, li);
-	printf("exiting bchain created %i FA1 \n", li-li_tmp);
-	li_tmp = li;
+	FA1.uid_end = li;
+	printf("exiting bchain created %i FA1 \n", FA1.uid_end - FA1.uid_end);
+	HC1.uid_start = li;
 	li = bchain(coor_array, HC1, ca_len, li);
-	printf("exited bchain created %i HC1 \n", li - li_tmp);
+	HC1.uid_end = li;
+	printf("exited bchain created %i HC1 \n", HC1.uid_end - HC1.uid_start);
 
 	printf("leaving get_init_data created %i particles \n", li);
 	return(li);

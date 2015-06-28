@@ -25,6 +25,8 @@ typedef struct partical_types {
 	double sd_ld; /* standard devation for the depth/radial interaction */
 	int max_build_steps; /* the maximum number of chunks to be used in the positive and negative directions. this is the limit of how many chunks can be in each FA */
 	int num_of; /* number of chains of that particle to create */
+	int uid_start;
+	int uid_end;
 
 } part_defs;
 
@@ -67,8 +69,8 @@ struct particle {
 	double* z;
 	part_defs* ptype;
 	int nlistlen;
-	int* nlist[30]; /* note the length is the max number of connections any particle can have at one time */
-	con_defs* nltype[30];
+	int* nlist; /* need to check if the length needs to be defined at compile time */
+	con_defs* nltype;
 };
 
 
