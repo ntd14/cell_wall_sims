@@ -51,30 +51,15 @@ int main(void) /*this may change to take in arguments later*/
 	{
 		printf("calloc failed when init particle* new_particles in cell_wall_subsection \n");
 	}
-	/* put below into a function probably in the get init data file*/
-	for(ii = 0; ii < plist_len; ii++)
-	{
-		old_particles[ii].uid = ii;
-		old_particles[ii].x = &init_coors[ind2D(ii,0, plist_len, 3)];
-		old_particles[ii].y = &init_coors[ind2D(ii,1, plist_len, 3)];
-		old_particles[ii].z = &init_coors[ind2D(ii,2, plist_len, 3)];
-		if(ii >= H2O.uid_start && ii < H2O.uid_end)
-		{
-			old_particles[ii].ptype = &H2O;
-		}
-		else if(ii >= FA1.uid_start && ii < FA1.uid_end)
-		{
-			old_particles[ii].ptype = &FA1;
-		}
-		else if(ii >= HC1.uid_start && ii < HC1.uid_end)
-		{
-			old_particles[ii].ptype = &HC1;
-		}
-		else
-		{
-			printf("WARNING particle type not found \n");
-		}
-	}
+
+	/* setup a pointer to the pointer of the coordiante array */
+	double** init_coors_ptr = init_coors;
+	/* pass old_particles the particle type and total number of particles to the load particles function
+	 * Note the &init_coors_ptr means take the value of the pointer to the pointer to the init coors array and pass it in*/
+	load_particle_into_struct(old_particles, &init_coors_ptr, H2O, plist_len);
+	load_particle_into_struct(old_particles, &init_coors_ptr, FA1, plist_len);
+	load_particle_into_struct(old_particles, &init_coors_ptr, HC1, plist_len);
+
 
 	/* start filling the structure. still need to create NN lists. strong bonds, probably just check if
 	 * the next point in the series is within some dist and if it is, and it is the same type, strong bond it.
@@ -89,14 +74,6 @@ int main(void) /*this may change to take in arguments later*/
 		printf("%f ", *old_particles[ii].y);
 		printf("%f \n", *old_particles[ii].z);
 	}
-
-/*	printf("\n");
-	for(ii=plist_len-5;ii<plist_len;ii++)
-	{
-		printf("%f ", init_coors[ind2D(ii,0,plist_len,4)]);
-		printf("%f ", init_coors[ind2D(ii,1,plist_len,4)]);
-		printf("%f \n", init_coors[ind2D(ii,2,plist_len,4)]);
-	}*/
 
 
 	/* call to function to fill struct with everything */

@@ -47,3 +47,19 @@ int create_init_state(double* 	init_coors, int ca_len)
 	return(li);
 }
 
+/*reciving the value of the pointer to the pointer to the init coors array then taking what it points to
+ * (the pointer to the init coors arrray) and adding the aproprate index on to it. This stores the value of the pointer to the
+ * approprate coord in the struct.*/
+void load_particle_into_struct(struct particle* old_particles, double** init_coors_ptr, part_defs pl, int plist_len)
+{
+	int ii;
+	for(ii = pl.uid_start; ii < pl.uid_end; ii++)
+	{
+		old_particles[ii].x = *init_coors_ptr + ind2D(ii,0, plist_len, 3);
+		old_particles[ii].y = *init_coors_ptr + ind2D(ii,1, plist_len, 3);
+		old_particles[ii].z = *init_coors_ptr + ind2D(ii,2, plist_len, 3);
+		old_particles[ii].uid = ii;
+		old_particles[ii].ptype = &pl;
+	}
+}
+
