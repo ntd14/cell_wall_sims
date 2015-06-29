@@ -16,7 +16,7 @@ int depth_of_problem_space;
 double max_ndist;
 int max_cons;
 
-typedef struct partical_types {
+typedef struct particle_types {
 	char* name;
 	double R; /* radius of particles */
 	double density; /* the desity of the particle type */

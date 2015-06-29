@@ -60,6 +60,7 @@ int main(void) /*this may change to take in arguments later*/
 	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len);
 
 	create_NN_lists(old_particles, plist_len);
+
 	/* build NN lists */
 /*	int ii;
 	for(ii=0;ii<plist_len;ii++)
@@ -68,8 +69,8 @@ int main(void) /*this may change to take in arguments later*/
 		printf("%f ", *old_particles[ii].x);
 		printf("%f ", *old_particles[ii].y);
 		printf("%f \n", *old_particles[ii].z);
-	}
-*/
+	}*/
+
 
 	/* at this point have an array of structs "all_particles" in there init positions, before any work is done*/
 

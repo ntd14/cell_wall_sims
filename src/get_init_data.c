@@ -71,15 +71,47 @@ void create_NN_lists(struct particle* old_particles, int plist_len)
 	for(ii = 0; ii < plist_len-1; ii++)
 	{
 		int* NNuids = make1Darray_int(max_cons);
+
+		con_defs* NNtypes = calloc(max_cons,sizeof(con_defs));
+		if(NNtypes == NULL)
+		{
+			printf("make1Darray failed in calloc");
+		}
 		old_particles[ii].nlistlen = 0;
-		if(old_particles[ii].ptype->max_build_steps >= 1 && old_particles[ii].ptype ==  old_particles[ii+1].ptype) /* need condistions on proximity and type, ie no strong bonding in h2o*/
+
+		if(old_particles[ii].ptype->max_build_steps >= 1
+				&& old_particles[ii].ptype ==  old_particles[ii+1].ptype)
+			/* add restrictions on proximity */
 		{
 			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
 			NNuids[0] = old_particles[ii+1].uid;
-			/* get ptype then get connection type from the to ptypes and store in array that needs defining*/
+
+			if(old_particles[ii].ptype == &FA1)
+			{
+				NNtypes[0] = FA1FA1strong;
+			}
+			else if(old_particles[ii].ptype == &HC1)
+			{
+				NNtypes[0] = HC1HC1strong;
+			}
+			/* get ptype then get connection type from the to ptypes */
 		}
-		printf("%i \n", old_particles[ii].nlistlen);
+
+		old_particles[ii].nlist = make1Darray_int(old_particles[ii].nlistlen);
+		old_particles[ii].nltype = calloc(max_cons,sizeof(con_defs));
+		if(old_particles[ii].nltype == NULL)
+		{
+			printf("make1Darray failed in calloc");
+		}
+
+		int jj;
+		for(jj = 0; jj < old_particles[ii].nlistlen; jj++)
+		{
+			old_particles[ii].nlist[jj] = NNuids[jj];
+			old_particles[ii].nltype[jj] = NNtypes[jj];
+		}
 		free(NNuids);
+		free(NNtypes);
 	}
 }
 
