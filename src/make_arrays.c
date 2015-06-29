@@ -11,13 +11,7 @@
 
 int ind2D(int i, int j, int nrow, int ncol)
 {
-	int ind = nrow*j + i;
-	return ind;
-}
-
-int ind3D(int i,int j,int k, int nrow, int ncol, int ndep)
-{
-	int ind = nrow*ncol*k + nrow*j + i;
+	int ind = ncol*i + j;
 	return ind;
 }
 
@@ -43,18 +37,7 @@ double* make2Darray(int nrow, int ncol)
 	return array;
 }
 
-double* make3Darray(int nrow, int ncol, int ndep)
-{
-	int len = nrow*ncol*ndep;
-	double* array = (double *)calloc(len,sizeof(double));
-	if(array == NULL)
-	{
-		printf("make3Darray failed in calloc");
-	}
-	return array;
-}
-
-void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len)
+/*void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len)
 {
 	int ii;
 	for(ii = 0; ii < new_len; ii++)
@@ -62,28 +45,32 @@ void reduce1Darray(double* old_array, int old_len, double* new_array, int new_le
 			new_array[ii] = old_array[ii];
 	}
 	free(old_array);
-}
+}*/
 
 
-void reduce2Darray(double* old_array, int old_nrow, int old_ncol, double* new_array, int new_nrow, int new_ncol)
+double* reduce2Darray(double* old_array, int new_nrow, int new_ncol)
 {
-	/*split array into seperate 1D vectors of nrow and ncol length then call make2D array */
-	int ii, jj;
-	for(ii=0; ii < new_nrow; ii++)
+	double* tmp_array = make2Darray(new_nrow, new_ncol);
+	if(tmp_array == NULL)
+	{
+		printf("calloc failure was called by reudce 2D array \n");
+	}
+	else
+	{
+		int ii;
+		for(ii = 0; ii < new_nrow*new_ncol; ii++)
 		{
-			for(jj=0; jj < new_ncol; jj++)
-			{
-				new_array[ind2D(ii,jj,new_nrow,new_ncol)] = old_array[ind2D(ii,jj,old_nrow, old_ncol)];
-			}
+			tmp_array[ii] = old_array[ii];
 		}
+	}
 	free(old_array);
 	old_array = NULL;
+	return(tmp_array);
 }
 
 
-void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep)
+/*void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep)
 {
-	/*split array into seperate 1D vectors of nrow and ncol length then call make2D array */
 	int ii, jj, kk;
 	for(ii=0; ii < new_nrow; ii++)
 		{
@@ -97,7 +84,7 @@ void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, 
 		}
 	free(old_array);
 	old_array = NULL;
-}
+}*/
 
 
 

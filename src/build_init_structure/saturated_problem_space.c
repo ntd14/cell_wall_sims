@@ -10,9 +10,10 @@
 #include "../make_arrays.h"
 #include "../par_defs.h"
 
-int sat_problem_space(double* pos, int li, part_defs pl, int alen)
+int sat_problem_space(double* init_coors, int li, part_defs pl, int alen)
 {
 	printf("in sat problem space \n");
+
 	int ii, jj, kk;
 	for(ii=0; ii < (int)(length_of_problem_space/(pl.R*2.0) + 1); ii++)
 	{
@@ -20,9 +21,9 @@ int sat_problem_space(double* pos, int li, part_defs pl, int alen)
 		{
 			for(kk=0; kk < (int)(depth_of_problem_space/(pl.R*2.0) + 1) ; kk++)
 			{
-				pos[ind2D(li, 0, alen, 3)] = ii*pl.R*2.0;
-				pos[ind2D(li, 1, alen, 3)] = jj*pl.R*2.0;
-				pos[ind2D(li, 2, alen, 3)] = kk*pl.R*2.0;
+				init_coors[ind2D(li, 0, alen, 3)] = ii*pl.R*2.0;
+				init_coors[ind2D(li, 1, alen, 3)] = jj*pl.R*2.0;
+				init_coors[ind2D(li, 2, alen, 3)] = kk*pl.R*2.0;
 				li++;
 			}
 		}

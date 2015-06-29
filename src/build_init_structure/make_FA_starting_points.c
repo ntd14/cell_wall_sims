@@ -25,9 +25,9 @@ void starting_points(double* FA_starts, part_defs pl)
 {
 	printf("in starting_points \n");
 	int ii, jj;
+	double* start_point = make1Darray(3);
 	for(ii = 0; ii < pl.num_of; ii++)
 	{
-		double* start_point = make1Darray(3);
 		make_start_point(start_point);
 		for(jj = 0; jj < 3; jj++)
 		{
@@ -35,5 +35,7 @@ void starting_points(double* FA_starts, part_defs pl)
 			FA_starts[ind2D(ii, jj, pl.num_of, 3)] = start_point[jj];
 		}
 	}
+	free(start_point);
+	start_point = NULL;
 	printf("exiting starting points \n");
 }

@@ -21,22 +21,23 @@ int main(void) /*this may change to take in arguments later*/
 {
 	printf("entering main \n");
 	int ii;
-
+	/* calc the number of H2O particles to be used */
+	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
 	/* calc total potentiual number of particles */
 	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + 2*HC1.max_build_steps*HC1.num_of;
 
 	/* init 2D array of coords */
-	double* init_coor_array = make2Darray(total_num_pls, 3);
+	double* init_coors = make2Darray(total_num_pls, 3);
 
 	/* call function to fill with init coords */
 	printf("entering init data \n");
-	int plist_len = create_init_state(init_coor_array, total_num_pls);
+
+	int plist_len = create_init_state(init_coors, total_num_pls);
 	printf("exiting init data \n");
 	printf("%i \n", plist_len);
-	/* reduce array size to only used elements */
-	double* init_coors = make2Darray(plist_len, 3);
-/*double free or corruption (!prev) happens here */
-	reduce2Darray(init_coor_array, total_num_pls, 3, init_coors, plist_len, 3);
+
+	/* resize the init_coors array to only hold the particles created */
+	init_coors = reduce2Darray(init_coors, plist_len, 3);
 
 	/* init a new array of strcuts to hold each particle that was created */
 	struct particle* old_particles = calloc(plist_len,sizeof(struct particle));
@@ -131,7 +132,12 @@ int main(void) /*this may change to take in arguments later*/
 		fprintf(allp, "%i, \n",all_particles[ii].nlistlen);
 	}
 	fclose(allp);*/
-
+	free(old_particles);
+	old_particles = NULL;
+	free(new_particles);
+	new_particles = NULL;
+	free(init_coors);
+	init_coors = NULL;
 	printf("end of main \n");
 	return 0;
 }

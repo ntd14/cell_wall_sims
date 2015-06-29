@@ -10,18 +10,16 @@
 
 int ind2D(int i, int j, int nrow, int ncol);
 
-int ind3D(int i,int j,int k, int nrow, int ncol, int ndep);
-
 double* make1Darray(int len);
 
 double* make2Darray(int nrow, int ncol);
 
-double* make3Darray(int nrow, int ncol, int ndep);
+double* reduce2Darray(double* old_array, int new_nrow, int new_ncol);
 
-void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len);
+/*void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len);
 
-void reduce2Darray(double* old_array, int old_nrow, int old_ncol, double* new_array, int new_nrow, int new_ncol);
 
-void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep);
+
+void reduce3Darray(double* old_array, int old_nrow, int old_ncol, int old_ndep, double* new_array, int new_nrow, int new_ncol, int new_ndep);*/
 
 #endif /* MAKE_ARRAYS_H_ */

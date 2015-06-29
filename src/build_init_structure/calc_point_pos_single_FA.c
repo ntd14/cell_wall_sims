@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "../normal_dist_gen.h"
 #include "../par_defs.h"
 #include "calc_point_pos_single_FA.h"
@@ -30,21 +31,21 @@ void point_neg(double* cur_point, double* next_point, double theta, double thi, 
 
 int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int alen)
 {
-	double* vec_of_theta = make1Darray(2*pl.max_build_steps);
-	norm_dist(vec_of_theta, 2*pl.max_build_steps, pl.angle_lh, pl.sd_lh); /* note because norm_dist produces 2 random numbers
+	double* vec_of_theta = norm_dist(2*pl.max_build_steps, pl.angle_lh, pl.sd_lh); /* note because norm_dist produces 2 random numbers
 																	this is 2x more cpu efficant than calling each time,
 																	trade of is that it uses more memory*/
-	double* vec_of_thi = make1Darray(2*pl.max_build_steps);
-	norm_dist(vec_of_thi, 2*pl.max_build_steps, pl.angle_ld, pl.sd_ld);
+	double* vec_of_thi = norm_dist(2*pl.max_build_steps, pl.angle_ld, pl.sd_ld);
 
 	double p_len = 2*pl.R;
-	int ii, jj;
+	int ii, jj, ll;
 	double* tmp_pos = make2Darray(pl.max_build_steps, 3);
 	double* tmp_neg = make2Darray(pl.max_build_steps, 3);
+
 	double* cur_point_pos = make1Darray(3);
 	double* cur_point_neg = make1Darray(3);
 	double* next_point_pos = make1Darray(3);
 	double* next_point_neg = make1Darray(3);
+
 	for(ii=0; ii <3; ii++)
 	{
 		cur_point_pos[ii] = start_point[ii];
@@ -61,7 +62,10 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 		{
 			tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)] = next_point_pos[jj];
 		}
-		cur_point_pos = next_point_pos;
+		for(ll=0; ll <3; ll++)
+		{
+			cur_point_pos[ll] = next_point_pos[ll];
+		}
 		ii++;
 	}
 	int tmp_pos_len = ii;
@@ -77,7 +81,10 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 		{
 			tmp_neg[ind2D(ii, jj, pl.max_build_steps, 3)] = next_point_neg[jj];
 		}
-		cur_point_neg = next_point_neg;
+		for(ll=0; ll <3; ll++)
+		{
+			cur_point_neg[ll] = next_point_neg[ll];
+		}
 		ii++;
 	}
 	int tmp_neg_len = ii;
@@ -103,5 +110,25 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 			pos[ind2D(ii+tmp_neg_len+1 + li, jj, alen, 3)] = tmp_pos[ind2D(ii, jj, pl.max_build_steps, 3)];
 		}
 	}
+
+	free(cur_point_pos);
+	cur_point_pos  = NULL;
+	free(cur_point_neg);
+	cur_point_neg  = NULL;
+	free(next_point_pos);
+	next_point_pos  = NULL;
+	free(next_point_neg);
+	next_point_neg  = NULL;
+
+	free(vec_of_theta);
+	vec_of_theta = NULL;
+	free(vec_of_thi);
+	vec_of_thi  = NULL;
+	free(tmp_pos);
+	tmp_pos = NULL;
+	free(tmp_neg);
+	tmp_neg  = NULL;
+
+
 	return li+tmp_neg_len + 1 + tmp_pos_len;
 }
