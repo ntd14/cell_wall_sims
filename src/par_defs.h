@@ -14,6 +14,7 @@ int height_of_problem_space;
 int depth_of_problem_space;
 
 double max_ndist;
+int max_cons;
 
 typedef struct partical_types {
 	char* name;

@@ -20,7 +20,6 @@
 int main(void) /*this may change to take in arguments later*/
 {
 	printf("entering main \n");
-	int ii;
 	/* calc the number of H2O particles to be used */
 	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
 	/* calc total potentiual number of particles */
@@ -53,20 +52,16 @@ int main(void) /*this may change to take in arguments later*/
 	}
 
 	/* setup a pointer to the pointer of the coordiante array */
-	double** init_coors_ptr = init_coors;
+	double** init_coors_ptr = &init_coors;
 	/* pass old_particles the particle type and total number of particles to the load particles function
 	 * Note the &init_coors_ptr means take the value of the pointer to the pointer to the init coors array and pass it in*/
-	load_particle_into_struct(old_particles, &init_coors_ptr, H2O, plist_len);
-	load_particle_into_struct(old_particles, &init_coors_ptr, FA1, plist_len);
-	load_particle_into_struct(old_particles, &init_coors_ptr, HC1, plist_len);
+	load_particle_into_struct(old_particles, init_coors_ptr, &H2O, plist_len);
+	load_particle_into_struct(old_particles, init_coors_ptr, &FA1, plist_len);
+	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len);
 
-
-	/* start filling the structure. still need to create NN lists. strong bonds, probably just check if
-	 * the next point in the series is within some dist and if it is, and it is the same type, strong bond it.
-	 * For other bonds, universal upward diag search, and create two? lists, NN and shortlist. probably just store
-	 * pointers to there struct entries
-	 */
-
+	create_NN_lists(old_particles, plist_len);
+	/* build NN lists */
+/*	int ii;
 	for(ii=0;ii<plist_len;ii++)
 	{
 		printf("%i ", old_particles[ii].uid);
@@ -74,25 +69,10 @@ int main(void) /*this may change to take in arguments later*/
 		printf("%f ", *old_particles[ii].y);
 		printf("%f \n", *old_particles[ii].z);
 	}
-
-
-	/* call to function to fill struct with everything */
-
+*/
 
 	/* at this point have an array of structs "all_particles" in there init positions, before any work is done*/
 
-
-
-
-/*	for(ii = 0; ii < plist_len;ii++)
-	{
-		printf("%f ", all_particles[ii].x);
-		printf("%f ", all_particles[ii].y);
-		printf("%f ", all_particles[ii].z);
-		printf("%i \n", all_particles[ii].nlistlen);
-	}
-	printf("finished get_init_data \n");
-	printf("starting write to file \n");*/
 
 /*	FILE *allp = fopen("allp.vtk", "w");
 	if (allp == NULL)
@@ -109,6 +89,7 @@ int main(void) /*this may change to take in arguments later*/
 		fprintf(allp, "%i, \n",all_particles[ii].nlistlen);
 	}
 	fclose(allp);*/
+
 	free(old_particles);
 	old_particles = NULL;
 	free(new_particles);

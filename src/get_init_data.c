@@ -50,16 +50,37 @@ int create_init_state(double* 	init_coors, int ca_len)
 /*reciving the value of the pointer to the pointer to the init coors array then taking what it points to
  * (the pointer to the init coors arrray) and adding the aproprate index on to it. This stores the value of the pointer to the
  * approprate coord in the struct.*/
-void load_particle_into_struct(struct particle* old_particles, double** init_coors_ptr, part_defs pl, int plist_len)
+void load_particle_into_struct(struct particle* old_particles, double** init_coors_ptr, part_defs* pl, int plist_len)
 {
 	int ii;
-	for(ii = pl.uid_start; ii < pl.uid_end; ii++)
+	for(ii = pl->uid_start; ii < pl->uid_end; ii++)
 	{
 		old_particles[ii].x = *init_coors_ptr + ind2D(ii,0, plist_len, 3);
 		old_particles[ii].y = *init_coors_ptr + ind2D(ii,1, plist_len, 3);
 		old_particles[ii].z = *init_coors_ptr + ind2D(ii,2, plist_len, 3);
 		old_particles[ii].uid = ii;
-		old_particles[ii].ptype = &pl;
+		old_particles[ii].ptype = pl;/* NOTE this is not storing the pointer to the ptype, insted to the var pl */
 	}
 }
+
+
+
+void create_NN_lists(struct particle* old_particles, int plist_len)
+{
+	int ii;
+	for(ii = 0; ii < plist_len-1; ii++)
+	{
+		int* NNuids = make1Darray_int(max_cons);
+		old_particles[ii].nlistlen = 0;
+		if(old_particles[ii].ptype->max_build_steps >= 1 && old_particles[ii].ptype ==  old_particles[ii+1].ptype) /* need condistions on proximity and type, ie no strong bonding in h2o*/
+		{
+			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
+			NNuids[0] = old_particles[ii+1].uid;
+			/* get ptype then get connection type from the to ptypes and store in array that needs defining*/
+		}
+		printf("%i \n", old_particles[ii].nlistlen);
+		free(NNuids);
+	}
+}
+
 

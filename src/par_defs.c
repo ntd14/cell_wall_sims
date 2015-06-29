@@ -13,6 +13,7 @@ int height_of_problem_space = 200;
 int depth_of_problem_space = 200;
 
 double max_ndist = 45;
+int max_cons = 50;
 
 /*see header file for def of each entry*/
 part_defs FA1 = {"FA1", 7.0, 1500.0, M_PI/2, M_PI/2, M_PI/4, M_PI/14, 100, 10}; /* aprox 35% */

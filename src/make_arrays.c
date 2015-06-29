@@ -18,7 +18,7 @@ int ind2D(int i, int j, int nrow, int ncol)
 
 double* make1Darray(int len)
 {
-	double* array = (double *)calloc(len,sizeof(double));
+	double* array = calloc(len,sizeof(double));
 	if(array == NULL)
 	{
 		printf("make1Darray failed in calloc");
@@ -29,13 +29,35 @@ double* make1Darray(int len)
 double* make2Darray(int nrow, int ncol)
 {
 	int len = nrow*ncol;
-	double* array = (double *)calloc(len,sizeof(double));
+	double* array = calloc(len,sizeof(double));
 	if(array == NULL)
 	{
 		printf("make2Darray failed in calloc");
 	}
 	return array;
 }
+
+int* make1Darray_int(int len)
+{
+	int* array = calloc(len,sizeof(int));
+	if(array == NULL)
+	{
+		printf("make1Darray failed in calloc");
+	}
+	return array;
+}
+
+int* make2Darray_int(int nrow, int ncol)
+{
+	int len = nrow*ncol;
+	int* array = calloc(len,sizeof(int));
+	if(array == NULL)
+	{
+		printf("make2Darray failed in calloc");
+	}
+	return array;
+}
+
 
 /*void reduce1Darray(double* old_array, int old_len, double* new_array, int new_len)
 {
