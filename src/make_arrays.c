@@ -15,6 +15,11 @@ int ind2D(int i, int j, int nrow, int ncol)
 	return ind;
 }
 
+int ind3D(int i, int j, int k, int nrow, int ncol, int ndep)
+{
+	int ind = ncol*ndep*i + j*ndep + k;
+	return ind;
+}
 
 double* make1Darray(int len)
 {
@@ -32,7 +37,7 @@ double* make2Darray(int nrow, int ncol)
 	double* array = calloc(len,sizeof(double));
 	if(array == NULL)
 	{
-		printf("make2Darray failed in calloc");
+		printf("make2Darray failed in calloc \n");
 	}
 	return array;
 }
@@ -42,7 +47,7 @@ int* make1Darray_int(int len)
 	int* array = calloc(len,sizeof(int));
 	if(array == NULL)
 	{
-		printf("make1Darray failed in calloc");
+		printf("make1Darray failed in calloc \n");
 	}
 	return array;
 }
@@ -53,7 +58,7 @@ int* make2Darray_int(int nrow, int ncol)
 	int* array = calloc(len,sizeof(int));
 	if(array == NULL)
 	{
-		printf("make2Darray failed in calloc");
+		printf("make2Darray failed in calloc \n");
 	}
 	return array;
 }

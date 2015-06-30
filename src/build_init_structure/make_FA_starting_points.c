@@ -23,7 +23,6 @@ void make_start_point(double* start_point)
 /* use above to calc the starting points for each FA */
 void starting_points(double* FA_starts, part_defs pl)
 {
-	printf("in starting_points \n");
 	int ii, jj;
 	double* start_point = make1Darray(3);
 	for(ii = 0; ii < pl.num_of; ii++)
@@ -37,5 +36,4 @@ void starting_points(double* FA_starts, part_defs pl)
 	}
 	free(start_point);
 	start_point = NULL;
-	printf("exiting starting points \n");
 }

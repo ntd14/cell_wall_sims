@@ -12,7 +12,6 @@
 
 int sat_problem_space(double* init_coors, int li, part_defs pl, int alen)
 {
-	printf("in sat problem space \n");
 
 	int ii, jj, kk;
 	for(ii=0; ii < (int)(length_of_problem_space/(pl.R*2.0) + 1); ii++)
@@ -28,6 +27,5 @@ int sat_problem_space(double* init_coors, int li, part_defs pl, int alen)
 			}
 		}
 	}
-	printf("leaving sat problem space\n");
 	return(li);
 }

@@ -20,9 +20,10 @@
 int main(void) /*this may change to take in arguments later*/
 {
 	printf("entering main \n");
+	int ii;
 	/* calc the number of H2O particles to be used */
 	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
-	/* calc total potentiual number of particles */
+	/* calc total potentiual number of particles, needs updateding if have multiple particles in each chain cross section */
 	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + 2*HC1.max_build_steps*HC1.num_of;
 
 	/* init 2D array of coords */
@@ -33,7 +34,7 @@ int main(void) /*this may change to take in arguments later*/
 
 	int plist_len = create_init_state(init_coors, total_num_pls);
 	printf("exiting init data \n");
-	printf("%i \n", plist_len);
+	printf("num of particles %i \n", plist_len);
 
 	/* resize the init_coors array to only hold the particles created */
 	init_coors = reduce2Darray(init_coors, plist_len, 3);
@@ -50,29 +51,61 @@ int main(void) /*this may change to take in arguments later*/
 	{
 		printf("calloc failed when init particle* new_particles in cell_wall_subsection \n");
 	}
-
+	if(max_cons < 9)
+	{
+		printf("WARNING: very low max_cons \n");
+	}
+	struct particle** nlist_array = calloc(plist_len*max_cons,sizeof(struct particle*));
+	if(nlist_array == NULL)
+	{
+		printf("calloc failed when init particle** nlist_array in cell_wall_subsection \n");
+	}
+	for(ii = 0; ii < plist_len*max_cons; ii++)
+	{
+		nlist_array[ii] = NULL;
+	}
 	/* setup a pointer to the pointer of the coordiante array */
 	double** init_coors_ptr = &init_coors;
 	/* pass old_particles the particle type and total number of particles to the load particles function
 	 * Note the &init_coors_ptr means take the value of the pointer to the pointer to the init coors array and pass it in*/
-	load_particle_into_struct(old_particles, init_coors_ptr, &H2O, plist_len);
-	load_particle_into_struct(old_particles, init_coors_ptr, &FA1, plist_len);
-	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len);
+	printf("starting calls to load_particle_into_struct \n");
+	load_particle_into_struct(old_particles, init_coors_ptr, &H2O, plist_len, nlist_array);
+	load_particle_into_struct(old_particles, init_coors_ptr, &FA1, plist_len, nlist_array);
+	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len, nlist_array);
+	printf("finished calls to load_particle_into_struct \n");
 
-	create_NN_lists(old_particles, plist_len);
+	printf("calling create_sat_bonds \n");
+	create_sat_bonds(old_particles, plist_len, nlist_array, &H2O);
+	printf("finished create_sat_bonds \n");
+	/* create the bonds that exist between elements of a chain, will need updating when chains can have multiple elments in the cross section */
+	printf("starting calls to create_chain_bonds \n");
+	create_chain_bonds(old_particles, plist_len, nlist_array, &FA1); /* creates the strong bonds between chains */
+	create_chain_bonds(old_particles, plist_len, nlist_array, &HC1); /* creates the strong bonds between chains */
+	printf("finished calls to create_chain_bonds \n");
+	/*create_NN_list(old_particles, plist_len, nlist_array);*/
 
-	/* build NN lists */
-/*	int ii;
-	for(ii=0;ii<plist_len;ii++)
+	/* build NN lists this should be generic so can be used every time a full problem space search is needed*/
+
+/*	for(ii=0;ii<plist_len;ii++)
 	{
 		printf("%i ", old_particles[ii].uid);
 		printf("%f ", *old_particles[ii].x);
 		printf("%f ", *old_particles[ii].y);
-		printf("%f \n", *old_particles[ii].z);
-	}*/
+		printf("%f ", *old_particles[ii].z);
+		printf("%i ", old_particles[ii].nlistlen);
+
+		if(old_particles[ii].nlistlen > 0)
+		{
+			printf("%i \n", old_particles[ii].nlist[0]->uid);
+		}
+		else
+		{
+			printf("NNNNNNNNN \n");
+		}
+	}
 
 
-	/* at this point have an array of structs "all_particles" in there init positions, before any work is done*/
+	 at this point have an array of structs "all_particles" in there init positions, before any work is done*/
 
 
 /*	FILE *allp = fopen("allp.vtk", "w");
@@ -91,6 +124,8 @@ int main(void) /*this may change to take in arguments later*/
 	}
 	fclose(allp);*/
 
+	free(nlist_array);
+	nlist_array = NULL;
 	free(old_particles);
 	old_particles = NULL;
 	free(new_particles);

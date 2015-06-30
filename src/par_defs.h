@@ -70,8 +70,7 @@ struct particle {
 	double* z;
 	part_defs* ptype;
 	int nlistlen;
-	int* nlist; /* need to check if the length needs to be defined at compile time */
-	con_defs* nltype;
+	struct particle** nlist;
 };
 
 

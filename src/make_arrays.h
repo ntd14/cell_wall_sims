@@ -10,6 +10,8 @@
 
 int ind2D(int i, int j, int nrow, int ncol);
 
+int ind3D(int i, int j, int k, int nrow, int ncol, int ndep);
+
 double* make1Darray(int len);
 
 double* make2Darray(int nrow, int ncol);
