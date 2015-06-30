@@ -13,13 +13,15 @@
 #include "calc_point_pos_single_FA.h"
 #include "../make_arrays.h"
 
+/* Some how need to add aditional particles for thickness */
+
+
 /* calc next point in positive direction */
 void point_pos(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
 	next_point[0] = p_len*cos(theta)*sin(thi)+ cur_point[0];
 	next_point[1] = p_len*sin(theta)*sin(thi) + cur_point[1];
 	next_point[2] = p_len*cos(thi) + cur_point[2];
-	/* 3D will change these */
 }
 /* calc next point in negitive direction */
 void point_neg(double* cur_point, double* next_point, double theta, double thi, double p_len)

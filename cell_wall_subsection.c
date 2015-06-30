@@ -82,8 +82,10 @@ int main(void) /*this may change to take in arguments later*/
 	create_chain_bonds(old_particles, plist_len, nlist_array, &FA1); /* creates the strong bonds between chains */
 	create_chain_bonds(old_particles, plist_len, nlist_array, &HC1); /* creates the strong bonds between chains */
 	printf("finished calls to create_chain_bonds \n");
-	/*create_NN_list(old_particles, plist_len, nlist_array);*/
 
+	/*maybe get a new vector of centre points by taking the ones that have been created and translating to new pos.
+	 * Then can label them as a new particle type
+	 */
 	/* build NN lists this should be generic so can be used every time a full problem space search is needed*/
 
 /*	for(ii=0;ii<plist_len;ii++)

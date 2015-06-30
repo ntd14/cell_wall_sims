@@ -5,14 +5,6 @@
  *      Author: nick
  */
 
-
-/*
- * get_init_data.c
- *
- *  Created on: 21/05/2015
- *      Author: nick
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -34,7 +26,6 @@ int create_init_state(double* 	init_coors, int ca_len)
 	li = sat_problem_space(init_coors, li, H2O, ca_len);
 	H2O.uid_end = li -1;
 	printf("exited sat problem space, created %i H2O\n", H2O.uid_end - H2O.uid_start);
-	/* call to bchains to create the FAs and HCs */
 	printf("entering bchain \n");
 	FA1.uid_start = li;
 	li = bchain(init_coors, FA1, ca_len, li);
@@ -42,6 +33,7 @@ int create_init_state(double* 	init_coors, int ca_len)
 	printf("exiting bchain created %i FA1 \n", FA1.uid_end - FA1.uid_end);
 	HC1.uid_start = li;
 	li = bchain(init_coors, HC1, ca_len, li);
+	/* call function above for HC*/
 	HC1.uid_end = li -1;
 	printf("exited bchain created %i HC1 \n", HC1.uid_end - HC1.uid_start);
 
@@ -71,26 +63,32 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 void create_sat_bonds(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
 {
 	int ii, jj, kk, ii1, jj1, kk1, ln;
-	int pnum = pl->uid_start;
-	int ran = (int)(max_ndist/(2*pl->R))+1;
+	int pnum = pl->uid_start; /* set the starting uid from the particle struct uid starting point */
+	int ran = (int)(max_ndist/(2*pl->R))+1; /* set the distance inside which to keep particles */
 	printf("Thickness of non-chain particles as NNs: %i \n",ran);
+	/* get the number of particles along each side */
 	int sl = (int)(length_of_problem_space/(pl->R*2.0) + 1);
 	int sh = (int)(height_of_problem_space/(pl->R*2.0) + 1);
 	int sd = (int)(depth_of_problem_space/(pl->R*2.0) + 1);
+	/* first three loops to itterate through the number of particles along each side */
 	for(ii=0; ii < sl; ii++)
 	{
 		for(jj=0;jj < sh; jj++)
 		{
 			for(kk=0; kk < sd; kk++)
 			{
+				/*setting the number of particles connections to zero */
 				ln = 0;
+				/* for loops to cycle through all souronding particles */
 				for(ii1 = -1*ran; ii1 <= ran; ii1++)
 				{
 					for(jj1 = -1*ran; jj1 <= ran; jj1++)
 					{
 						for(kk1 = -1*ran; kk1 <= ran; kk1++)
 						{
+							/* store the particle connections in the nlist_array */
 							nlist_array[ind2D(pnum, ln, plist_len, max_cons)] = &old_particles[ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)];
+							/* check that the max number of connections is not exceeded */
 							if(ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) >= 0 && ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) <= plist_len)
 							{
 								ln++;
@@ -112,49 +110,49 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, struct part
 void create_chain_bonds(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
 {
 	int ii;
+	/* check the particle type in question forms chains */
 	if(pl->max_build_steps < 1)
 	{
 		printf("not creating chains as particle type %s has max_build_steps <1 \n", pl->name);
 		exit(1);
 	}
-
+	/* calc the distance between the first and second element */
 	double dist = get_dist(*old_particles[pl->uid_start].x, *old_particles[pl->uid_start+1].x, *old_particles[pl->uid_start].y, *old_particles[pl->uid_start+1].y, *old_particles[pl->uid_start].z, *old_particles[pl->uid_start+1].z);
-
+	/* if 1 diameter appart store the second particle as a particle connection in the first */
 	if(dist < 2.1*pl->R && dist > 1.9*pl->R)
 	{
 		nlist_array[ind2D(pl->uid_start, old_particles[pl->uid_start].nlistlen, plist_len, max_cons)] = &old_particles[pl->uid_start+1];
+		/* update the number of connections on the current particle */
 		old_particles[pl->uid_start].nlistlen = old_particles[pl->uid_start].nlistlen + 1;
 	}
-
+	/* loop over all particles of the given type, note the + and - 1 in as we store both the next and previous particles */
 	for(ii = pl->uid_start+1; ii < pl->uid_end-1; ii++)
 	{
+		/* getting distance between the previous particle and current */
 		dist = get_dist(*old_particles[ii].x, *old_particles[ii-1].x, *old_particles[ii].y, *old_particles[ii-1].y, *old_particles[ii].z, *old_particles[ii-1].z);
-
+		/* check if the previous particle in the sequence is the previous particle in the sequence */
 		if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
 		{
 			nlist_array[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)] = &old_particles[ii-1];
 			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
 		}
-
+		/* get the distance to the next particle */
 		dist = get_dist(*old_particles[ii].x, *old_particles[ii+1].x, *old_particles[ii].y, *old_particles[ii+1].y, *old_particles[ii].z, *old_particles[ii+1].z);
-
+		/* check if the next particle is the next one in the sequence */
 		if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
 		{
 			nlist_array[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)] = &old_particles[ii+1];
 			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
 		}
 	}
-
+	/* get distance from the last particle in the sequence to the second to last */
 	dist = get_dist(*old_particles[pl->uid_end].x, *old_particles[pl->uid_end-1].x, *old_particles[pl->uid_end].y, *old_particles[pl->uid_end-1].y, *old_particles[pl->uid_end].z, *old_particles[pl->uid_end-1].z);
-
+	/* check if the second to last particle in the sequence is attached to the last particle */
 	if(dist < 2.1*pl->R && dist > 1.9*pl->R)
 	{
 		nlist_array[ind2D(pl->uid_end, old_particles[pl->uid_end].nlistlen, plist_len, max_cons)] = &old_particles[pl->uid_end-1];
 		old_particles[pl->uid_end].nlistlen = old_particles[pl->uid_end].nlistlen + 1;
 	}
 }
-
-
-
 
 
