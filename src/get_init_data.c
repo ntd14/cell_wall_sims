@@ -30,11 +30,20 @@ int create_init_state(double* 	init_coors, int ca_len)
 	FA1.uid_start = li;
 	li = bchain(init_coors, FA1, ca_len, li);
 	FA1.uid_end = li - 1;
+
+	FA2.uid_start = li;
+	li = bchain_sur(init_coors, FA2, FA1, ca_len, li);
+	FA2.uid_end = li - 1;
+
 	printf("exiting bchain created %i FA1 \n", FA1.uid_end - FA1.uid_end);
 	HC1.uid_start = li;
 	li = bchain(init_coors, HC1, ca_len, li);
-	/* call function above for HC*/
 	HC1.uid_end = li -1;
+
+	HC2.uid_start = li;
+	li = bchain_sur(init_coors, HC2, HC1, ca_len, li);
+	HC2.uid_end = li - 1;
+
 	printf("exited bchain created %i HC1 \n", HC1.uid_end - HC1.uid_start);
 
 	printf("leaving get_init_data created %i particles \n", li);
@@ -154,5 +163,14 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 		old_particles[pl->uid_end].nlistlen = old_particles[pl->uid_end].nlistlen + 1;
 	}
 }
+
+void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
+{
+	int ii;
+}
+
+
+
+
 
 

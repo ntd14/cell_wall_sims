@@ -33,7 +33,9 @@ typedef struct particle_types {
 
 /* init the different particle types above, see source file for values */
 part_defs FA1;
+part_defs FA2;
 part_defs HC1;
+part_defs HC2;
 part_defs LG1;
 part_defs H2O;
 

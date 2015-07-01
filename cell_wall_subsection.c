@@ -24,7 +24,12 @@ int main(void) /*this may change to take in arguments later*/
 	/* calc the number of H2O particles to be used */
 	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
 	/* calc total potentiual number of particles, needs updateding if have multiple particles in each chain cross section */
-	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + 2*HC1.max_build_steps*HC1.num_of;
+
+	FA2.num_of = 2*FA1.max_build_steps*FA1.num_of;
+	HC2.num_of = 2*HC1.max_build_steps*HC1.num_of;
+
+	int total_num_pls = H2O.num_of + 2*FA1.max_build_steps*FA1.num_of + FA2.num_of*FA2.max_build_steps
+			+ 2*HC1.max_build_steps*HC1.num_of + HC2.num_of*HC2.max_build_steps;
 
 	/* init 2D array of coords */
 	double* init_coors = make2Darray(total_num_pls, 3);
@@ -71,6 +76,8 @@ int main(void) /*this may change to take in arguments later*/
 	printf("starting calls to load_particle_into_struct \n");
 	load_particle_into_struct(old_particles, init_coors_ptr, &H2O, plist_len, nlist_array);
 	load_particle_into_struct(old_particles, init_coors_ptr, &FA1, plist_len, nlist_array);
+	load_particle_into_struct(old_particles, init_coors_ptr, &FA2, plist_len, nlist_array);
+	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len, nlist_array);
 	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len, nlist_array);
 	printf("finished calls to load_particle_into_struct \n");
 

@@ -43,5 +43,28 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 	printf("leaving bchain \n");
 	return(li);
 }
-/* Will probably put in the ability to build chains of multiple particle thicknesses and types here some where later on */
 
+ int bchain_sur(double* coor_array, part_defs pl, part_defs pl_centre, int alen, int li)
+ {
+	 double dchange = pl_centre.R + pl.R;
+	 double achange = 2*M_PI/pl.max_build_steps;
+	 double xo;
+	 double yo;
+	 int bcp;
+	 int ii;
+
+	 for(bcp = pl_centre.uid_start; bcp < pl_centre.uid_end+1; bcp++)
+	 {
+		 xo = coor_array[ind2D(bcp, 0, alen, 3)];
+		 yo = coor_array[ind2D(bcp, 2, alen, 3)];
+
+		 for(ii = 0; ii < pl.max_build_steps; ii++)
+		 {
+			 coor_array[ind2D(li, 0, alen, 3)] = cos(ii*achange)*dchange + xo; /* - sin(ii*achange)*y_start */
+			 coor_array[ind2D(li, 1, alen, 3)] = sin(ii*achange)*dchange + yo; /* + cos(ii*achange)*y_start */
+			 coor_array[ind2D(li, 2, alen, 3)] = coor_array[ind2D(bcp, 2, alen, 3)];
+			 li++;
+		 }
+	 }
+	 return(li);
+ }
