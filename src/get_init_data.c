@@ -164,9 +164,14 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 	}
 }
 
-void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
+void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)
 {
-	int ii;
+	int cp_num = 0;
+	/* from currnet particle, move 1 back and 1 foward to get NN, except last and first in list, then go to start/end.
+	 * Keep track of the number of central particles used, ie cp_num.
+	 * to get current central particle, take central particle.uid_start then add the number of used particles.
+	 *
+	 */
 }
 
 
