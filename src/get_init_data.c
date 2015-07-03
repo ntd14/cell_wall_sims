@@ -167,11 +167,17 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)
 {
 	int cp_num = 0;
-	/* from currnet particle, move 1 back and 1 foward to get NN, except last and first in list, then go to start/end.
-	 * Keep track of the number of central particles used, ie cp_num.
-	 * to get current central particle, take central particle.uid_start then add the number of used particles.
+	/* cycle through the centre particles, for each one, should be able to get the index for the surounding particles
+	 * Get index for first surface particle
+	 * store that and the rest of the surface particles in that loop, the loop below and above as sourding paricles to teh centre
+	 * go to the fist particle in the loop. store the coorosponding up and down particles and the next one in the list
+	 * loop over 1:end -1 and store the previous, next, up down and central particles
+	 * go to last particle and store the previous, up, down and central particles.
+	 * go to the enxt particle in the central list, check it is connected.
 	 *
+	 * probably write a function to get all the particles
 	 */
+
 }
 
 
