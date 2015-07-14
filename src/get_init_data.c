@@ -180,5 +180,7 @@ void create_chain_surface(struct particle* old_particles, int plist_len, struct 
 
 }
 
-
+/* to get an updated NN list, take the current particles NN list then go to each of the particles on the list and get their NN lists.
+ * Scan their NN lists for particles that are in contact with the first, and add any that are to the first particles NN list.
+ */
 
