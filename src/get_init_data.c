@@ -175,13 +175,10 @@ void create_chain_surface(struct particle* old_particles, int plist_len, struct 
 	 * go to last particle and store the previous, up, down and central particles.
 	 * go to the enxt particle in the central list, check it is connected.
 	 *
-	 * probably write a function to get all the particles
+	 * probably write a function to get all the particle
 	 */
 
 }
-
-
-
 
 
 
