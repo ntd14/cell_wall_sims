@@ -166,7 +166,17 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)
 {
+	int ii, sid;
 	int cp_num = 0;
+	for(ii = pl_centre->uid_start; ii < pl_centre->uid_end-1; ii++)
+	{
+		sid = ii + pl->uid_start;
+		/* old_particle[ii]->ptype needs assinment generated from pl_centre and pl */
+		/* old_particle[ii]->nlist needs assinment generated from the sid list */
+		/* old_particle[sid]->ptype and nlist need to be added for the centre particle attachment */
+		/* call to function that cycles through the surounding particles, max build steps is the number of the particles in the chain around each pc_centre  */
+
+	}
 	/* cycle through the centre particles, for each one, should be able to get the index for the surounding particles
 	 * Get index for first surface particle
 	 * store that and the rest of the surface particles in that loop, the loop below and above as sourding paricles to teh centre
