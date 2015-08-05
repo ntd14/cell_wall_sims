@@ -167,6 +167,18 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)
 {
 	int cp_num = 0;
+	int ii;
+	/* check the particle type in question forms chains */
+	if(pl->max_build_steps < 1)
+	{
+		printf("not creating chains as particle type %s has max_build_steps <1 \n", pl->name);
+		exit(1);
+	}
+	/* pl_centre.start conects to pl.start through to pl.start + pl.max build steps */
+	/* pl_centre.start + 1 connects to pl.start + pl.max build steps to pl.start + 2*pl.max build steps */
+
+	/* pl.start +1 connects to pl.start, pl.start + 2, pl.start + pl.max build steps, and -pl.max build steps
+
 	/* cycle through the centre particles, for each one, should be able to get the index for the surounding particles
 	 * Get index for first surface particle
 	 * store that and the rest of the surface particles in that loop, the loop below and above as sourding paricles to teh centre
