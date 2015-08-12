@@ -60,6 +60,7 @@ int main(void) /*this may change to take in arguments later*/
 	{
 		printf("WARNING: very low max_cons \n");
 	}
+
 	struct particle** nlist_array = calloc(plist_len*max_cons,sizeof(struct particle*));
 	if(nlist_array == NULL)
 	{
@@ -78,17 +79,48 @@ int main(void) /*this may change to take in arguments later*/
 	load_particle_into_struct(old_particles, init_coors_ptr, &FA1, plist_len, nlist_array);
 	load_particle_into_struct(old_particles, init_coors_ptr, &FA2, plist_len, nlist_array);
 	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len, nlist_array);
-	load_particle_into_struct(old_particles, init_coors_ptr, &HC1, plist_len, nlist_array);
+	load_particle_into_struct(old_particles, init_coors_ptr, &HC2, plist_len, nlist_array);
 	printf("finished calls to load_particle_into_struct \n");
 
 	printf("calling create_sat_bonds \n");
-	create_sat_bonds(old_particles, plist_len, nlist_array, &H2O);
+	create_sat_bonds(old_particles, plist_len, &H2O);
 	printf("finished create_sat_bonds \n");
 	/* create the bonds that exist between elements of a chain, will need updating when chains can have multiple elments in the cross section */
-	printf("starting calls to create_chain_bonds \n");
-	create_chain_bonds(old_particles, plist_len, nlist_array, &FA1); /* creates the strong bonds between chains */
-	create_chain_bonds(old_particles, plist_len, nlist_array, &HC1); /* creates the strong bonds between chains */
-	printf("finished calls to create_chain_bonds \n");
+	/*printf("starting calls to create_chain_bonds \n");*/
+	/*create_chain_bonds(old_particles, plist_len, nlist_array, &FA1);*/ /* creates the strong bonds between chains */
+	/*create_chain_bonds(old_particles, plist_len, nlist_array, &HC1);*/ /* creates the strong bonds between chains */
+	/*printf("finished calls to create_chain_bonds \n");*/
+
+	int jj;
+	FILE *allp = fopen("allp.csv", "w");
+	if (allp == NULL)
+	{
+		   printf("Error opening file!\n");
+		   exit(1);
+	}
+
+	fprintf(allp, "uid, x, y, z, type, nlistlen, nlist \n");
+	for(ii = 0; ii < plist_len; ii++)
+	{
+		fprintf(allp, "%i, ", old_particles[ii].uid);
+		fprintf(allp, "%f, ", *old_particles[ii].x);
+		fprintf(allp, "%f, ", *old_particles[ii].y);
+		fprintf(allp, "%f, ", *old_particles[ii].z);
+		fprintf(allp, "%s, ", old_particles[ii].ptype->name);
+		fprintf(allp, "%i, ", old_particles[ii].nlistlen);
+		if(old_particles[ii].nlistlen > 0)
+		{
+			for(jj = 0; jj < old_particles[ii].nlistlen; jj++)
+			{
+				fprintf(allp, "%i, ", (*old_particles[ii].nlist[jj]).uid);
+			}
+		}
+		fprintf(allp, "\n");
+	}
+	fclose(allp);
+
+
+
 
 	/*maybe get a new vector of centre points by taking the ones that have been created and translating to new pos.
 	 * Then can label them as a new particle type

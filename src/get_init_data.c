@@ -69,7 +69,7 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 }
 
 /*takes non-chain forming particles, H2O only at this stage, and uses a huristic to get the NN list, will only work before deformation and for particles of the same type */
-void create_sat_bonds(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
+void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* pl)
 {
 	int ii, jj, kk, ii1, jj1, kk1, ln;
 	int pnum = pl->uid_start; /* set the starting uid from the particle struct uid starting point */
@@ -96,7 +96,7 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, struct part
 						for(kk1 = -1*ran; kk1 <= ran; kk1++)
 						{
 							/* store the particle connections in the nlist_array */
-							nlist_array[ind2D(pnum, ln, plist_len, max_cons)] = &old_particles[ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)];
+							old_particles[ind3D(ii, jj, kk, sl, sh, sd)].nlist[ln] = &old_particles[ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)];
 							/* check that the max number of connections is not exceeded */
 							if(ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) >= 0 && ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) <= plist_len)
 							{
@@ -109,6 +109,7 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, struct part
 							}
 						}
 					}
+					old_particles[ind3D(ii, jj, kk, sl, sh, sd)].nlistlen = ln;
 				}
 			}
 		}
@@ -166,10 +167,9 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)
 {
-	int ii, sid;
-	int cp_num = 0;
+	/*int ii, sid;
+	int cp_num = 0;*/
 
-	int ii;
 	/* check the particle type in question forms chains */
 	if(pl->max_build_steps < 1)
 	{
