@@ -72,14 +72,13 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* pl)
 {
 	int ii, jj, kk, ii1, jj1, kk1, ln;
-	int pnum = pl->uid_start; /* set the starting uid from the particle struct uid starting point */
 	int ran = (int)(max_ndist/(2*pl->R))+1; /* set the distance inside which to keep particles */
 	printf("Thickness of non-chain particles as NNs: %i \n",ran);
 	/* get the number of particles along each side */
 	int sl = (int)(length_of_problem_space/(pl->R*2.0) + 1);
 	int sh = (int)(height_of_problem_space/(pl->R*2.0) + 1);
 	int sd = (int)(depth_of_problem_space/(pl->R*2.0) + 1);
-	/* first three loops to itterate through the number of particles along each side */
+	/* first three loops to iterate through the number of particles along each side */
 	for(ii=0; ii < sl; ii++)
 	{
 		for(jj=0;jj < sh; jj++)
@@ -88,7 +87,7 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* 
 			{
 				/*setting the number of particles connections to zero */
 				ln = 0;
-				/* for loops to cycle through all souronding particles */
+				/* for loops to cycle through all souronding particles NOTE needs to be changed so that it deals with the boundarys */
 				for(ii1 = -1*ran; ii1 <= ran; ii1++)
 				{
 					for(jj1 = -1*ran; jj1 <= ran; jj1++)
@@ -96,16 +95,21 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* 
 						for(kk1 = -1*ran; kk1 <= ran; kk1++)
 						{
 							/* store the particle connections in the nlist_array */
-							old_particles[ind3D(ii, jj, kk, sl, sh, sd)].nlist[ln] = &old_particles[ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)];
-							/* check that the max number of connections is not exceeded */
-							if(ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) >= 0 && ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) <= plist_len)
+							if(ii+ii1 >= 0 && ii+ii1 < sl && jj+jj1 >= 0 && jj+jj1 < sh && kk+kk1 >= 0 && kk+kk1 < sd
+									&& ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) >= pl->uid_start && ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)<=pl->uid_end)
 							{
-								ln++;
-							}
-							if(ln >= max_cons)
-							{
-								printf("WARNING: can not track requested connections, increase max_cons or decrease max_ndist \n");
-								break;
+								old_particles[ind3D(ii, jj, kk, sl, sh, sd)].nlist[ln] = &old_particles[ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd)];
+
+								/* check that the max number of connections is not exceeded */
+								if(ind3D(ii+ii1, jj+jj1, kk+kk1, sl, sh, sd) <= plist_len)
+								{
+									ln++;
+								}
+								if(ln >= max_cons)
+								{
+									printf("WARNING: can not track requested connections, increase max_cons or decrease max_ndist \n");
+									break;
+								}
 							}
 						}
 					}
