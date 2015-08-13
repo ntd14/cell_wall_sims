@@ -110,10 +110,11 @@ int main(void) /*this may change to take in arguments later*/
 		fprintf(allp, "%i, ", old_particles[ii].nlistlen);
 		if(old_particles[ii].nlistlen > 0)
 		{
-			for(jj = 0; jj < old_particles[ii].nlistlen; jj++)
+			for(jj = 0; jj < old_particles[ii].nlistlen -1; jj++)
 			{
-				fprintf(allp, "%i, ", (*old_particles[ii].nlist[jj]).uid);
+				fprintf(allp, "%i; ", (*old_particles[ii].nlist[jj]).uid);
 			}
+			fprintf(allp, "%i ", (*old_particles[ii].nlist[jj]).uid);
 		}
 		fprintf(allp, "\n");
 	}
