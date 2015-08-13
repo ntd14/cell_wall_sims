@@ -16,7 +16,7 @@ double max_ndist = 5;
 int max_cons = 500;
 
 /*see header file for def of each entry*/
-part_defs FA1 = {"FA1", 3.22625, 1500.0, M_PI/2, M_PI/2, 0, 0, 10, 100}; /* aprox 35% */
+part_defs FA1 = {"FA1", 3.22625, 1500.0, M_PI/2, M_PI/2, 0, 0, 10, 10}; /* aprox 35% */
 part_defs FA2 = {"FA2", 2.0, 1500.0, 0, 0, 0, 0, 8, 0}; /* Note these chains run around the FA1 core use r = Rsin(π/n)/[1 - sin(π/n)] and R = r[1 - sin(π/n)]/sin(π/n)
  	 	 	 	 	 	 	 	 	 	 	 	 	 	 * to pick the FA1 and FA2 radii as well as the chain length for FA2, calculator here http://www.had2know.com/academics/outer-circular-ring-radii-formulas-calculator.html*/
 part_defs HC1 = {"HC1", 3.22625, 1500.0, M_PI/2, M_PI/2, 0, 0, 20, 20};/* aprox 20% */
