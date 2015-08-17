@@ -14,7 +14,7 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 
 void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* pl);
 
-void create_chain_bonds(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl);
+void create_chain_bonds(struct particle* old_particles, int plist_len, part_defs* pl);
 
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre);
 

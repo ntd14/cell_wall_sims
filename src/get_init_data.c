@@ -121,7 +121,7 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* 
 }
 
 /* Finds the particles which have strong inner chain bonds and stores them in the NN list */
-void create_chain_bonds(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl)
+void create_chain_bonds(struct particle* old_particles, int plist_len, part_defs* pl)
 {
 	int ii;
 	/* check the particle type in question forms chains */
@@ -135,38 +135,38 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, struct pa
 	/* if 1 diameter appart store the second particle as a particle connection in the first */
 	if(dist < 2.1*pl->R && dist > 1.9*pl->R)
 	{
-		nlist_array[ind2D(pl->uid_start, old_particles[pl->uid_start].nlistlen, plist_len, max_cons)] = &old_particles[pl->uid_start+1];
+		/*old_particles[ind2D(pl->uid_start, old_particles[pl->uid_start].nlistlen, plist_len, max_cons)].nlist[0] = &old_particles[pl->uid_start+1];*/
 		/* update the number of connections on the current particle */
 		old_particles[pl->uid_start].nlistlen = old_particles[pl->uid_start].nlistlen + 1;
 	}
 	/* loop over all particles of the given type, note the + and - 1 in as we store both the next and previous particles */
-	for(ii = pl->uid_start+1; ii < pl->uid_end-1; ii++)
+	/*for(ii = pl->uid_start+1; ii < pl->uid_end-1; ii++)
 	{
 		/* getting distance between the previous particle and current */
-		dist = get_dist(*old_particles[ii].x, *old_particles[ii-1].x, *old_particles[ii].y, *old_particles[ii-1].y, *old_particles[ii].z, *old_particles[ii-1].z);
+		/*dist = get_dist(*old_particles[ii].x, *old_particles[ii-1].x, *old_particles[ii].y, *old_particles[ii-1].y, *old_particles[ii].z, *old_particles[ii-1].z);
 		/* check if the previous particle in the sequence is the previous particle in the sequence */
-		if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
+		/*if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
 		{
-			nlist_array[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)] = &old_particles[ii-1];
-			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
+			/*old_particles[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)].nlist[0] = &old_particles[ii-1];*/
+		/*	old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
 		}
 		/* get the distance to the next particle */
-		dist = get_dist(*old_particles[ii].x, *old_particles[ii+1].x, *old_particles[ii].y, *old_particles[ii+1].y, *old_particles[ii].z, *old_particles[ii+1].z);
+		/*dist = get_dist(*old_particles[ii].x, *old_particles[ii+1].x, *old_particles[ii].y, *old_particles[ii+1].y, *old_particles[ii].z, *old_particles[ii+1].z);
 		/* check if the next particle is the next one in the sequence */
-		if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
+		/*if(dist < 2.1*old_particles[ii].ptype->R && dist > 1.9*old_particles[ii].ptype->R)
 		{
-			nlist_array[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)] = &old_particles[ii+1];
-			old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
+			/*old_particles[ind2D(ii, old_particles[ii].nlistlen, plist_len, max_cons)].nlist[1] = &old_particles[ii+1];*/
+			/*old_particles[ii].nlistlen = old_particles[ii].nlistlen + 1;
 		}
 	}
 	/* get distance from the last particle in the sequence to the second to last */
-	dist = get_dist(*old_particles[pl->uid_end].x, *old_particles[pl->uid_end-1].x, *old_particles[pl->uid_end].y, *old_particles[pl->uid_end-1].y, *old_particles[pl->uid_end].z, *old_particles[pl->uid_end-1].z);
+	/*dist = get_dist(*old_particles[pl->uid_end].x, *old_particles[pl->uid_end-1].x, *old_particles[pl->uid_end].y, *old_particles[pl->uid_end-1].y, *old_particles[pl->uid_end].z, *old_particles[pl->uid_end-1].z);
 	/* check if the second to last particle in the sequence is attached to the last particle */
-	if(dist < 2.1*pl->R && dist > 1.9*pl->R)
+	/*if(dist < 2.1*pl->R && dist > 1.9*pl->R)
 	{
-		nlist_array[ind2D(pl->uid_end, old_particles[pl->uid_end].nlistlen, plist_len, max_cons)] = &old_particles[pl->uid_end-1];
-		old_particles[pl->uid_end].nlistlen = old_particles[pl->uid_end].nlistlen + 1;
-	}
+		/*old_particles[ind2D(pl->uid_end, old_particles[pl->uid_end].nlistlen, plist_len, max_cons)].nlist[0] = &old_particles[pl->uid_end-1];*/
+	/*	old_particles[pl->uid_end].nlistlen = old_particles[pl->uid_end].nlistlen + 1;
+	}*/
 }
 
 void create_chain_surface(struct particle* old_particles, int plist_len, struct particle** nlist_array, part_defs* pl, part_defs* pl_centre)

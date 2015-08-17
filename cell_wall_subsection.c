@@ -86,10 +86,10 @@ int main(void) /*this may change to take in arguments later*/
 	create_sat_bonds(old_particles, plist_len, &H2O);
 	printf("finished create_sat_bonds \n");
 	/* create the bonds that exist between elements of a chain, will need updating when chains can have multiple elments in the cross section */
-	/*printf("starting calls to create_chain_bonds \n");*/
-	/*create_chain_bonds(old_particles, plist_len, nlist_array, &FA1);*/ /* creates the strong bonds between chains */
-	/*create_chain_bonds(old_particles, plist_len, nlist_array, &HC1);*/ /* creates the strong bonds between chains */
-	/*printf("finished calls to create_chain_bonds \n");*/
+	printf("starting calls to create_chain_bonds \n");
+	create_chain_bonds(old_particles, plist_len, &FA1); /* creates the strong bonds between chains */
+	/*create_chain_bonds(old_particles, plist_len, &HC1);*/ /* creates the strong bonds between chains */
+	printf("finished calls to create_chain_bonds \n");
 
 	int jj;
 	FILE *allp = fopen("allp.csv", "w");
