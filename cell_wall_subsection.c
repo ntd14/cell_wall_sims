@@ -88,7 +88,7 @@ int main(void) /*this may change to take in arguments later*/
 	/* create the bonds that exist between elements of a chain, will need updating when chains can have multiple elments in the cross section */
 	printf("starting calls to create_chain_bonds \n");
 	create_chain_bonds(old_particles, plist_len, &FA1); /* creates the strong bonds between chains */
-	/*create_chain_bonds(old_particles, plist_len, &HC1);*/ /* creates the strong bonds between chains */
+	create_chain_bonds(old_particles, plist_len, &HC1); /* creates the strong bonds between chains */
 	printf("finished calls to create_chain_bonds \n");
 
 	int jj;
@@ -108,14 +108,14 @@ int main(void) /*this may change to take in arguments later*/
 		fprintf(allp, "%f, ", *old_particles[ii].z);
 		fprintf(allp, "%s, ", old_particles[ii].ptype->name);
 		fprintf(allp, "%i, ", old_particles[ii].nlistlen);
-		if(old_particles[ii].nlistlen > 0)
+/*		if(old_particles[ii].nlistlen > 0)
 		{
 			for(jj = 0; jj < old_particles[ii].nlistlen -1; jj++)
 			{
 				fprintf(allp, "%i; ", (*old_particles[ii].nlist[jj]).uid);
 			}
 			fprintf(allp, "%i ", (*old_particles[ii].nlist[jj]).uid);
-		}
+		}*/
 		fprintf(allp, "\n");
 	}
 	fclose(allp);
