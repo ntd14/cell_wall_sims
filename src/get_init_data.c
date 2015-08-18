@@ -26,25 +26,31 @@ int create_init_state(double* 	init_coors, int ca_len)
 	li = sat_problem_space(init_coors, li, H2O, ca_len);
 	H2O.uid_end = li -1;
 	printf("exited sat problem space, created %i H2O\n", H2O.uid_end - H2O.uid_start);
+
+
 	printf("entering bchain \n");
 	FA1.uid_start = li;
 	li = bchain(init_coors, FA1, ca_len, li);
 	FA1.uid_end = li - 1;
 
+	printf("exiting bchain created %i FA1 \n", FA1.uid_end - FA1.uid_start);
+
 	FA2.uid_start = li;
 	li = bchain_sur(init_coors, FA2, FA1, ca_len, li);
 	FA2.uid_end = li - 1;
 
-	printf("exiting bchain created %i FA1 \n", FA1.uid_end - FA1.uid_end);
+	printf("entering bchain \n");
 	HC1.uid_start = li;
 	li = bchain(init_coors, HC1, ca_len, li);
 	HC1.uid_end = li -1;
+
+	printf("exited bchain created %i HC1 \n", HC1.uid_end - HC1.uid_start);
 
 	HC2.uid_start = li;
 	li = bchain_sur(init_coors, HC2, HC1, ca_len, li);
 	HC2.uid_end = li - 1;
 
-	printf("exited bchain created %i HC1 \n", HC1.uid_end - HC1.uid_start);
+
 
 	printf("leaving get_init_data created %i particles \n", li);
 	return(li);

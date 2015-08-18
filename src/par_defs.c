@@ -8,20 +8,21 @@
 #include <math.h>
 
 /* define size of problem space in nm */
-int length_of_problem_space = 30;
-int height_of_problem_space = 30;
-int depth_of_problem_space = 30;
+int length_of_problem_space = 50;
+int height_of_problem_space = 50;
+int depth_of_problem_space = 50;
 
 double max_ndist = 10;
 int max_cons = 500;
 
 /*see header file for def of each entry*/
-part_defs FA1 = {"FA1", 3.22625, 1500.0, 0, 0, 0, 0, 100, 0}; /* aprox 35% */
-part_defs FA2 = {"FA2", 2.0,     1500.0, 0,      0,      0, 0, 8}; /* Note these chains run around the FA1 core use r = Rsin(π/n)/[1 - sin(π/n)] and R = r[1 - sin(π/n)]/sin(π/n)
+part_defs FA1 = {"FA1", 3.22625, 1500.0, 0, 0, 0, 0, 100, 5}; /* aprox 35% */
+part_defs FA2 = {"FA2", 2.0,     1500.0, 0, 0, 0, 0,   8}; /* Note these chains run around the FA1 core use r = Rsin(π/n)/[1 - sin(π/n)] and R = r[1 - sin(π/n)]/sin(π/n)
  	 	 	 	 	 	 	 	 	 	 	 	 	 	 * to pick the FA1 and FA2 radii as well as the chain length for FA2, calculator here http://www.had2know.com/academics/outer-circular-ring-radii-formulas-calculator.html*/
-part_defs HC1 = {"HC1", 3.22625, 1500.0, 0, 0, 0, 0, 20, 3};/* aprox 20% */
-part_defs HC2 = {"HC2", 2.0,     1500.0, 0,      0,      0, 0, 8}; /* see FA2 comment */
-part_defs H2O = {"H2O", 400.0, 1000.0, 0, 0, 0, 0, 0, 0}; /* aprox 30%, leave number of particles unknown it is calculated later */
+part_defs HC1 = {"HC1", 3.22625, 1500.0, 0, 0, 0, 0, 100, 5};/* aprox 20% */
+part_defs HC2 = {"HC2", 2.0,     1500.0, 0, 0, 0, 0,  8}; /* see FA2 comment */
+
+part_defs H2O = {"H2O", 4.0, 1000.0, 0, 0, 0, 0, 0, 0}; /* aprox 30%, leave number of particles unknown it is calculated later */
 
 con_defs FA1FA1strong = {"FA1", "FA1", 14, 100, -1000, 0, 14, 1000};
 con_defs FA1FA1weak = {"FA1", "FA1", 14, 100, -1000, 0, 14, 1000};
