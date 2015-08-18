@@ -56,7 +56,7 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 	 for(bcp = pl_centre.uid_start; bcp < pl_centre.uid_end+1; bcp++)
 	 {
 		 xo = coor_array[ind2D(bcp, 0, alen, 3)];
-		 yo = coor_array[ind2D(bcp, 2, alen, 3)];
+		 yo = coor_array[ind2D(bcp, 1, alen, 3)];
 
 		 for(ii = 0; ii < pl.max_build_steps; ii++)
 		 {

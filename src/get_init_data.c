@@ -58,7 +58,7 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 	int ii;
 	for(ii = pl->uid_start; ii <= pl->uid_end; ii++)
 	{
-		old_particles[ii].uid = ii; /* not that sure this is needed, may need to add 1 so no uids are zero, change above start and end points to +1 if this is the case */
+		old_particles[ii].uid = ii;
 		old_particles[ii].x = *init_coors_ptr + ind2D(ii,0, plist_len, 3);
 		old_particles[ii].y = *init_coors_ptr + ind2D(ii,1, plist_len, 3);
 		old_particles[ii].z = *init_coors_ptr + ind2D(ii,2, plist_len, 3);
@@ -67,6 +67,9 @@ void load_particle_into_struct(struct particle* old_particles, double** init_coo
 		old_particles[ii].nlist = &nlist_array[ind2D(ii, 0, plist_len, max_cons)];
 	}
 }
+
+/*################## NOTE HERE ############### */
+/* ALL FUNCTIONS BELOW THIS POINT ARE NOT USED  AND HAVE BEEN COMMENTED FROM THE HEADER FILE*/
 
 /*takes non-chain forming particles, H2O only at this stage, and uses a huristic to get the NN list, will only work before deformation and for particles of the same type */
 void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* pl)
@@ -162,7 +165,7 @@ void create_chain_bonds(struct particle* old_particles, int plist_len, part_defs
 		}
 	}
 	/* get distance from the last particle in the sequence to the second to last */
-	/*dist = get_dist(*old_particles[pl->uid_end].x, *old_particles[pl->uid_end-1].x, *old_particles[pl->uid_end].y, *old_particles[pl->uid_end-1].y, *old_particles[pl->uid_end].z, *old_particles[pl->uid_end-1].z);
+	/*dist = get_dist(*old_particles[pl->uid_end].x, *old_particles[pl->uid_end-1].x, *old_particles[pl->uid_end].y, *old_particles[pl->uid_end-1].y, *old_particles[pl->uid_end].z, *old_particles[pl->uid_end-1].z);*/
 	/* check if the second to last particle in the sequence is attached to the last particle */
 	if(dist < 2.1*pl->R && dist > 1.9*pl->R)
 	{
@@ -213,4 +216,5 @@ void create_chain_surface(struct particle* old_particles, int plist_len, struct 
 /* to get an updated NN list, take the current particles NN list then go to each of the particles on the list and get their NN lists.
  * Scan their NN lists for particles that are in contact with the first, and add any that are to the first particles NN list.
  */
+
 

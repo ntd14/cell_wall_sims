@@ -15,6 +15,7 @@
 #include "src/get_init_data.h"
 #include "src/main_worker.h"
 #include "src/post_processing.h"
+#include "src/global_search.h"
 
 
 int main(void) /*this may change to take in arguments later*/
@@ -82,14 +83,10 @@ int main(void) /*this may change to take in arguments later*/
 	load_particle_into_struct(old_particles, init_coors_ptr, &HC2, plist_len, nlist_array);
 	printf("finished calls to load_particle_into_struct \n");
 
-	printf("calling create_sat_bonds \n");
-	create_sat_bonds(old_particles, plist_len, &H2O);
-	printf("finished create_sat_bonds \n");
-	/* create the bonds that exist between elements of a chain, will need updating when chains can have multiple elments in the cross section */
-	printf("starting calls to create_chain_bonds \n");
-	create_chain_bonds(old_particles, plist_len, &FA1); /* creates the strong bonds between chains */
-	create_chain_bonds(old_particles, plist_len, &HC1); /* creates the strong bonds between chains */
-	printf("finished calls to create_chain_bonds \n");
+	printf("calling global search \n");
+	search_all_upper(old_particles, plist_len);
+	printf("returned from global search \n");
+
 
 	int jj;
 	FILE *allp = fopen("allp.csv", "w");
@@ -108,63 +105,18 @@ int main(void) /*this may change to take in arguments later*/
 		fprintf(allp, "%f, ", *old_particles[ii].z);
 		fprintf(allp, "%s, ", old_particles[ii].ptype->name);
 		fprintf(allp, "%i, ", old_particles[ii].nlistlen);
-/*		if(old_particles[ii].nlistlen > 0)
+		if(old_particles[ii].nlistlen > 0)
 		{
 			for(jj = 0; jj < old_particles[ii].nlistlen -1; jj++)
 			{
-				fprintf(allp, "%i; ", (*old_particles[ii].nlist[jj]).uid);
+				fprintf(allp, "%i; ", old_particles[ii].nlist[jj]->uid);
 			}
-			fprintf(allp, "%i ", (*old_particles[ii].nlist[jj]).uid);
-		}*/
+			fprintf(allp, "%i ", old_particles[ii].nlist[jj]->uid);
+		}
 		fprintf(allp, "\n");
 	}
 	fclose(allp);
 
-
-
-
-	/*maybe get a new vector of centre points by taking the ones that have been created and translating to new pos.
-	 * Then can label them as a new particle type
-	 */
-	/* build NN lists this should be generic so can be used every time a full problem space search is needed*/
-
-/*	for(ii=0;ii<plist_len;ii++)
-	{
-		printf("%i ", old_particles[ii].uid);
-		printf("%f ", *old_particles[ii].x);
-		printf("%f ", *old_particles[ii].y);
-		printf("%f ", *old_particles[ii].z);
-		printf("%i ", old_particles[ii].nlistlen);
-
-		if(old_particles[ii].nlistlen > 0)
-		{
-			printf("%i \n", old_particles[ii].nlist[0]->uid);
-		}
-		else
-		{
-			printf("NNNNNNNNN \n");
-		}
-	}
-
-
-	 at this point have an array of structs "all_particles" in there init positions, before any work is done*/
-
-
-/*	FILE *allp = fopen("allp.vtk", "w");
-	if (allp == NULL)
-	{
-	    printf("Error opening file!\n");
-	    exit(1);
-	}
-	fprintf(allp, "x, y, z, type \n");
-	for(ii = 0; ii < plist_len; ii++)
-	{
-		fprintf(allp, "%f, ", all_particles[ii].x);
-		fprintf(allp, "%f, ", all_particles[ii].y);
-		fprintf(allp, "%f, ", all_particles[ii].z);
-		fprintf(allp, "%i, \n",all_particles[ii].nlistlen);
-	}
-	fclose(allp);*/
 
 	free(nlist_array);
 	nlist_array = NULL;
