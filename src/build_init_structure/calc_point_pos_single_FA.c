@@ -28,7 +28,7 @@ void point_neg(double* cur_point, double* next_point, double theta, double thi, 
 {
 	next_point[0] = p_len*cos(theta + M_PI)*sin(thi)+ cur_point[0];
 	next_point[1] = p_len*sin(theta + M_PI)*sin(thi)+ cur_point[1];
-	next_point[2] = p_len*cos(thi) + cur_point[2];
+	next_point[2] = p_len*cos(thi+M_PI) + cur_point[2];
 }
 
 int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int alen)
@@ -72,7 +72,6 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 	}
 	int tmp_pos_len = ii;
 
-	/* update here for 3D */
 	ii = 0;
 	while(cur_point_neg[0] < length_of_problem_space-2*pl.R && cur_point_neg[1] < height_of_problem_space-2*pl.R && cur_point_neg[2] < depth_of_problem_space-2*pl.R
 			&& cur_point_neg[0] > 2*pl.R && cur_point_neg[1] > 2*pl.R && cur_point_neg[2] > 2*pl.R
