@@ -23,7 +23,7 @@ int main(void) /*this may change to take in arguments later*/
 	printf("entering main \n");
 	int ii;
 	/* calc the number of H2O particles to be used */
-	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1);
+	H2O.num_of = (length_of_problem_space/(H2O.R*2) + 1)*(depth_of_problem_space/(H2O.R*2) + 1)*(height_of_problem_space/(H2O.R*2) + 1);
 	/* calc total potentiual number of particles, needs updateding if have multiple particles in each chain cross section */
 
 	FA2.num_of = 2*FA1.max_build_steps*FA1.num_of;

@@ -85,8 +85,8 @@ void create_sat_bonds(struct particle* old_particles, int plist_len, part_defs* 
 	printf("Thickness of non-chain particles as NNs: %i \n",ran);
 	/* get the number of particles along each side */
 	int sl = (int)(length_of_problem_space/(pl->R*2.0) + 1);
-	int sh = (int)(height_of_problem_space/(pl->R*2.0) + 1);
-	int sd = (int)(depth_of_problem_space/(pl->R*2.0) + 1);
+	int sh = (int)(depth_of_problem_space/(pl->R*2.0) + 1);
+	int sd = (int)(height_of_problem_space/(pl->R*2.0) + 1);
 	/* first three loops to iterate through the number of particles along each side */
 	for(ii=0; ii < sl; ii++)
 	{

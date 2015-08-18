@@ -19,24 +19,24 @@
 /* calc next point in positive direction */
 void point_pos(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(theta)*sin(thi)+ cur_point[0];
-	next_point[1] = p_len*sin(theta)*sin(thi) + cur_point[1];
-	next_point[2] = p_len*cos(thi) + cur_point[2];
+	next_point[0] = p_len*cos(thi)+-sin(theta)+ cur_point[0];
+	next_point[1] = p_len*sin(thi)+cos(theta) + cur_point[1];
+	next_point[2] = p_len*cos(theta) + cur_point[2];
 }
 /* calc next point in negitive direction */
 void point_neg(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(theta + M_PI)*sin(thi)+ cur_point[0];
-	next_point[1] = p_len*sin(theta + M_PI)*sin(thi)+ cur_point[1];
-	next_point[2] = p_len*cos(thi+M_PI) + cur_point[2];
+	next_point[0] = p_len*cos(thi + M_PI)*-sin(theta)+ cur_point[0];
+	next_point[1] = p_len*sin(thi + M_PI)*cos(theta)+ cur_point[1];
+	next_point[2] = p_len*cos(theta+M_PI) + cur_point[2];
 }
 
 int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int alen)
 {
-	double* vec_of_theta = norm_dist(2*pl.max_build_steps, pl.angle_lh, pl.sd_lh); /* note because norm_dist produces 2 random numbers
+	double* vec_of_theta = norm_dist(2*pl.max_build_steps, pl.angle_MFA, pl.sd_MFA); /* note because norm_dist produces 2 random numbers
 																	this is 2x more cpu efficant than calling each time,
 																	trade of is that it uses more memory*/
-	double* vec_of_thi = norm_dist(2*pl.max_build_steps, pl.angle_ld, pl.sd_ld);
+	double* vec_of_thi = norm_dist(2*pl.max_build_steps, pl.angle_depth, pl.sd_depth);
 
 	double p_len = 2*pl.R;
 	int ii, jj, ll;
@@ -54,10 +54,10 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 		cur_point_neg[ii] = start_point[ii];
 	}
 	ii = 0;
-/*	while(cur_point_pos[0] < length_of_problem_space-2*pl.R && cur_point_pos[1] < height_of_problem_space-2*pl.R && cur_point_pos[2] < depth_of_problem_space-2*pl.R
+/*	while(cur_point_pos[0] < length_of_problem_space-2*pl.R && cur_point_pos[1] < depth_of_problem_space-2*pl.R && cur_point_pos[2] < height_of_problem_space-2*pl.R
 			&& cur_point_pos[0] > 2*pl.R && cur_point_pos[1] > 2*pl.R && cur_point_pos[2] > 2*pl.R
 			&& ii < pl.max_build_steps)*/
-	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < height_of_problem_space && cur_point_pos[2] < depth_of_problem_space
+	while(cur_point_pos[0] < length_of_problem_space && cur_point_pos[1] < depth_of_problem_space && cur_point_pos[2] < height_of_problem_space
 				&& cur_point_pos[0] > 0 && cur_point_pos[1] > 0 && cur_point_pos[2] > 0
 				&& ii < pl.max_build_steps)
 	{
@@ -76,10 +76,10 @@ int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int al
 	int tmp_pos_len = ii;
 
 	ii = 0;
-/*	while(cur_point_neg[0] < length_of_problem_space-2*pl.R && cur_point_neg[1] < height_of_problem_space-2*pl.R && cur_point_neg[2] < depth_of_problem_space-2*pl.R
+/*	while(cur_point_neg[0] < length_of_problem_space-2*pl.R && cur_point_neg[1] < depth_of_problem_space-2*pl.R && cur_point_neg[2] < height_of_problem_space-2*pl.R
 			&& cur_point_neg[0] > 2*pl.R && cur_point_neg[1] > 2*pl.R && cur_point_neg[2] > 2*pl.R
 			&& ii < pl.max_build_steps)*/
-	while(cur_point_neg[0] < length_of_problem_space && cur_point_neg[1] < height_of_problem_space && cur_point_neg[2] < depth_of_problem_space
+	while(cur_point_neg[0] < length_of_problem_space && cur_point_neg[1] < depth_of_problem_space && cur_point_neg[2] < height_of_problem_space
 			&& cur_point_neg[0] > 0 && cur_point_neg[1] > 0 && cur_point_neg[2] > 0
 			&& ii < pl.max_build_steps)
 	{
