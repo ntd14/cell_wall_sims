@@ -19,16 +19,16 @@
 /* calc next point in positive direction */
 void point_pos(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(thi)+-sin(theta)+ cur_point[0];
-	next_point[1] = p_len*sin(thi)+cos(theta) + cur_point[1];
+	next_point[0] = p_len*(cos(thi)*-sin(theta)) + cur_point[0];
+	next_point[1] = p_len*(sin(thi)*cos(theta)) + cur_point[1];
 	next_point[2] = p_len*cos(theta) + cur_point[2];
 }
 /* calc next point in negitive direction */
 void point_neg(double* cur_point, double* next_point, double theta, double thi, double p_len)
 {
-	next_point[0] = p_len*cos(thi + M_PI)*-sin(theta)+ cur_point[0];
-	next_point[1] = p_len*sin(thi + M_PI)*cos(theta)+ cur_point[1];
-	next_point[2] = p_len*cos(theta+M_PI) + cur_point[2];
+	next_point[0] = p_len*(cos(thi + M_PI)*-sin(theta))+ cur_point[0];
+	next_point[1] = p_len*(sin(thi + M_PI)*cos(theta))+ cur_point[1];
+	next_point[2] = p_len*cos(theta + M_PI) + cur_point[2];
 }
 
 int new_point_pos(double* pos, double* start_point, part_defs pl, int li, int alen)

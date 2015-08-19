@@ -51,6 +51,12 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 	 double xo;
 	 double yo;
 	 double zo;
+	 double xn0;
+	 double yn0;
+	 double zn0;
+	 double xn1;
+	 double yn1;
+	 double zn1;
 	 int bcp;
 	 int ii;
 
@@ -62,9 +68,25 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 
 		 for(ii = 0; ii < pl.max_build_steps; ii++)
 		 {
-			 coor_array[ind2D(li, 0, alen, 3)] = xo + dchange*cos(ii*achange); /* - sin(ii*achange)*y_start */
-			 coor_array[ind2D(li, 1, alen, 3)] = yo + dchange*sin(ii*achange); /* + cos(ii*achange)*y_start */
-			 coor_array[ind2D(li, 2, alen, 3)] = zo;
+			 xn0 = dchange*cos(ii*achange);
+			 yn0 = dchange*sin(ii*achange);
+			 zn0 = 0;
+
+			 xn1 = xn0;
+			 yn1 = yn0*cos(pl.angle_depth) - zn0*sin(pl.angle_depth);
+			 zn1 = yn0*sin(pl.angle_depth) + zn0*cos(pl.angle_depth);
+
+			 xn0 = xn1*cos(pl.angle_MFA) - zn1*sin(pl.angle_MFA);
+			 yn0 = yn1;
+			 zn0 = xn1*sin(pl.angle_MFA) + zn1*cos(pl.angle_MFA);
+
+			 xn1 = xn0;
+			 yn1 = yn0;
+			 zn1 = zn0;
+
+			 coor_array[ind2D(li, 0, alen, 3)] = xo + xn1;
+			 coor_array[ind2D(li, 1, alen, 3)] = yo + yn1;
+			 coor_array[ind2D(li, 2, alen, 3)] = zo + zn1;
 			 li++;
 		 }
 	 }
