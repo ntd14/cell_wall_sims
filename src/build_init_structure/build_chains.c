@@ -80,13 +80,9 @@ int bchain(double* coor_array, part_defs pl, int alen, int li)
 			 yn0 = yn1;
 			 zn0 = xn1*sin(pl.angle_MFA) + zn1*cos(pl.angle_MFA);
 
-			 xn1 = xn0;
-			 yn1 = yn0;
-			 zn1 = zn0;
-
-			 coor_array[ind2D(li, 0, alen, 3)] = xo + xn1;
-			 coor_array[ind2D(li, 1, alen, 3)] = yo + yn1;
-			 coor_array[ind2D(li, 2, alen, 3)] = zo + zn1;
+			 coor_array[ind2D(li, 0, alen, 3)] = xo + xn0;
+			 coor_array[ind2D(li, 1, alen, 3)] = yo + yn0;
+			 coor_array[ind2D(li, 2, alen, 3)] = zo + zn0;
 			 li++;
 		 }
 	 }

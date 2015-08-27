@@ -19,8 +19,8 @@ int max_cons = 500;
 part_defs FA1 = {"FA1", 3.22625, 1500.0, 0, 0, 0.2, 0.04, 100, 50}; /* aprox 35% */ /* Name, Rad, density, MFA, angle in depth, sd on MFA, sd on depth angle, 0.5*max chain length, num of chains */
 part_defs FA2 = {"FA2", 2.0,     1500.0, 0, 0, 0.2, 0.04,   8}; /* Note these chains run around the FA1 core use r = Rsin(π/n)/[1 - sin(π/n)] and R = r[1 - sin(π/n)]/sin(π/n)
  	 	 	 	 	 	 	 	 	 	 	 	 	 	 * to pick the FA1 and FA2 radii as well as the chain length for FA2, calculator here http://www.had2know.com/academics/outer-circular-ring-radii-formulas-calculator.html*/
-part_defs HC1 = {"HC1", 1, 1500.0, M_PI/2, 0, 1, 1, 10, 100};/* aprox 20% */
-part_defs HC2 = {"HC2", 0.5,     1500.0, M_PI/2, 0, 1, 1,  8}; /* see FA2 comment */
+part_defs HC1 = {"HC1", 1,  1500.0, 0, 0, 1, 1, 10, 100};/* aprox 20% */
+part_defs HC2 = {"HC2", 0.5,1500.0, 0, 0, 1, 1,  8}; /* see FA2 comment */
 
 part_defs H2O = {"H2O", 4.0, 1000.0, 0, 0, 0, 0, 0, 0}; /* aprox 30%, leave number of particles unknown it is calculated later */
 
