@@ -23,7 +23,7 @@ int main(void) /*this may change to take in arguments later*/
 /* subset to the region defined in the ini */
 /* build CML, isotropic, with from ini */
 /* fill inside with H20 particles */
-/* randomly take points at each end of the cylinder, ie the tips, */
+/* take inner most points at each end of the cylinder, ie the tips, */
 /* what was doing tip growth now creates the FAs */
 /* run step to stable state */
 /* move up/down a bit using the verious randomnesses */
