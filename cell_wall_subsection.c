@@ -20,6 +20,7 @@ int main(void) /*this may change to take in arguments later*/
  * \
 /* call to some ini file with user adjustable varables */
 /* setup a cylindrical coord system */
+/*write cartesian<>cylindrical conversion function */
 /* subset to the region defined in the ini */
 /* build CML, isotropic, with from ini */
 /* fill inside with H20 particles */
