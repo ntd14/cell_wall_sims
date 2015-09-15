@@ -1,23 +1,15 @@
-/*
- * twoD_single_pore.c
- *
- *  Created on: 21/05/2015
- *      Author: nick
- *
- *  This is the main trunk file for the implementation.
- */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "./iniparser/src/iniparser.h" /* from http://ndevilla.free.fr/iniparser/html/index.html*/
 
-
-int main(void) /*this may change to take in arguments later*/
+int main(void)
 {
 	printf("entering main \n");
 	int ii;
-/*
- * Here will include:
- * \
+
+ /* Here will include:
+ */
 /* call to some ini file with user adjustable varables */
 /* setup a cylindrical coord system */
 /* write cartesian<>cylindrical conversion function */
