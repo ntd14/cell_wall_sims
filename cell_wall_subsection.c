@@ -20,21 +20,35 @@ int main(void) /*this may change to take in arguments later*/
  * \
 /* call to some ini file with user adjustable varables */
 /* setup a cylindrical coord system */
+/* write cartesian<>cylindrical conversion function */
 /* subset to the region defined in the ini */
 /* build CML, isotropic, with from ini */
+/* build boundary conditions for togur pressure etc */
 /* fill inside with H20 particles */
 /* take inner most points at each end of the cylinder, ie the tips, */
 /* what was doing tip growth now creates the FAs */
 /* run step to stable state */
-/* move up/down a bit using the verious randomnesses */
+/* move up/down a bit using the verious randomnesses -- controled by functions with space and time/age dependence -- */
 /* run step to stable */
 /* loop it until built */
 /* somehow set rate */
-/* if close enough, FA with most MFAs links using x MFAs */
-/* if the same, no link */
+/* if close enough, FAs link to form big FAs */
 /* at some point start lignification */
-
-/* need to some how set the rate of lignification */
 	return 0;
 }
+
+/* structs */
+
+/* uid */
+/* Ptype */
+/* coords */
+/* conns */
+/* creation time */
+
+/* ptype1 */
+/* ptype2 */
+/* function of force */
+
+
+
 
