@@ -20,13 +20,15 @@ int main(void)
 /* build a generic function to interpolate properties between the points in the ini file. curently set to 9 but could generalise? */
 /* write cartesian<>cylindrical conversion function */
 /* setup a cylindrical coord system */
-/* subset to the region defined in the ini */
+/* subset to the ROI defined in the ini */
 /* build CML */
 /* build boundary conditions for togur pressure etc */
 /* fill inside with H20 particles */
 /* take inner most points at each end of the cylinder, ie the tips, what was doing tip growth now creates the FAs */
+/* generic function to deal with force applied to each particle. outermost point = 0, linear to intersept, linear to very large inside intersept */
 /* run step to stable state */
 /* move up/down a bit using the verious randomnesses -- controled by functions with space and time/age dependence -- */
+/* when a FA hits the end of the ROI need some logic as to where to start it next time to keep the chem proportions correct */
 /* run step to stable */
 /* loop it until built */
 /* somehow set rate */
@@ -42,10 +44,6 @@ int main(void)
 /* coords */
 /* conns */
 /* creation time */
-
-/* ptype1 */
-/* ptype2 */
-/* function of force */
 
 
 
