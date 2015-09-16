@@ -6,8 +6,18 @@
 int main(void)
 {
 	printf("entering main \n");
+
 	const char * properties = "properties.ini";
 	dictionary* d = iniparser_load(properties);
+	const char * TEST_VAR_lab = "vars:TEST_VAR";
+	int TEST_VAR = iniparser_getint(d, TEST_VAR_lab, 0);
+	if(TEST_VAR == 1){
+		printf("ini test pass \n");
+	}
+	else {
+		printf("\n #### WARNING #### \n");
+		printf("ini test failed with val: %d \n\n", TEST_VAR);
+	}
 	const char * ROI_angle_lab = "vars:ROI_angle";
 	double ROI_angle = iniparser_getdouble(d, ROI_angle_lab, 99999999999);
 	printf("ini ROI_angle in rads: %f ", ROI_angle);
@@ -17,7 +27,8 @@ int main(void)
  */
 /* call to some ini file with user adjustable varables */
 /* load the varables to a useable format */
-/* build a generic function to interpolate properties between the points in the ini file. curently set to 9 but could generalise? */
+/* use some convention like if rad == 0 ignore so that can use a smaller number of interp points if needed */
+/* build a generic function to interpolate properties between the points in the ini file. curently set to 10 (0 - 9) but could generalise? */
 /* write cartesian<>cylindrical conversion function */
 /* setup a cylindrical coord system */
 /* subset to the ROI defined in the ini */
