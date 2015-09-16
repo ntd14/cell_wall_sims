@@ -16,14 +16,15 @@ int main(void)
 	/* Here will include:
  */
 /* call to some ini file with user adjustable varables */
-/* setup a cylindrical coord system */
+/* load the varables to a useable format */
+/* build a generic function to interpolate properties between the points in the ini file. curently set to 9 but could generalise? */
 /* write cartesian<>cylindrical conversion function */
+/* setup a cylindrical coord system */
 /* subset to the region defined in the ini */
-/* build CML, isotropic, with from ini */
+/* build CML */
 /* build boundary conditions for togur pressure etc */
 /* fill inside with H20 particles */
-/* take inner most points at each end of the cylinder, ie the tips, */
-/* what was doing tip growth now creates the FAs */
+/* take inner most points at each end of the cylinder, ie the tips, what was doing tip growth now creates the FAs */
 /* run step to stable state */
 /* move up/down a bit using the verious randomnesses -- controled by functions with space and time/age dependence -- */
 /* run step to stable */
