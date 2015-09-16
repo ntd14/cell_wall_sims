@@ -1,14 +1,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "./iniparser/src/iniparser.h" /* from http://ndevilla.free.fr/iniparser/html/index.html*/
+#include "./src/helpers/iniparser.h" /* from http://ndevilla.free.fr/iniparser/html/index.html*/
 
 int main(void)
 {
 	printf("entering main \n");
-	int ii;
+	const char * properties = "properties.ini";
+	dictionary* d = iniparser_load(properties);
+	const char * ROI_angle_lab = "vars:ROI_angle";
+	double ROI_angle = iniparser_getdouble(d, ROI_angle_lab, 99999999999);
+	printf("ini ROI_angle in rads: %f ", ROI_angle);
+	iniparser_freedict(d);
 
- /* Here will include:
+	/* Here will include:
  */
 /* call to some ini file with user adjustable varables */
 /* setup a cylindrical coord system */
