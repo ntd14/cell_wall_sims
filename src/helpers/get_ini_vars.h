@@ -17,10 +17,13 @@ typedef struct var {
 	int FA_steps_PT;
 	int LG_steps_PT;
 	int LG_start_time;
+	int num_points_used;
+	int num_cons_used;
 } var;
 var vars;
 
 typedef struct point {
+	char* name;
 	double rad;
 	double MFA;
 	double MFA_SD;
@@ -41,6 +44,7 @@ point P8;
 point P9;
 
 typedef struct con {
+	char* name;
 	double dist;
 	double met;
 	double met_force;
@@ -53,6 +57,16 @@ con FA0H2Ocon;
 con LG0LG0con;
 con LG0H2Ocon;
 con H2OH2Ocon;
+
+typedef struct pc_lists {
+	char* list_points;
+	point* ptr_points;
+	char* list_cons;
+	con* ptr_cons;
+} pc_lists;
+
+pc_lists pclists;
+
 
 void build_structs();
 

@@ -3,11 +3,21 @@
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
 
+#include "./src/helpers/interp_funs.h"
+
 int main(void)
 {
 	printf("entering main \n");
 
 	build_structs();
+
+	/*printf("%s \n", pclists.list_points[1]);*/
+
+	char* interp_var = "MFA_SD";
+	double r = 530;
+	double val = get_interp_val_P(r, interp_var);
+
+	printf("%f \n", val);
 
 	printf("finished main \n");
 

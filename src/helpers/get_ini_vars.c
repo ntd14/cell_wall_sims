@@ -31,42 +31,33 @@ void vars_import()
 	const char* properties = "properties.ini";
 	dictionary* d = iniparser_load(properties);
 	char tmp1[30];
-	char tmp2[30];
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "ROI_angle");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:ROI_angle");
 	vars.ROI_angle = iniparser_getdouble(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "H2O_dia");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:H2O_dia");
 	vars.H2O_dia = iniparser_getdouble(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "FA_dia");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:FA_dia");
 	vars.FA_dia = iniparser_getdouble(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "LG_dia");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:LG_dia");
 	vars.LG_dia = iniparser_getdouble(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "FA_steps_PT");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:FA_steps_PT");
 	vars.FA_steps_PT = iniparser_getint(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "LG_steps_PT");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:LG_steps_PT");
 	vars.LG_steps_PT = iniparser_getint(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:");
-	strcpy(tmp2, "LG_start_time");
-	strcat(tmp1, tmp2);
+	strcpy(tmp1, "vars:LG_start_time");
 	vars.LG_start_time = iniparser_getint(d, tmp1, 0);
+
+	strcpy(tmp1, "vars:num_points_used");
+	vars.num_points_used = iniparser_getint(d, tmp1, 0);
+
+	strcpy(tmp1, "vars:num_cons_used");
+	vars.num_cons_used = iniparser_getint(d, tmp1, 0);
 
 	iniparser_freedict(d);
 
@@ -80,6 +71,8 @@ void point_import(char* p, point* P)
 	char tmp2[30];
 
 	strcpy(tmp1, p);
+	P->name = tmp1;
+
 	strcpy(tmp2, ":rad");
 	strcat(tmp1, tmp2);
 	P->rad = iniparser_getdouble(d, tmp1, 0);
@@ -121,6 +114,8 @@ void con_import(char* c, con* C)
 	char tmp2[30];
 
 	strcpy(tmp1, c);
+	C->name = tmp1;
+
 	strcpy(tmp2, ":dist");
 	strcat(tmp1, tmp2);
 	C->dist = iniparser_getdouble(d, tmp1, 0);
@@ -155,18 +150,26 @@ void build_structs()
 
 	char* list_points[] = {"P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"};
 	point* ptr_points[] = {&P0, &P1, &P2, &P3, &P4, &P5, &P6, &P7, &P8, &P9};
+	char* list_cons[] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2Ocon", "H2OH2Ocon"};
+	con* ptr_cons[] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
+
+	pclists.ptr_points = *ptr_points;
+	pclists.list_points = *list_points;
+	pclists.ptr_cons = *ptr_cons;
+	pclists.list_cons = *list_cons;
+
+	printf("%s \n", list_points[1]);
+	memcpy(pclists.list_points, list_points, sizeof(char)*20);
+
 	char p[3];
 	int ii;
-	for(ii=0; ii < 10; ii++)
+	for(ii=0; ii < vars.num_points_used; ii++)
 	{
 		strcpy(p, list_points[ii]);
 		point_import(p, ptr_points[ii]);
 	}
-
-	char* list_cons[] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2Ocon", "H2OH2Ocon"};
-	con* ptr_cons[] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
 	char c[10];
-	for(ii=0; ii < 6; ii++)
+	for(ii=0; ii < vars.num_cons_used; ii++)
 	{
 		strcpy(c, list_cons[ii]);
 		con_import(c, ptr_cons[ii]);
