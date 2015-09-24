@@ -8,7 +8,7 @@
 #include <string.h>
 #include "iniparser.h" /* from http://ndevilla.free.fr/iniparser/html/index.html*/
 #include "get_ini_vars.h"
-
+#include "lists.h"
 
 void test_ini_import()
 {
@@ -148,32 +148,18 @@ void build_structs()
 
 	vars_import();
 
-	char* list_points[] = {"P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"};
-	point* ptr_points[] = {&P0, &P1, &P2, &P3, &P4, &P5, &P6, &P7, &P8, &P9};
-	char* list_cons[] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2Ocon", "H2OH2Ocon"};
-	con* ptr_cons[] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
-
-	pc_lists* ptr_pclists = &pclists;
-
-	ptr_pclists->ptr_points = ptr_points;
-	ptr_pclists->list_points = list_points;
-	ptr_pclists->ptr_cons = ptr_cons;
-	ptr_pclists->list_cons = list_cons;
-
-	printf("%s \n", list_points[1]);
-
 	char p[3];
 	int ii;
 	for(ii=0; ii < vars.num_points_used; ii++)
 	{
-		strcpy(p, list_points[ii]);
-		point_import(p, ptr_points[ii]);
+		strcpy(p, &list_points[ii]);
+		point_import(p, &ptr_points[ii]);
 	}
 	char c[10];
 	for(ii=0; ii < vars.num_cons_used; ii++)
 	{
-		strcpy(c, list_cons[ii]);
-		con_import(c, ptr_cons[ii]);
+		strcpy(c, &list_cons[ii]);
+		con_import(c, &ptr_cons[ii]);
 	}
 
 	printf("finished building structs from ini file \n");

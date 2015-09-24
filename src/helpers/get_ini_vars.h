@@ -58,14 +58,7 @@ struct con LG0LG0con;
 struct con LG0H2Ocon;
 struct con H2OH2Ocon;
 
-typedef struct pc_lists {
-	char** list_points;
-	point** ptr_points;
-	char** list_cons;
-	con** ptr_cons;
-} pc_lists;
 
-struct pc_lists pclists;
 
 void build_structs();
 
