@@ -153,13 +153,14 @@ void build_structs()
 	char* list_cons[] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2Ocon", "H2OH2Ocon"};
 	con* ptr_cons[] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
 
-	pclists.ptr_points = *ptr_points;
-	pclists.list_points = *list_points;
-	pclists.ptr_cons = *ptr_cons;
-	pclists.list_cons = *list_cons;
+	pc_lists* ptr_pclists = &pclists;
+
+	ptr_pclists->ptr_points = ptr_points;
+	ptr_pclists->list_points = list_points;
+	ptr_pclists->ptr_cons = ptr_cons;
+	ptr_pclists->list_cons = list_cons;
 
 	printf("%s \n", list_points[1]);
-	memcpy(pclists.list_points, list_points, sizeof(char)*20);
 
 	char p[3];
 	int ii;

@@ -20,7 +20,7 @@ typedef struct var {
 	int num_points_used;
 	int num_cons_used;
 } var;
-var vars;
+struct var vars;
 
 typedef struct point {
 	char* name;
@@ -32,16 +32,16 @@ typedef struct point {
 	double LG_content;
 } point;
 
-point P0;
-point P1;
-point P2;
-point P3;
-point P4;
-point P5;
-point P6;
-point P7;
-point P8;
-point P9;
+struct point P0;
+struct point P1;
+struct point P2;
+struct point P3;
+struct point P4;
+struct point P5;
+struct point P6;
+struct point P7;
+struct point P8;
+struct point P9;
 
 typedef struct con {
 	char* name;
@@ -51,22 +51,21 @@ typedef struct con {
 	double max_force;
 } con;
 
-con FA0FA0con;
-con FA0LG0con;
-con FA0H2Ocon;
-con LG0LG0con;
-con LG0H2Ocon;
-con H2OH2Ocon;
+struct con FA0FA0con;
+struct con FA0LG0con;
+struct con FA0H2Ocon;
+struct con LG0LG0con;
+struct con LG0H2Ocon;
+struct con H2OH2Ocon;
 
 typedef struct pc_lists {
-	char* list_points;
-	point* ptr_points;
-	char* list_cons;
-	con* ptr_cons;
+	char** list_points;
+	point** ptr_points;
+	char** list_cons;
+	con** ptr_cons;
 } pc_lists;
 
-pc_lists pclists;
-
+struct pc_lists pclists;
 
 void build_structs();
 
