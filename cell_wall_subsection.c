@@ -17,10 +17,10 @@ int main(void)
 
 /* check cartesian<>cylindrical conversion function */
 
+/* build boundary conditions for togur pressure, sourding cells etc */
+
 /* build CML in subseted ROI defined in the ini file*/
 	/* CML can just be FAs to start with, will have to work out how to have them randomly orentated, then fill the CML with lignin later */
-
-/* build boundary conditions for togur pressure etc */
 
 /* fill inside with H20 particles */
 
