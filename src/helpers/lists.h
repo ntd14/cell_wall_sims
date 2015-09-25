@@ -10,9 +10,9 @@
 
 
 
-char* list_points;
-point* ptr_points;
-char* list_cons;
-con* ptr_cons;
+char* list_points[10];
+point* ptr_points[10];
+char* list_cons[6];
+con* ptr_cons[6];
 
 #endif /* LISTS_H_ */

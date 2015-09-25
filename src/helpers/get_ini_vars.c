@@ -152,14 +152,14 @@ void build_structs()
 	int ii;
 	for(ii=0; ii < vars.num_points_used; ii++)
 	{
-		strcpy(p, &list_points[ii]);
-		point_import(p, &ptr_points[ii]);
+		strcpy(p, list_points[ii]);
+		point_import(p, ptr_points[ii]);
 	}
 	char c[10];
 	for(ii=0; ii < vars.num_cons_used; ii++)
 	{
-		strcpy(c, &list_cons[ii]);
-		con_import(c, &ptr_cons[ii]);
+		strcpy(c, list_cons[ii]);
+		con_import(c, ptr_cons[ii]);
 	}
 
 	printf("finished building structs from ini file \n");

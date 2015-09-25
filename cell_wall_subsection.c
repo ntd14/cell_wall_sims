@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
 
-#include "./src/helpers/interp_funs.h"
 
 int main(void)
 {
@@ -11,30 +10,20 @@ int main(void)
 
 	build_structs();
 
-	/*printf("%s \n", pclists.list_points[1]);*/
-
-	char* interp_var = "MFA_SD";
-	double r = 530;
-	double val = get_interp_val_P(r, interp_var);
-
-	printf("%f \n", val);
-
 	printf("finished main \n");
 
 
 	/* Here will include: */
 
-/* use some convention like if rad == 0 ignore so that can use a smaller number of interp points if needed */
+/* check cartesian<>cylindrical conversion function */
 
-/* build a generic function to interpolate properties between the points in the ini file. curently set to 10 (0 - 9) but could generalise? */
+/* build CML in subseted ROI defined in the ini file*/
+	/* CML can just be FAs to start with, will have to work out how to have them randomly orentated, then fill the CML with lignin later */
 
-/* write cartesian<>cylindrical conversion function */
-
-/* setup a cylindrical coord system */
-/* subset to the ROI defined in the ini */
-/* build CML */
 /* build boundary conditions for togur pressure etc */
+
 /* fill inside with H20 particles */
+
 /* take inner most points at each end of the cylinder, ie the tips, what was doing tip growth now creates the FAs */
 /* generic function to deal with force applied to each particle. outermost point = 0, linear to intersept, linear to very large inside intersept */
 /* run step to stable state */
