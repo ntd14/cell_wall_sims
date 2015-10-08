@@ -21,7 +21,10 @@ int main(void)
 /* build boundary conditions for togur pressure, sourding cells etc, this may need to be ini input info?
  * maybe do four quarters of the cell and the top/bottom, as boundaries each with there own properties in the ini
  * would then have to update the build_structs to include the new values
- * could maybe just have say x number of boundary conditions and give the extreme coords that they cover*/
+ * could maybe just have say x number of boundary conditions and give the extreme coords that they cover
+ *
+ * could take P0 rad and then just have a check somewhere that takes into account the BC if r >P0 rad,
+ * rather than any direct particle boundary*/
 
 /* build CML in subseted ROI defined in the ini file*/
 	/* CML can just be FAs to start with, will have to work out how to have them randomly orentated, then fill the CML with lignin later */
