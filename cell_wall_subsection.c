@@ -18,7 +18,7 @@ int main(void)
 
 /* check cartesian<>cylindrical conversion function */
 
-/* build boundary conditions for togur pressure, sourding cells etc */
+/* build boundary conditions for togur pressure, sourding cells etc, this may need to be ini input info? */
 
 /* build CML in subseted ROI defined in the ini file*/
 	/* CML can just be FAs to start with, will have to work out how to have them randomly orentated, then fill the CML with lignin later */
