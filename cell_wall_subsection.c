@@ -18,7 +18,10 @@ int main(void)
 
 /* check cartesian<>cylindrical conversion function */
 
-/* build boundary conditions for togur pressure, sourding cells etc, this may need to be ini input info? */
+/* build boundary conditions for togur pressure, sourding cells etc, this may need to be ini input info?
+ * maybe do four quarters of the cell and the top/bottom, as boundaries each with there own properties in the ini
+ * would then have to update the build_structs to include the new values
+ * could maybe just have say x number of boundary conditions and give the extreme coords that they cover*/
 
 /* build CML in subseted ROI defined in the ini file*/
 	/* CML can just be FAs to start with, will have to work out how to have them randomly orentated, then fill the CML with lignin later */
