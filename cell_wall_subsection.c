@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
 
+#include "./src/helpers/interp_funs.h"
 
 int main(void)
 {

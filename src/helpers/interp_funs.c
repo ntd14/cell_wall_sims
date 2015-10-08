@@ -56,13 +56,13 @@ double get_interp_val_P(double r, char* interp_var)
 		Pinnervar = Pinner.depth_SD;
 	}
 
-	else if(strcmp(interp_var, "depth_SD") == 0)
+	else if(strcmp(interp_var, "FA_content") == 0)
 	{
 		Poutervar = Pouter.FA_content;
 		Pinnervar = Pinner.FA_content;
 	}
 
-	else if(strcmp(interp_var, "depth_SD") == 0)
+	else if(strcmp(interp_var, "LG_content") == 0)
 	{
 		Poutervar = Pouter.LG_content;
 		Pinnervar = Pinner.LG_content;
