@@ -59,6 +59,9 @@ void vars_import()
 	strcpy(tmp1, "vars:num_cons_used");
 	vars.num_cons_used = iniparser_getint(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:num_bounds_used");
+	vars.num_bounds_used = iniparser_getint(d, tmp1, 0);
+
 	iniparser_freedict(d);
 
 }
@@ -139,6 +142,44 @@ void con_import(char* c, con* C)
 
 }
 
+void bound_import(char* b, bound* B)
+{
+	const char* properties = "properties.ini";
+	dictionary* d = iniparser_load(properties);
+	char tmp1[30];
+	char tmp2[30];
+
+	strcpy(tmp1, b);
+	B->name = tmp1;
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":r_start");
+	strcat(tmp1, tmp2);
+	B->r_start = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":r_end");
+	strcat(tmp1, tmp2);
+	B->r_end = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":force_FA0");
+	strcat(tmp1, tmp2);
+	B->force_FA0 = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":force_LG0");
+	strcat(tmp1, tmp2);
+	B->force_LG0 = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":force_H2O");
+	strcat(tmp1, tmp2);
+	B->force_H2O = iniparser_getdouble(d, tmp1, 0);
+
+	iniparser_freedict(d);
+
+}
 
 void build_structs()
 {
@@ -160,6 +201,13 @@ void build_structs()
 	{
 		strcpy(c, list_cons[ii]);
 		con_import(c, ptr_cons[ii]);
+	}
+
+	char b[10];
+	for(ii=0; ii < vars.num_bounds_used; ii++)
+	{
+		strcpy(b, list_bounds[ii]);
+		bound_import(b, ptr_bounds[ii]);
 	}
 
 	printf("finished building structs from ini file \n");

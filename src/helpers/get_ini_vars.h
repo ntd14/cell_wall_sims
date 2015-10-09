@@ -19,6 +19,7 @@ typedef struct var {
 	int LG_start_time;
 	int num_points_used;
 	int num_cons_used;
+	int num_bounds_used;
 } var;
 struct var vars;
 
@@ -58,7 +59,21 @@ struct con LG0LG0con;
 struct con LG0H2Ocon;
 struct con H2OH2Ocon;
 
+typedef struct bound {
+	char* name;
+	double r_start;
+	double r_end;
+	double force_FA0;
+	double force_LG0;
+	double force_H2O;
+} bound;
 
+struct bound B_top;
+struct bound B_bot;
+struct bound B0;
+struct bound B1;
+struct bound B2;
+struct bound B3;
 
 void build_structs();
 

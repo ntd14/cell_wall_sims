@@ -23,3 +23,10 @@ void cyl_to_cart(double* rtz_array, double* xyz_array)
 	xyz_array[1] = rtz_array[0]*sin(rtz_array[1]);
 	xyz_array[2] = rtz_array[2];
 }
+
+double arc_length(double r, double angle)
+{
+	double l = 2*r * M_PI * angle / (2*M_PI);
+	return l;
+}
+

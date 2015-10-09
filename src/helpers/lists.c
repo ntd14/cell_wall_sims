@@ -16,3 +16,7 @@ point* ptr_points[10] = {&P0, &P1, &P2, &P3, &P4, &P5, &P6, &P7, &P8, &P9};
 char* list_cons[6] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2Ocon", "H2OH2Ocon"};
 
 con* ptr_cons[6] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
+
+char* list_bounds[6] = {"B_top", "B_bot", "B0", "B1", "B2", "B3"};
+
+bound* ptr_bounds[6] = {&B_top, &B_bot, &B0, &B1, &B2, &B3};
