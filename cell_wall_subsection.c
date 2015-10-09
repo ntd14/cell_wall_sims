@@ -19,6 +19,9 @@ int main(void)
 /* check cartesian<>cylindrical conversion function */
 
 /* need some way to convert the conventional MFA into an MFA applied to the angle coord in cylindrical system */
+/* to start maybe just take point 1 in cyl, convert to cart, calc point 2 and convert point 2 to cyl
+ * Do using multiple functions so that can intersept for building chains, ie:
+ * take point in cart > calc next point in cart > convert first point to cyl and pass out > repeat */
 
 /* Now have the BCs, still need to write a check to see if a given particle is outside the boundary or not*/
 
