@@ -11,12 +11,19 @@ int main(void)
 
 	build_structs();
 
-	printf("finished main \n");
+	struct particle* old_particles = calloc(vars.max_particles,sizeof(struct particle));
+	if(old_particles == NULL)
+	{
+		printf("calloc failed when init particle* old_particles in cell_wall_subsection \n");
+	}
+
 
 
 	/* Here will include: */
 
 /* check cartesian<>cylindrical conversion function */
+
+/* Can I just calculate a new x position from the angle in cart then convert that to a theta val? */
 
 /* need some way to convert the conventional MFA into an MFA applied to the angle coord in cylindrical system */
 /* to start maybe just take point 1 in cyl, convert to cart, calc point 2 and convert point 2 to cyl
@@ -42,6 +49,11 @@ int main(void)
 /* somehow set rate */
 /* if close enough, FAs link to form big FAs */
 /* at some point start lignification */
+	printf("finished main \n");
+
+	free(old_particles);
+	old_particles = NULL;
+
 	return 0;
 }
 

@@ -59,6 +59,9 @@ void vars_import()
 	strcpy(tmp1, "vars:num_cons_used");
 	vars.num_cons_used = iniparser_getint(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:max_particles");
+	vars.max_particles = iniparser_getint(d, tmp1, 0);
+
 	strcpy(tmp1, "vars:num_bounds_used");
 	vars.num_bounds_used = iniparser_getint(d, tmp1, 0);
 
@@ -94,6 +97,11 @@ void point_import(char* p, point* P)
 	strcpy(tmp2, ":depth_SD");
 	strcat(tmp1, tmp2);
 	P->depth_SD = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, p);
+	strcpy(tmp2, ":max_FA_length");
+	strcat(tmp1, tmp2);
+	P->max_FA_length = iniparser_getint(d, tmp1, 0);
 
 	strcpy(tmp1, p);
 	strcpy(tmp2, ":FA_content");

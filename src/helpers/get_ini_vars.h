@@ -20,6 +20,7 @@ typedef struct var {
 	int num_points_used;
 	int num_cons_used;
 	int num_bounds_used;
+	int max_particles;
 } var;
 struct var vars;
 
@@ -30,6 +31,7 @@ typedef struct point {
 	double MFA_SD;
 	double depth_SD;
 	double FA_content;
+	int max_FA_length;
 	double LG_content;
 } point;
 
@@ -74,6 +76,16 @@ struct bound B0;
 struct bound B1;
 struct bound B2;
 struct bound B3;
+
+struct particle {
+	int uid;
+	double x;
+	double y;
+	double z;
+	char ptype[3];
+	int nlistlen;
+	struct particle** nlist;
+};
 
 void build_structs();
 
