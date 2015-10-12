@@ -26,9 +26,10 @@ int main(void)
 /* Can I just calculate a new x position from the angle in cart then convert that to a theta val? */
 
 /* need some way to convert the conventional MFA into an MFA applied to the angle coord in cylindrical system */
-/* to start maybe just take point 1 in cyl, convert to cart, calc point 2 and convert point 2 to cyl
- * Do using multiple functions so that can intersept for building chains, ie:
- * take point in cart > calc next point in cart > convert first point to cyl and pass out > repeat */
+/* calc total circunfrence given r at a point
+ * calc the change in x in the cart system
+ * deta theta = delta x / cir * 2*M_PI Might be able to calc this once for each point, along with the given SD at that point
+ * change in depth and height coords are equel the change in cart coords -- check this --*/
 
 /* Now have the BCs, still need to write a check to see if a given particle is outside the boundary or not*/
 
