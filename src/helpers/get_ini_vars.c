@@ -35,6 +35,9 @@ void vars_import()
 	strcpy(tmp1, "vars:ROI_angle");
 	vars.ROI_angle = iniparser_getdouble(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:ROI_height");
+	vars.ROI_height = iniparser_getdouble(d, tmp1, 0);
+
 	strcpy(tmp1, "vars:H2O_dia");
 	vars.H2O_dia = iniparser_getdouble(d, tmp1, 0);
 

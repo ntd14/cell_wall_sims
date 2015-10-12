@@ -79,13 +79,14 @@ struct bound B3;
 
 struct particle {
 	int uid;
-	double x;
-	double y;
-	double z;
-	char ptype[3];
+	double r;
+	double theta;
+	double h;
+	char* ptype;
 	int nlistlen;
 	struct particle** nlist;
 };
+
 
 void build_structs();
 

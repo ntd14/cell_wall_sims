@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
+#include "./src/make_CML.h"
 
 #include "./src/helpers/cart_and_cyl.h"
 
@@ -11,13 +12,36 @@ int main(void)
 
 	build_structs();
 
-	struct particle* old_particles = calloc(vars.max_particles,sizeof(struct particle));
+	struct particle* old_particles = calloc(vars.max_particles, sizeof(struct particle));
 	if(old_particles == NULL)
 	{
 		printf("calloc failed when init particle* old_particles in cell_wall_subsection \n");
 	}
+	printf("build particles struct, creating CML \n");
+	create_CML(old_particles);
 
 
+
+
+	int ii;
+	FILE *allp = fopen("allp.csv", "w");
+		if (allp == NULL)
+		{
+			   printf("Error opening file!\n");
+			   exit(1);
+		}
+
+		fprintf(allp, "uid, ptype, r, theta, h \n");
+		for(ii = 0; ii < 103138; ii++)
+		{
+			fprintf(allp, "%i, ", old_particles[ii].uid);
+			fprintf(allp, "%s, ", old_particles[ii].ptype);
+			fprintf(allp, "%f, ", old_particles[ii].r);
+			fprintf(allp, "%f, ", old_particles[ii].theta);
+			fprintf(allp, "%f ", old_particles[ii].h);
+			fprintf(allp, "\n");
+		}
+		fclose(allp);
 
 	/* Here will include: */
 
