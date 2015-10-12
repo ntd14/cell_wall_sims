@@ -38,7 +38,6 @@ void create_CML(struct particle* p)
 	/* need to update this to use the interp functions for now just using P0 values */
 
 	/*
-	 *
 	 * calculate the number of FAs and H2Os in the CML-- not the straight foward because they are spheres so dont pack well -- http://www2.latech.edu/~jkanno/packing.pdf --
 	 * loop through calling CML_point for each particle and designating it either FA0 of H2O
 	 * global search to find all connections
