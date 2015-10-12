@@ -31,6 +31,13 @@ int main(void)
  * deta theta = delta x / cir * 2*M_PI Might be able to calc this once for each point, along with the given SD at that point
  * change in depth and height coords are equel the change in cart coords -- check this --*/
 
+	/* have a point in cyl
+	 * convert to cart
+	 * calc new point cart pos
+	 * convert new point to cyl
+	 */
+
+
 /* Now have the BCs, still need to write a check to see if a given particle is outside the boundary or not*/
 
 /* calc coords of subseted ROI defined in the ini file */
