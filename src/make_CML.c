@@ -60,7 +60,8 @@ void create_CML(struct particle* p)
 	int update_pos_counter = 0;
 	double carray[3];
 
-	while(update_pos_counter <= vars.max_particles && (iif < num_of_FA0s ||  iih < num_of_H2Os))
+	while(update_pos_counter <= vars.max_particles &&
+			(iif < num_of_FA0s ||  iih < num_of_H2Os))
 	{
 		p[update_pos_counter].uid = update_pos_counter;
 		if(iif < num_of_FA0s)
