@@ -20,9 +20,6 @@ int main(void)
 	printf("build particles struct, creating CML \n");
 	create_CML(old_particles);
 
-
-
-
 	int ii;
 	FILE *allp = fopen("allp.csv", "w");
 		if (allp == NULL)

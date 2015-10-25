@@ -17,8 +17,6 @@
 
 #include "make_CML.h"
 
-
-
 /* function that gets vec of random starting points
  * then propgates in either direction from each one
  */
