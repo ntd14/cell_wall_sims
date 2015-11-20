@@ -28,14 +28,14 @@ int main(void)
 			   exit(1);
 		}
 
-		fprintf(allp, "uid, ptype, r, theta, h \n");
+		fprintf(allp, "uid,ptype,r,theta,h\n");
 		for(ii = 0; ii < 103138; ii++)
 		{
-			fprintf(allp, "%i, ", old_particles[ii].uid);
-			fprintf(allp, "%s, ", old_particles[ii].ptype);
-			fprintf(allp, "%f, ", old_particles[ii].r);
-			fprintf(allp, "%f, ", old_particles[ii].theta);
-			fprintf(allp, "%f ", old_particles[ii].h);
+			fprintf(allp, "%i,", old_particles[ii].uid);
+			fprintf(allp, "%s,", old_particles[ii].ptype);
+			fprintf(allp, "%f,", old_particles[ii].r);
+			fprintf(allp, "%f,", old_particles[ii].theta);
+			fprintf(allp, "%f", old_particles[ii].h);
 			fprintf(allp, "\n");
 		}
 		fclose(allp);

@@ -75,7 +75,7 @@ void create_CML(struct particle* p)
 			update_pos_counter++;
 		}
 
-		if(iih < num_of_H2Os)
+		else if(iih < num_of_H2Os)
 		{
 			CML_point(carray);
 			p[update_pos_counter].r = carray[0];
