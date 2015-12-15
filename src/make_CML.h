@@ -8,6 +8,6 @@
 #ifndef MACK_CML_H_
 #define MACK_CML_H_
 
-void create_CML(struct particle* p);
+int create_CML(struct particle* p, int num_of_particles);
 
 #endif /* MACK_CML_H_ */

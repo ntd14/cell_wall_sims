@@ -12,14 +12,23 @@ int main(void)
 
 	build_structs();
 
-	struct particle* old_particles = calloc(vars.max_particles, sizeof(struct particle));
-	if(old_particles == NULL)
+	struct particle* particles = calloc(vars.max_particles, sizeof(struct particle));
+	if(particles == NULL)
 	{
-		printf("calloc failed when init particle* old_particles in cell_wall_subsection \n");
+		printf("calloc failed creating particles in cell_wall_subsection, try and reduce max_particles in ini file \n");
+		printf("exiting code due to lack of memory for given perameters \n");
+		exit(0);
 	}
 	printf("build particles struct, creating CML \n");
-	create_CML(old_particles);
+	int num_of_particles = 0;
+	num_of_particles = create_CML(particles, num_of_particles);
 
+	printf("finisheed buiding CML \n");
+
+
+
+
+	printf("num_of_particles = %i \n", num_of_particles);
 	int ii;
 	FILE *allp = fopen("allp.csv", "w");
 		if (allp == NULL)
@@ -29,13 +38,13 @@ int main(void)
 		}
 
 		fprintf(allp, "uid,ptype,r,theta,h\n");
-		for(ii = 0; ii < 103138; ii++)
+		for(ii = 0; ii < num_of_particles; ii++)
 		{
-			fprintf(allp, "%i,", old_particles[ii].uid);
-			fprintf(allp, "%s,", old_particles[ii].ptype);
-			fprintf(allp, "%f,", old_particles[ii].r);
-			fprintf(allp, "%f,", old_particles[ii].theta);
-			fprintf(allp, "%f", old_particles[ii].h);
+			fprintf(allp, "%i,", particles[ii].uid);
+			fprintf(allp, "%s,", particles[ii].ptype);
+			fprintf(allp, "%f,", particles[ii].r);
+			fprintf(allp, "%f,", particles[ii].theta);
+			fprintf(allp, "%f",  particles[ii].h);
 			fprintf(allp, "\n");
 		}
 		fclose(allp);
@@ -80,8 +89,8 @@ int main(void)
 /* at some point start lignification */
 	printf("finished main \n");
 
-	free(old_particles);
-	old_particles = NULL;
+	free(particles);
+	particles = NULL;
 
 	return 0;
 }
