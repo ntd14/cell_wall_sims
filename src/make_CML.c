@@ -17,25 +17,25 @@
 
 #include "make_CML.h"
 
-/* function that gets vec of random starting points
- * then propgates in either direction from each one
- */
-
 /*
- * function to calc the mean distance and sd between starting point in the X direction
- * To do this, need to somehow estimate the number of chains that will be built,
- * We know the number of particles needed to fill the volume, somehow need to work out what the average chain length should be
- * num of particles / av chain length = num of starting points
- *
- * partition the starting points to the bottom and side based on the MFA
  * set x as 1, use MFA and trig to calc the multiplier for y. tan(mfa) = y multiplyer (or maybe 1/multipyer)
  *
+ * We know the total virtual length of the two starting sides (x + multiplyer * y),
+ * and the volume fraction of each constituent
+ * so should be able to estimate the number of starting points from
+ * num of starting points of ptype = ( total virtual length / volume proportion ) / particle diameter
  *
- * SD is just a scaling based on the difference in the two means of dist appart, eg Y dist is 1.3 * X dist then Y sd is 1.3 * X sd
+ * then calc the starting points on the two sides that they are needed sampling from a uniform dist
  *
- * then calc the starting points on the two sides that they are needed to give a uniform distribution
+ * partition the starting points to the bottom and side based on the MFA
+ * (if else statements using the sign of the mfa, and the value, < M_PI uses bottom, > M_PI uses top)
  *
- * */
+ * num of x starting points of ptype = length of x / total vert length * num of starting points of ptype
+ * num of y starting points of ptype = vert length of y / total vert length * num of starting points of ptype
+ *
+ * x start points pos = sample from uniform dist between 0 and length x by num of x starting points times
+ * y start points pos =  sample from uniform dist between 0 and length y by num of y starting points times
+*/
 
 
 /* create a random point inside the ROI */
