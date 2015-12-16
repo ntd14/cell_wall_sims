@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "iniparser.h" /* from http://ndevilla.free.fr/iniparser/html/index.html*/
 #include "get_ini_vars.h"
 #include "lists.h"
@@ -34,6 +35,9 @@ void vars_import()
 
 	strcpy(tmp1, "vars:ROI_angle");
 	vars.ROI_angle = iniparser_getdouble(d, tmp1, 0);
+	if(vars.ROI_angle > M_PI){
+		vars.ROI_angle = 2*M_PI;
+	}
 
 	strcpy(tmp1, "vars:ROI_height");
 	vars.ROI_height = iniparser_getdouble(d, tmp1, 0);
