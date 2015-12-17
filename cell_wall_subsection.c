@@ -23,7 +23,7 @@ int main(void)
 	int num_of_particles = 0;
 	num_of_particles = create_CML(particles, num_of_particles);
 
-	printf("finisheed buiding CML \n"); /**/
+	printf("finisheed buiding CML \n");
 
 
 

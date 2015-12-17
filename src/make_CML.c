@@ -17,32 +17,33 @@
 
 #include "make_CML.h"
 
-
-double get_multiplier(void){ /* needs more work */
-	double multi;
+void get_multiplier(double* multi){ /* needs more work */
 	if(vars.ROI_angle > M_PI){
-		multi = 0;
+		multi[0] = 1;
+		multi[1] = 0;
 	}else{
-		multi = tan(P0.MFA); /*might have to work out how to deal with this if tan assumes first quadrant*/
-		printf("multi = %f \n", multi);
+		multi[0] = tan(M_PI/2 - P0.MFA) / (tan(M_PI/2 - P0.MFA) + tan(P0.MFA));
+		multi[1] = tan(P0.MFA) / (tan(M_PI/2 - P0.MFA) + tan(P0.MFA));
+		printf("multi x = %f, ", multi[0]);
+		printf("multi y = %f \n", multi[1]);
 	}
-	return(multi);
 }
 
 void get_num_starting_points(int* sarray){
-	double multi = get_multiplier();
-	double l = arc_length(P0.rad, vars.ROI_angle);
-	double vl = l + multi * vars.ROI_height;
-	double nsp = (vl/P0.FA_content)/vars.FA_dia;
-	sarray[0] = (int) l / vl * nsp;
-	sarray[1] = (int) (vars.ROI_height * multi)/ vl * nsp;
+	double multi[2];
+	get_multiplier(multi);
+	double lx = arc_length(P0.rad, vars.ROI_angle) * multi[0];
+	double ly = vars.ROI_height * multi[1];
+	double vl = lx + ly;
+	int nsp = (int) (vl/P0.FA_content)/vars.FA_dia;
+	sarray[0] = nsp*multi[0];
+	sarray[1] = nsp*multi[1];
 }
 
 /* call CML_point to make the isotropic CML */
 int create_CML(struct particle* p, int num_of_particles)
 {
-	int update_pos_counter = 0;
-	int sp_counter = 0;
+	int update_pos_counter = num_of_particles;
 	int sarray[2];
 	int ii;
 	get_num_starting_points(sarray);
@@ -55,19 +56,36 @@ int create_CML(struct particle* p, int num_of_particles)
 		exit(0);
 	}
 
-	printf("%i \n", sarray[0]);
-	printf("%i \n", sarray[1]);
+	printf("num x points %i \n", sarray[0]);
+	printf("num y points %i \n", sarray[1]);
 
 	for(ii = 0; ii < sarray[0]; ii++){
-		starting_points[update_pos_counter] = vars.ROI_angle*(rand()/(double) RAND_MAX);
-		sp_counter++;
+		p[update_pos_counter].uid = update_pos_counter;
+		p[update_pos_counter].r = P0.rad;
+		p[update_pos_counter].theta = vars.ROI_angle*(rand()/(double) RAND_MAX);
+		p[update_pos_counter].h = 0;
+		p[update_pos_counter].ptype = "FA0";
+		update_pos_counter++;
 	}
 	for(ii = 0; ii < sarray[1]; ii++){
-		starting_points[update_pos_counter] = vars.ROI_height*(rand()/(double) RAND_MAX);
-		sp_counter++;
+		if(P0.MFA > 0){
+			p[update_pos_counter].uid = update_pos_counter;
+			p[update_pos_counter].r = P0.rad;
+			p[update_pos_counter].theta = 0;
+			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
+			p[update_pos_counter].ptype = "FA0";
+			update_pos_counter++;
+		}else{
+			p[update_pos_counter].uid = update_pos_counter;
+			p[update_pos_counter].r = P0.rad;
+			p[update_pos_counter].theta = vars.ROI_angle;
+			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
+			p[update_pos_counter].ptype = "FA0";
+			update_pos_counter++;
+		}
 	}
 
-	if(sp_counter != (sarray[0] + sarray[1])){
+	if(update_pos_counter - num_of_particles != (sarray[0] + sarray[1])){
 		printf("warning update_pos_counter = %i while sarray has ", update_pos_counter);
 		printf("%i points \n", (sarray[0] + sarray[1]));
 	}
@@ -77,6 +95,6 @@ int create_CML(struct particle* p, int num_of_particles)
 	printf("%i particles in CML \n", update_pos_counter);
 	free(starting_points);
 	starting_points = NULL;
-	return(num_of_particles + update_pos_counter);
+	return(update_pos_counter);
 }
 
