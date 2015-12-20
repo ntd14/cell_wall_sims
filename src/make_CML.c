@@ -77,7 +77,7 @@ int create_CML(struct particle* p, int num_of_particles)
 	/*storing the particles that are started on the x surface*/
 	for(ii = 0; ii < sarray[0]; ii++){
 		p[update_pos_counter].uid = update_pos_counter;
-		p[update_pos_counter].r = P0.rad;/*needs to be sampled from a linear distribution between the inner and outer points*/
+		p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
 		p[update_pos_counter].theta = vars.ROI_angle*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].h = 0; /*should this have some noise added into it?*/
 		p[update_pos_counter].ptype = "FA0";
@@ -88,14 +88,14 @@ int create_CML(struct particle* p, int num_of_particles)
 	for(ii = 0; ii < sarray_outer[1]; ii++){
 		if(P0.MFA > 0){
 			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = P0.rad;/*needs to be sampled from a linear distribution between the inner and outer points*/
+			p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
 			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 			p[update_pos_counter].ptype = "FA0";
 			update_pos_counter++;
 		}else{
 			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = P0.rad;/*needs to be sampled from a linear distribution between the inner and outer points*/
+			p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
 			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 			p[update_pos_counter].ptype = "FA0";
