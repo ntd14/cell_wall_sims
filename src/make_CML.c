@@ -14,6 +14,7 @@
 #include "./helpers/cart_and_cyl.h"
 #include "./helpers/make_arrays.h"
 #include "./helpers/normal_dist_gen.h"
+#include "./helpers/generate_starting_points.h"
 
 #include "make_CML.h"
 
@@ -67,47 +68,80 @@ int create_CML(struct particle* p, int num_of_particles)
 	get_num_starting_points_line(sarray_outer, P0.MFA, P0.rad);
 	get_num_starting_points_line(sarray_inner, P1.MFA, P1.rad);
 	/*calc the total number of starting points over the regions x and y surfaces*/
-	int sarray[2];
-	sarray[0] = ((sarray_outer[0] + sarray_inner[0])/2.0) * (P0.rad - P1.rad);
-	sarray[1] = ((sarray_outer[1] + sarray_inner[1])/2.0) * (P0.rad - P1.rad);
+	int sarray[4];
+	sarray[0] = sarray_inner[0] * (P0.rad - P1.rad);
+	sarray[1] = sarray_inner[1] * (P0.rad - P1.rad);
+	sarray[2] = sarray_outer[0] * (P0.rad - P1.rad);
+	sarray[3] = sarray_outer[1] * (P0.rad - P1.rad);
 
-	printf("num x points %i \n", sarray[0]);
-	printf("num y points %i \n", sarray[1]);
+	printf("num x points inner %i \n", sarray[0]);
+	printf("num y points inner %i \n", sarray[1]);
+	printf("num x points outer %i \n", sarray[2]);
+	printf("num y points outer %i \n", sarray[3]);
+
+	int* np_maxmin[2];
+	np_maxmin[0] = sarray[0];
+	np_maxmin[1] = sarray[2];
+	get_biggest_int(np_maxmin);
+	int pv_len_x = np_maxmin[1] + ((np_maxmin[0]-np_maxmin[1])/2);
+	double* points_vec_x = calloc(pv_len_x, sizeof(double));
+
+	if(points_vec_x == NULL)
+	{
+		printf("calloc failed creating points_vec_x in make_CML \n");
+		printf("exiting code due to lack of memory for given perameters \n");
+		exit(0);
+	}
+
+	gen_starting_points(sarray[0], sarray[2], P1.rad, P0.rad, points_vec_x, pv_len_x);
 
 	/*storing the particles that are started on the x surface*/
-	for(ii = 0; ii < sarray[0]; ii++){
+	for(ii = 0; ii < pv_len_x; ii++){
 		p[update_pos_counter].uid = update_pos_counter;
-		p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
+		p[update_pos_counter].r = points_vec_x[ii]; /*P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);needs to be sampled from a linear distribution between the inner and outer points*/
 		p[update_pos_counter].theta = vars.ROI_angle*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].h = 0; /*should this have some noise added into it?*/
 		p[update_pos_counter].ptype = "FA0";
 		update_pos_counter++;
 	}
+	free(points_vec_x);
+	points_vec_x = NULL;
 	/*storing the particles that are started on the y axis, ifelse deals with which side of the
 	 * ROI they start on based on the direction of the MFA*/
-	for(ii = 0; ii < sarray_outer[1]; ii++){
+
+	np_maxmin[0]= sarray[1];
+	np_maxmin[1] = sarray[3];
+	get_biggest_int(np_maxmin);
+	int pv_len_y = np_maxmin[1] + ((np_maxmin[0]-np_maxmin[1])/2);
+
+	double* points_vec_y = calloc(pv_len_y, sizeof(double));
+	if(points_vec_y == NULL)
+	{
+		printf("calloc failed creating points_vec_y in make_CML \n");
+		printf("exiting code due to lack of memory for given perameters \n");
+		exit(0);
+	}
+
+	gen_starting_points(sarray[1], sarray[3], P1.rad, P0.rad, points_vec_y, pv_len_y);
+	for(ii = 0; ii < pv_len_y; ii++){
 		if(P0.MFA > 0){
 			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
+			p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
 			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 			p[update_pos_counter].ptype = "FA0";
 			update_pos_counter++;
 		}else{
 			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = P1.rad + (P0.rad - P1.rad)*(rand()/(double) RAND_MAX);/*needs to be sampled from a linear distribution between the inner and outer points*/
+			p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
 			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 			p[update_pos_counter].ptype = "FA0";
 			update_pos_counter++;
 		}
 	}
-
-	if(update_pos_counter - num_of_particles != (sarray_outer[0] + sarray_outer[1])){
-		printf("warning update_pos_counter = %i while sarray has ", update_pos_counter);
-		printf("%i points \n", (sarray_outer[0] + sarray_outer[1]));
-	}
-
+	free(points_vec_y);
+	points_vec_y = NULL;
 	printf("%i particles in CML \n", update_pos_counter);
 	return(update_pos_counter);
 }
