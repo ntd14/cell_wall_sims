@@ -25,34 +25,35 @@ void gen_tri(int starting_point, int max_points, double* points_vec){
 	printf("tri %i \n", ii);
 }
 
-void get_biggest_double(double max, double min){
-	int max_in = max;
-	int min_in = min;
-	if(min_in > max_in){
-		max = min_in;
-		min = max_in;
+void get_biggest_double(double* maxmin){
+	double maxmin_out[2];
+	if(maxmin[1] > maxmin[0]){
+		maxmin_out[0] = maxmin[1];
+		maxmin_out[1] = maxmin[0];
 	}
+	maxmin = maxmin_out;
 }
 void get_biggest_int(int* maxmin){
-	int max_in = maxmin[0];
-	int min_in = maxmin[1];
-	if(min_in > max_in){
-		maxmin[0] = min_in;
-		maxmin[1] = max_in;
+	int maxmin_out[2];
+	if(maxmin[1] > maxmin[0]){
+		maxmin_out[0] = maxmin[1];
+		maxmin[1] = maxmin[0];
 	}
+	maxmin = maxmin_out;
 }
 
 void gen_starting_points(int np_inner, int np_outer, double phy_inner, double phy_outer, double* points_vec, int pv_len){
 	/*check of np_inner or np_outer is lower, or if the same*/
-	double phy_max = phy_inner;
-	double phy_min = phy_outer;
 
-	int* np_maxmin[2];
+	int np_maxmin[2];
 	np_maxmin[0] = np_inner;
 	np_maxmin[1] = np_outer;
 	get_biggest_int(np_maxmin);
 
-	get_biggest_double(phy_max, phy_min);
+	double phy_maxmin[2];
+	phy_maxmin[0] = np_inner;
+	phy_maxmin[1] = np_outer;
+	get_biggest_double(phy_maxmin);
 	/*call a function to generate random uniform 0-1 numbers and populate points_vec */
 	printf("np_min = %i", np_maxmin[1]);
 	gen_uniform(np_maxmin[1], points_vec);
@@ -62,6 +63,6 @@ void gen_starting_points(int np_inner, int np_outer, double phy_inner, double ph
 
 	int ii;
 	for(ii = 0; ii < pv_len; ii++){
-		points_vec[ii] = (phy_max - phy_min) * points_vec[ii] + phy_min;
+		points_vec[ii] = (phy_maxmin[0] - phy_maxmin[1]) * points_vec[ii] + phy_maxmin[1];
 	}
 }

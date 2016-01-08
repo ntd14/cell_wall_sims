@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
-#include "./src/make_CML.h"
+#include "./src/cell_wall_layer.h"
 
 #include "./src/helpers/cart_and_cyl.h"
 
@@ -21,7 +21,7 @@ int main(void)
 	}
 	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
-	num_of_particles = create_CML(particles, num_of_particles);
+	num_of_particles = create_layer(particles, num_of_particles);
 
 	printf("finisheed buiding CML \n");
 
