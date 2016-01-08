@@ -21,9 +21,15 @@ int main(void)
 	}
 	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
+	/* should water be added before or after the FAs? could make whole domain fill with water before starting, but this will use a lot more memory */
+	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
 	num_of_particles = create_layer(particles, num_of_particles); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
-
+	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("finisheed buiding CML \n");
+
+	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
+	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that
+	 * where as to water/lignin they appear as 14nm, so when two combine they are viewed by water/lignin as 20nm, but alone as 14nm*/
 
 	/* to do the water for the rest of the layers, add uniformly make FAs fixed delete when big overlap, move where little overlap*/
 	/* to do lignification, randomly find water particles in the lignification zone, add a bit of noise, create lignin particle */
