@@ -21,12 +21,12 @@ int main(void)
 	}
 	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
-	num_of_particles = create_layer(particles, num_of_particles);
+	num_of_particles = create_layer(particles, num_of_particles); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 
 	printf("finisheed buiding CML \n");
 
-
-
+	/* to do the water for the rest of the layers, add uniformly make FAs fixed delete when big overlap, move where little overlap*/
+	/* to do lignification, randomly find water particles in the lignification zone, add a bit of noise, create lignin particle */
 
 	printf("num_of_particles = %i \n", num_of_particles);
 	int ii;

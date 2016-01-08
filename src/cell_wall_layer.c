@@ -148,7 +148,7 @@ int create_layer(struct particle* p, int num_of_particles)
 	free(points_vec_y);
 	points_vec_y = NULL;
 
-	/* propogate starting points to chains*/
+	/* propogate starting points to chains, probably do this in a seperate function?*/
 
 	printf("%i particles in CML \n", update_pos_counter);
 	return(update_pos_counter);
