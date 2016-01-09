@@ -145,6 +145,10 @@ int create_layer(struct particle* p, int num_of_particles)
 	points_vec_y = NULL;
 
 	/* propogate starting points to chains, probably do this in a seperate function?*/
+	/*take the starting point, num_of_particles and the end point update_pos_counter and loop between them,
+	 * adding one particle to each of the starting points, record the first and last in this sequence
+	 * loop between the new start and end of the particles, checking that they are in the ROI and adding
+	 * a new particle with a position defined by the previous*/
 
 	printf("%i particles in CML \n", update_pos_counter);
 	return(update_pos_counter);
