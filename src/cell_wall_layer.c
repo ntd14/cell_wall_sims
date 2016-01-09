@@ -129,21 +129,17 @@ int create_layer(struct particle* p, int num_of_particles)
 
 	/* storing the particles that are started on the y surface, if statment to deal with the side they start on depending on the MFA */
 	for(ii = 0; ii < pv_len_y; ii++){
+		p[update_pos_counter].uid = update_pos_counter;
+		p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
+		p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
+		p[update_pos_counter].ptype = "FA0";
+
 		if(P0.MFA > 0){
-			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
-			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
-			p[update_pos_counter].ptype = "FA0";
-			update_pos_counter++;
 		}else{
-			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
-			p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
-			p[update_pos_counter].ptype = "FA0";
-			update_pos_counter++;
 		}
+		update_pos_counter++;
 	}
 	free(points_vec_y);
 	points_vec_y = NULL;
