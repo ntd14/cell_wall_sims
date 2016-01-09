@@ -10,4 +10,6 @@
 
 double* norm_dist(int length_of_vec, double mean, double sd);
 
+double norm_dist_single(double mean, double sd);
+
 #endif /* NORMAL_DIST_GEN_H_ */

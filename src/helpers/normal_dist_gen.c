@@ -39,6 +39,27 @@ double* norm_dist(int length_of_vec, double mean, double sd)
     }
     return(vec_of_nums);
 }
+
+
+
+double norm_dist_single(double mean, double sd)
+{
+	double x1, x2, w;
+    x1 = 2.0 * rand()/RAND_MAX - 1.0;
+    x2 = 2.0 * rand()/RAND_MAX - 1.0;
+    w = x1 * x1 + x2 * x2;
+    while ( w >= 1.0 ){
+    	x1 = 2.0 * (double) rand()/RAND_MAX - 1.0;
+    	x2 = 2.0 * (double) rand()/RAND_MAX - 1.0;
+    	w = x1 * x1 + x2 * x2;
+    }
+    w = sqrt( (-2.0 * log( w ) ) / w );
+
+    double rand_num = (x1 * w)*sd + mean;
+
+    return(rand_num);
+}
+
 /*
 
  *

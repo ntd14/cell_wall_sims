@@ -24,6 +24,7 @@
 #include "./helpers/make_arrays.h"
 #include "./helpers/normal_dist_gen.h"
 #include "./helpers/generate_starting_points.h"
+#include "./helpers/interp_funs.h"
 
 #include "cell_wall_layer.h"
 
@@ -55,6 +56,58 @@ void get_num_starting_points_line(int* sarray, double mfa, double r, double cont
 	/*calcs and returns the number of particles to be started on x and y axes*/
 	sarray[0] = nsp*multi[0];
 	sarray[1] = nsp*multi[1];
+}
+
+int add_particles_to_chains(struct particle* p, int start_point, int end_point){
+	int used = 0;
+	int update_pos_counter = start_point;
+	int ii;
+	double start_coords_rtz[3];
+	double start_coords_xyz[3];
+	double new_coords_rtz[3];
+	double new_coords_xyz[3];
+	double mfa;
+	double mfa_sd;
+	double depth_sd;
+	double cmfa;
+	double cdepth;
+
+	for(ii = start_point; ii < end_point; ii++){
+		if((p[ii].theta >= 0) & (p[ii].theta <= vars.ROI_angle) & (p[ii].h >= 0) & (p[ii].h <= vars.ROI_height)){
+			start_coords_rtz[0] = p[ii].r;
+			start_coords_rtz[1] = p[ii].theta;
+			start_coords_rtz[2] = p[ii].h;
+			cyl_to_cart(start_coords_rtz, start_coords_xyz); /* convert to cart coords */
+
+			/*call the interp function using r between the two points to get the mfa, mfa_sd and depth_sd*/
+			mfa = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.MFA, P1.MFA);
+			mfa_sd = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.MFA_SD, P1.MFA_SD);
+			depth_sd = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.depth_SD, P1.depth_SD);
+
+			/* call random normal dist function for above to get vals for this chain and step*/
+			cmfa = norm_dist_single(mfa, mfa_sd);
+			cdepth = norm_dist_single(0, depth_sd);
+
+			/* calc new pos in the cart coords */
+			new_coords_xyz[0] = vars.FA_dia*(cos(cdepth)*sin(cmfa)) + start_coords_xyz[0];
+			new_coords_xyz[1] = vars.FA_dia*(cos(cdepth)*cos(cmfa)) + start_coords_xyz[1];
+			new_coords_xyz[2] = vars.FA_dia*sin(cmfa) + start_coords_xyz[2];
+			/* convert new point back to cyl coords*/
+			cart_to_cyl(new_coords_xyz, new_coords_rtz);
+			printf("%f ", new_coords_xyz[0]);
+			printf("%f ", new_coords_xyz[1]);
+			printf("%f \n", new_coords_xyz[2]);
+			/* add new point to the particles struct */
+			p[update_pos_counter].uid = update_pos_counter;
+			p[update_pos_counter].ptype = "FA0";
+			p[update_pos_counter].r = new_coords_rtz[0];
+			p[update_pos_counter].theta = new_coords_rtz[1];
+			p[update_pos_counter].h = new_coords_rtz[2];
+			update_pos_counter++;
+			used++;
+		}
+	}
+	return(used);
 }
 
 /*
@@ -144,13 +197,58 @@ int create_layer(struct particle* p, int num_of_particles)
 	free(points_vec_y);
 	points_vec_y = NULL;
 
+	int start_point = num_of_particles;
+	int end_point = update_pos_counter;
+	int used = 1;
+	/*while(used > 0){*/
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used;
+		printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used;
+	/*	printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used;
+		printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used;
+		printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used;
+		printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		used = add_particles_to_chains(p, start_point, end_point);
+		start_point = start_point + used;
+		end_point = end_point + used; */
+	/*}*/
+		printf("used %i \n", used);
+		printf("start_points %i \n", start_point);
+		printf("end_points %i \n", end_point);
+		update_pos_counter = start_point;
 	/* propogate starting points to chains, probably do this in a seperate function?*/
+
 	/*take the starting point, num_of_particles and the end point update_pos_counter and loop between them,
 	 * adding one particle to each of the starting points, record the first and last in this sequence
 	 * loop between the new start and end of the particles, checking that they are in the ROI and adding
-	 * a new particle with a position defined by the previous*/
+	 * a new particle with a position defined by the previous */
 
 	printf("%i particles in CML \n", update_pos_counter);
 	return(update_pos_counter);
 }
+
+
 
