@@ -58,7 +58,7 @@ void get_num_starting_points_line(int* sarray, double mfa, double r, double cont
 	sarray[1] = nsp*multi[1];
 }
 
-int add_particles_to_chains(struct particle* p, int start_point, int end_point){
+int add_particles_to_chains(struct particle* p, int start_point, int end_point, struct point Po, struct point Pi){
 
 	int used = 0;
 	int update_pos_counter = end_point;
@@ -81,9 +81,9 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point){
 			cyl_to_cart(start_coords_rtz, start_coords_xyz); /* convert to cart coords */
 
 			/*call the interp function using r between the two points to get the mfa, mfa_sd and depth_sd*/
-			mfa = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.MFA, P1.MFA);
-			mfa_sd = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.MFA_SD, P1.MFA_SD);
-			depth_sd = get_interp_val_P(start_coords_rtz[0], P0.rad, P1.rad, P0.depth_SD, P1.depth_SD);
+			mfa = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.MFA, Pi.MFA);
+			mfa_sd = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.MFA_SD, Pi.MFA_SD);
+			depth_sd = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.depth_SD, Pi.depth_SD);
 
 			/* call random normal dist function for above to get vals for this chain and step*/
 			cmfa = norm_dist_single(mfa, mfa_sd);
@@ -116,7 +116,7 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point){
  * */
 
 /* call CML_point to make the isotropic CML */
-int create_layer(struct particle* p, int num_of_particles)
+int create_layer(struct particle* p, int num_of_particles, struct point Po, struct point Pi)
 {
 	int ii;
 	int update_pos_counter = num_of_particles;
@@ -124,18 +124,18 @@ int create_layer(struct particle* p, int num_of_particles)
 	int sarray_inner[2]; /* [0] number of points to start on the inner surface x axis, [1] y axis */
 
 	/*call get_num_starting_points_line for the outer and inner surfaces*/
-	get_num_starting_points_line(sarray_outer, P0.MFA, P0.rad, P0.FA_content); /*make generic for Px*/
-	get_num_starting_points_line(sarray_inner, P1.MFA, P1.rad, P1.FA_content);
+	get_num_starting_points_line(sarray_outer, Po.MFA, Po.rad, Po.FA_content); /*make generic for Px*/
+	get_num_starting_points_line(sarray_inner, Pi.MFA, Pi.rad, Pi.FA_content);
 
 	int npx_maxmin[2]; /* number of starting points in x direction at [0] outer and [1] inner */
-	npx_maxmin[0] = (int) sarray_outer[0]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
-	npx_maxmin[1] = (int) sarray_inner[0]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
+	npx_maxmin[0] = (int) sarray_outer[0]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
+	npx_maxmin[1] = (int) sarray_inner[0]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
 	get_biggest_int(npx_maxmin); /* converting so that [0] is max number of points, [1] is min number */
 	printf("sarray_outer[0] = %i \n", sarray_outer[0]);
 	printf("sarray_inner[0] = %i \n", sarray_inner[0]);
 	int npy_maxmin[2];/* number of starting points in xy direction at 0 outer and [1] inner */
-	npy_maxmin[0] = (int) sarray_outer[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
-	npy_maxmin[1] = (int) sarray_inner[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
+	npy_maxmin[0] = (int) sarray_outer[1]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
+	npy_maxmin[1] = (int) sarray_inner[1]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
 	get_biggest_int(npy_maxmin); /* converting so that [0] is max number of points, [1] is min number */
 
 	int pv_len_x = (int) (npx_maxmin[1] + ((npx_maxmin[0]-npx_maxmin[1])/2)); /* calc the total number of starting points in x direction */
@@ -154,7 +154,7 @@ int create_layer(struct particle* p, int num_of_particles)
 	}
 
 	/* call gen_starting_points to get all of the starting points over the layer on x axis*/
-	gen_starting_points(npx_maxmin[0], npx_maxmin[1], P1.rad, P0.rad, points_vec_x, pv_len_x);
+	gen_starting_points(npx_maxmin[0], npx_maxmin[1], Pi.rad, Po.rad, points_vec_x, pv_len_x);
 
 	/*storing the particles that are started on the x surface*/
 	for(ii = 0; ii < pv_len_x; ii++){
@@ -179,7 +179,7 @@ int create_layer(struct particle* p, int num_of_particles)
 
 
 	/* call gen_starting_points to get starting points on y axis*/
-	gen_starting_points(npy_maxmin[0], npy_maxmin[1], P1.rad, P0.rad, points_vec_y, pv_len_y);
+	gen_starting_points(npy_maxmin[0], npy_maxmin[1], Pi.rad, Po.rad, points_vec_y, pv_len_y);
 
 	/* storing the particles that are started on the y surface, if statment to deal with the side they start on depending on the MFA */
 	for(ii = 0; ii < pv_len_y; ii++){
@@ -188,7 +188,7 @@ int create_layer(struct particle* p, int num_of_particles)
 		p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].ptype = "FA0";
 
-		if((P0.MFA + P1.MFA)/2 > 0){
+		if((Po.MFA + Pi.MFA)/2 > 0){
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
 		}else{
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
@@ -202,7 +202,7 @@ int create_layer(struct particle* p, int num_of_particles)
 	int end_point = update_pos_counter;
 	int used = 1;
 	while(used > 0){
-		used = add_particles_to_chains(p, start_point, end_point);
+		used = add_particles_to_chains(p, start_point, end_point, Po, Pi);
 		start_point = start_point + used;
 		end_point = end_point + used;
 	}
