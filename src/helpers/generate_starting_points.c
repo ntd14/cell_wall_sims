@@ -31,16 +31,19 @@ void get_biggest_double(double* maxmin){
 	if(maxmin[1] > maxmin[0]){
 		maxmin_out[0] = maxmin[1];
 		maxmin_out[1] = maxmin[0];
+		maxmin[0] = maxmin_out[0];
+		maxmin[1] = maxmin_out[1];
 	}
-	maxmin = maxmin_out;
 }
 void get_biggest_int(int* maxmin){
 	int maxmin_out[2];
 	if(maxmin[1] > maxmin[0]){
 		maxmin_out[0] = maxmin[1];
-		maxmin[1] = maxmin[0];
+		maxmin_out[1] = maxmin[0];
+		maxmin[0] = maxmin_out[0];
+		maxmin[1] = maxmin_out[1];
 	}
-	maxmin = maxmin_out;
+
 }
 
 void gen_starting_points(int np_inner, int np_outer, double phy_inner, double phy_outer, double* points_vec, int pv_len){

@@ -59,8 +59,9 @@ void get_num_starting_points_line(int* sarray, double mfa, double r, double cont
 }
 
 int add_particles_to_chains(struct particle* p, int start_point, int end_point){
+
 	int used = 0;
-	int update_pos_counter = start_point;
+	int update_pos_counter = end_point;
 	int ii;
 	double start_coords_rtz[3];
 	double start_coords_xyz[3];
@@ -89,14 +90,11 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point){
 			cdepth = norm_dist_single(0, depth_sd);
 
 			/* calc new pos in the cart coords */
-			new_coords_xyz[0] = vars.FA_dia*(cos(cdepth)*sin(cmfa)) + start_coords_xyz[0];
+			new_coords_xyz[0] = vars.FA_dia*(cos(cdepth)*-sin(cmfa)) + start_coords_xyz[0];
 			new_coords_xyz[1] = vars.FA_dia*(cos(cdepth)*cos(cmfa)) + start_coords_xyz[1];
 			new_coords_xyz[2] = vars.FA_dia*sin(cmfa) + start_coords_xyz[2];
 			/* convert new point back to cyl coords*/
 			cart_to_cyl(new_coords_xyz, new_coords_rtz);
-			printf("%f ", new_coords_xyz[0]);
-			printf("%f ", new_coords_xyz[1]);
-			printf("%f \n", new_coords_xyz[2]);
 			/* add new point to the particles struct */
 			p[update_pos_counter].uid = update_pos_counter;
 			p[update_pos_counter].ptype = "FA0";
@@ -129,18 +127,21 @@ int create_layer(struct particle* p, int num_of_particles)
 	get_num_starting_points_line(sarray_outer, P0.MFA, P0.rad, P0.FA_content); /*make generic for Px*/
 	get_num_starting_points_line(sarray_inner, P1.MFA, P1.rad, P1.FA_content);
 
-	int npx_maxmin[2]; /* number of starting points in x direction at 0 outer and 1 inner */
+	int npx_maxmin[2]; /* number of starting points in x direction at [0] outer and [1] inner */
 	npx_maxmin[0] = (int) sarray_outer[0]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
 	npx_maxmin[1] = (int) sarray_inner[0]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
-	get_biggest_int(npx_maxmin); /* converting so that 0 is max number of points, 1 is min number */
-	int npy_maxmin[2];/* number of starting points in xy direction at 0 outer and 1 inner */
-	npy_maxmin[0] = sarray_outer[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;;
-	npy_maxmin[1] = sarray_inner[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;;
-	get_biggest_int(npx_maxmin); /* converting so that 0 is max number of points, 1 is min number */
+	get_biggest_int(npx_maxmin); /* converting so that [0] is max number of points, [1] is min number */
+	printf("sarray_outer[0] = %i \n", sarray_outer[0]);
+	printf("sarray_inner[0] = %i \n", sarray_inner[0]);
+	int npy_maxmin[2];/* number of starting points in xy direction at 0 outer and [1] inner */
+	npy_maxmin[0] = (int) sarray_outer[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
+	npy_maxmin[1] = (int) sarray_inner[1]*((P0.rad - P1.rad)/vars.FA_dia) + 0.5;
+	get_biggest_int(npy_maxmin); /* converting so that [0] is max number of points, [1] is min number */
 
 	int pv_len_x = (int) (npx_maxmin[1] + ((npx_maxmin[0]-npx_maxmin[1])/2)); /* calc the total number of starting points in x direction */
 	int pv_len_y = (int) (npy_maxmin[1] + ((npy_maxmin[0]-npy_maxmin[1])/2)); /* calc the total number of starting points in y direction */
-
+	printf("npx_maxmin[0] = %i \n", npx_maxmin[0]);
+	printf("npx_maxmin[1] = %i \n", npx_maxmin[1]);
 	/*set memory aside to store the vector of x starting points*/
 	/* create starting points vectors*/
 	printf("pv_len_x = %i \n", pv_len_x);
@@ -183,11 +184,11 @@ int create_layer(struct particle* p, int num_of_particles)
 	/* storing the particles that are started on the y surface, if statment to deal with the side they start on depending on the MFA */
 	for(ii = 0; ii < pv_len_y; ii++){
 		p[update_pos_counter].uid = update_pos_counter;
-		p[update_pos_counter].r = points_vec_y[ii];/*needs to be sampled from a linear distribution between the inner and outer points*/
+		p[update_pos_counter].r = points_vec_y[ii];
 		p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].ptype = "FA0";
 
-		if(P0.MFA > 0){
+		if((P0.MFA + P1.MFA)/2 > 0){
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
 		}else{
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
@@ -200,45 +201,15 @@ int create_layer(struct particle* p, int num_of_particles)
 	int start_point = num_of_particles;
 	int end_point = update_pos_counter;
 	int used = 1;
-	/*while(used > 0){*/
+	while(used > 0){
 		used = add_particles_to_chains(p, start_point, end_point);
 		start_point = start_point + used;
 		end_point = end_point + used;
-		printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		used = add_particles_to_chains(p, start_point, end_point);
-		start_point = start_point + used;
-		end_point = end_point + used;
-	/*	printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		used = add_particles_to_chains(p, start_point, end_point);
-		start_point = start_point + used;
-		end_point = end_point + used;
-		printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		used = add_particles_to_chains(p, start_point, end_point);
-		start_point = start_point + used;
-		end_point = end_point + used;
-		printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		used = add_particles_to_chains(p, start_point, end_point);
-		start_point = start_point + used;
-		end_point = end_point + used;
-		printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		used = add_particles_to_chains(p, start_point, end_point);
-		start_point = start_point + used;
-		end_point = end_point + used; */
-	/*}*/
-		printf("used %i \n", used);
-		printf("start_points %i \n", start_point);
-		printf("end_points %i \n", end_point);
-		update_pos_counter = start_point;
+	}
+	printf("used %i \n", used);
+	printf("start_points %i \n", start_point);
+	printf("end_points %i \n", end_point);
+	update_pos_counter = end_point;
 	/* propogate starting points to chains, probably do this in a seperate function?*/
 
 	/*take the starting point, num_of_particles and the end point update_pos_counter and loop between them,
