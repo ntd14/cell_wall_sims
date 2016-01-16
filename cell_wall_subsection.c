@@ -26,6 +26,7 @@ int main(void)
 	num_of_particles = create_layer(particles, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created", num_of_particles);
+
 	num_of_particles = create_layer(particles, num_of_particles, P1, P2);
 	printf("exiting P1 P2 with %i particles created", num_of_particles);
 
@@ -38,21 +39,22 @@ int main(void)
 
 	printf("num_of_particles = %i \n", num_of_particles);
 	int ii;
-	FILE *allp = fopen("allp.csv", "w");
+	FILE *allp = fopen("allp.js", "w");
 		if (allp == NULL)
 		{
 			   printf("Error opening file!\n");
 			   exit(1);
 		}
 
-		fprintf(allp, "uid,ptype,r,theta,h\n");
+		fprintf(allp, "var data = [];\n");
 		for(ii = 0; ii < num_of_particles; ii++)
 		{
-			fprintf(allp, "%i,", particles[ii].uid);
-			fprintf(allp, "%s,", particles[ii].ptype);
-			fprintf(allp, "%f,", particles[ii].r);
-			fprintf(allp, "%f,", particles[ii].theta);
-			fprintf(allp, "%f",  particles[ii].h);
+			fprintf(allp, "data[%i] = new Object(); ", ii);
+			fprintf(allp, "data[%i].uid = %i; ", ii, particles[ii].uid);
+			fprintf(allp, "data[%i].ptype = '%s'; ", ii, particles[ii].ptype);
+			fprintf(allp, "data[%i].r = %f; ", ii, particles[ii].r);
+			fprintf(allp, "data[%i].theta = %f; ",ii, particles[ii].theta);
+			fprintf(allp, "data[%i].h = %f; ", ii, particles[ii].h);
 			fprintf(allp, "\n");
 		}
 		fclose(allp);
