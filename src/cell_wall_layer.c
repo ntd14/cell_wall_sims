@@ -89,10 +89,11 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 			cmfa = norm_dist_single(mfa, mfa_sd);
 			cdepth = norm_dist_single(0, depth_sd);
 
-			/* calc new pos in the cart coords */
-			new_coords_xyz[0] = vars.FA_dia*(cos(cdepth)*-sin(cmfa)) + start_coords_xyz[0];
-			new_coords_xyz[1] = vars.FA_dia*(cos(cdepth)*cos(cmfa)) + start_coords_xyz[1];
-			new_coords_xyz[2] = vars.FA_dia*sin(cmfa) + start_coords_xyz[2];
+			/* calc new pos in the cart coords*/
+			new_coords_xyz[0] = vars.FA_dia*(sin(cmfa)*cos(cdepth)) + start_coords_xyz[0];
+			new_coords_xyz[1] = vars.FA_dia*(sin(cmfa)*sin(cdepth)) + start_coords_xyz[1];
+			new_coords_xyz[2] = vars.FA_dia*cos(cmfa) + start_coords_xyz[2];
+
 			/* convert new point back to cyl coords*/
 			cart_to_cyl(new_coords_xyz, new_coords_rtz);
 			/* add new point to the particles struct */

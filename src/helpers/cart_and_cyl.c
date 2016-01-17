@@ -12,7 +12,7 @@
 void cart_to_cyl(double* xyz_array, double* rtz_array)
 {
 	rtz_array[0] = sqrt(pow(xyz_array[0], 2) + pow(xyz_array[1], 2));
-	rtz_array[1] = atan(xyz_array[1]/xyz_array[0]); /* Be a bit carefull here, may need some logic to deal with a 360 degree body */
+	rtz_array[1] = atan(xyz_array[1]/rtz_array[0]); /* Be a bit carefull here, may need some logic to deal with a 360 degree body */
 	rtz_array[2] = xyz_array[2];
 }
 

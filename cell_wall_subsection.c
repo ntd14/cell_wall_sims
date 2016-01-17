@@ -27,8 +27,6 @@ int main(void)
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created", num_of_particles);
 
-	num_of_particles = create_layer(particles, num_of_particles, P1, P2);
-	printf("exiting P1 P2 with %i particles created", num_of_particles);
 
 	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
 	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that
