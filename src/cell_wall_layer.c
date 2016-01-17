@@ -63,53 +63,47 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 	int used = 0;
 	int update_pos_counter = end_point;
 	int ii;
-	double start_coords_rtz[3];
-	double new_coords_rtz[3];
-	double new_coords_xyz[3];
 	double mfa;
 	double mfa_sd;
 	double depth_sd;
 	double cmfa;
 	double cdepth;
 
+	double new_r;
+	double old_r;
+	double tmp_c;
+	double delta_theta;
+	double new_theta;
+	double new_h;
+
 	for(ii = start_point; ii < end_point; ii++){
 		if((p[ii].theta >= 0) & (p[ii].theta <= vars.ROI_angle) & (p[ii].h >= 0) & (p[ii].h <= vars.ROI_height)){
 
 			/*call the interp function using r between the two points to get the mfa, mfa_sd and depth_sd*/
-			mfa = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.MFA, Pi.MFA);
-			mfa_sd = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.MFA_SD, Pi.MFA_SD);
-			depth_sd = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.depth_SD, Pi.depth_SD);
+			mfa = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.MFA, Pi.MFA);
+			mfa_sd = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.MFA_SD, Pi.MFA_SD);
+			depth_sd = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.depth_SD, Pi.depth_SD);
 
 			/* call random normal dist function for above to get vals for this chain and step*/
 			cmfa = norm_dist_single(mfa, mfa_sd);
 			cdepth = norm_dist_single(0, depth_sd); /*need some corection in here so that the mfs dont leave the cell*/
 
 			/* calc new pos in the cart coords*/
-			new_coords_xyz[0] = vars.FA_dia*(sin(cmfa)*cos(cdepth));
-			new_coords_xyz[1] = vars.FA_dia*(sin(cmfa)*sin(cdepth));
-			new_coords_xyz[2] = vars.FA_dia*cos(cmfa);
+
+			old_r = p[ii].r;
+			new_r = old_r + vars.FA_dia*sin(cdepth);
+			tmp_c = vars.FA_dia*sin(cmfa);
+			delta_theta = acos((pow(old_r, 2) + pow(new_r, 2) - pow(tmp_c, 2) )/(2*old_r*new_r));
+			new_theta = p[ii].theta + delta_theta;
+			new_h = p[ii].h + vars.FA_dia*cos(cmfa)*cos(cdepth);
 
 
-			/* convert new point back to cyl coords*/
-			cart_to_cyl(new_coords_xyz, new_coords_rtz);
-
-			start_coords_rtz[0] = p[ii].r;
-			start_coords_rtz[1] = p[ii].theta;
-			start_coords_rtz[2] = p[ii].h;
-
-			new_coords_rtz[0] = new_coords_rtz[0] + start_coords_rtz[0];
-			new_coords_rtz[1] = new_coords_rtz[1] + start_coords_rtz[1];
-			new_coords_rtz[2] = new_coords_rtz[2] + start_coords_rtz[2];
-
-			printf("%f, ", new_coords_rtz[0]);
-			printf("%f, ", new_coords_rtz[1]);
-			printf("%f \n", new_coords_rtz[2]);
 			/* add new point to the particles struct */
 			p[update_pos_counter].uid = update_pos_counter;
 			p[update_pos_counter].ptype = "FA0";
-			p[update_pos_counter].r = new_coords_rtz[0];
-			p[update_pos_counter].theta = new_coords_rtz[1];
-			p[update_pos_counter].h = new_coords_rtz[2];
+			p[update_pos_counter].r = new_r;
+			p[update_pos_counter].theta = new_theta;
+			p[update_pos_counter].h = new_h;
 
 			update_pos_counter++;
 			used++;
