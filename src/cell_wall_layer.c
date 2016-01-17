@@ -64,7 +64,6 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 	int update_pos_counter = end_point;
 	int ii;
 	double start_coords_rtz[3];
-	double start_coords_xyz[3];
 	double new_coords_rtz[3];
 	double new_coords_xyz[3];
 	double mfa;
@@ -75,10 +74,6 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 
 	for(ii = start_point; ii < end_point; ii++){
 		if((p[ii].theta >= 0) & (p[ii].theta <= vars.ROI_angle) & (p[ii].h >= 0) & (p[ii].h <= vars.ROI_height)){
-			start_coords_rtz[0] = p[ii].r;
-			start_coords_rtz[1] = p[ii].theta;
-			start_coords_rtz[2] = p[ii].h;
-			cyl_to_cart(start_coords_rtz, start_coords_xyz); /* convert to cart coords */
 
 			/*call the interp function using r between the two points to get the mfa, mfa_sd and depth_sd*/
 			mfa = get_interp_val_P(start_coords_rtz[0], Po.rad, Pi.rad, Po.MFA, Pi.MFA);
@@ -87,21 +82,35 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 
 			/* call random normal dist function for above to get vals for this chain and step*/
 			cmfa = norm_dist_single(mfa, mfa_sd);
-			cdepth = norm_dist_single(0, depth_sd);
+			cdepth = norm_dist_single(0, depth_sd); /*need some corection in here so that the mfs dont leave the cell*/
 
 			/* calc new pos in the cart coords*/
-			new_coords_xyz[0] = vars.FA_dia*(sin(cmfa)*cos(cdepth)) + start_coords_xyz[0];
-			new_coords_xyz[1] = vars.FA_dia*(sin(cmfa)*sin(cdepth)) + start_coords_xyz[1];
-			new_coords_xyz[2] = vars.FA_dia*cos(cmfa) + start_coords_xyz[2];
+			new_coords_xyz[0] = vars.FA_dia*(sin(cmfa)*cos(cdepth));
+			new_coords_xyz[1] = vars.FA_dia*(sin(cmfa)*sin(cdepth));
+			new_coords_xyz[2] = vars.FA_dia*cos(cmfa);
+
 
 			/* convert new point back to cyl coords*/
 			cart_to_cyl(new_coords_xyz, new_coords_rtz);
+
+			start_coords_rtz[0] = p[ii].r;
+			start_coords_rtz[1] = p[ii].theta;
+			start_coords_rtz[2] = p[ii].h;
+
+			new_coords_rtz[0] = new_coords_rtz[0] + start_coords_rtz[0];
+			new_coords_rtz[1] = new_coords_rtz[1] + start_coords_rtz[1];
+			new_coords_rtz[2] = new_coords_rtz[2] + start_coords_rtz[2];
+
+			printf("%f, ", new_coords_rtz[0]);
+			printf("%f, ", new_coords_rtz[1]);
+			printf("%f \n", new_coords_rtz[2]);
 			/* add new point to the particles struct */
 			p[update_pos_counter].uid = update_pos_counter;
 			p[update_pos_counter].ptype = "FA0";
 			p[update_pos_counter].r = new_coords_rtz[0];
 			p[update_pos_counter].theta = new_coords_rtz[1];
 			p[update_pos_counter].h = new_coords_rtz[2];
+
 			update_pos_counter++;
 			used++;
 		}
@@ -146,6 +155,7 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	/*set memory aside to store the vector of x starting points*/
 	/* create starting points vectors*/
 	printf("pv_len_x = %i \n", pv_len_x);
+	printf("pv_len_y = %i \n", pv_len_y);
 	double *points_vec_x = calloc(pv_len_x, sizeof(double));
 	if(points_vec_x == NULL)
 	{
@@ -207,6 +217,7 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 		start_point = start_point + used;
 		end_point = end_point + used;
 	}
+
 	printf("used %i \n", used);
 	printf("start_points %i \n", start_point);
 	printf("end_points %i \n", end_point);
