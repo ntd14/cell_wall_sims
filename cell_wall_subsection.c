@@ -25,8 +25,7 @@ int main(void)
 	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
 	num_of_particles = create_layer(particles, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
-	printf("exiting P0 P1 with %i particles created", num_of_particles);
-
+	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 
 	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
 	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that
@@ -35,7 +34,7 @@ int main(void)
 	/* to do the water for the rest of the layers, add uniformly make FAs fixed delete when big overlap, move where little overlap*/
 	/* to do lignification, randomly find water particles in the lignification zone, add a bit of noise, create lignin particle */
 
-	printf("num_of_particles = %i \n", num_of_particles);
+	printf("total num_of_particles = %i \n", num_of_particles);
 	int ii;
 	FILE *allp = fopen("allp.js", "w");
 		if (allp == NULL)

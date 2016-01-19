@@ -28,34 +28,24 @@
 
 #include "cell_wall_layer.h"
 
-/* calcs the proportion of points to go the the x and y axis for a unit length */
-void get_multiplier(double* multi, double mfa){
-	if(vars.ROI_angle > M_PI){
-		multi[0] = 1;
-		multi[1] = 0;
-	}else{
-		multi[0] = tan(M_PI/2 - mfa) / (tan(M_PI/2 - mfa) + tan(mfa));
-		multi[1] = tan(mfa) / (tan(M_PI/2 - mfa) + tan(mfa));
-		printf("multi x = %f, ", multi[0]);
-		printf("multi y = %f \n", multi[1]);
-	}
-}
 
 /*calcs the number of starting points on the x and y axis*/
 void get_num_starting_points_line(int* sarray, double mfa, double r, double content){
-	double multi[2];
-	get_multiplier(multi, mfa);
-	 /*calcs the length of the x axis, with a provisor for the mean MFA, ie a mfa of pi/2 will give x length*/
-	double lx = arc_length(r, vars.ROI_angle) * multi[0];
+
+	/* calc height of y * tan (mfa)  this gives the extra length in the x direction that y start points need to compensate for*/
+	/* calc the ratio of extra distance to total distance and devide the total number of points, giving the number of points to start on the y axis */
+	/*calcs the length of the x axis, with a provisor for the mean MFA, ie a mfa of pi/2 will give x length*/
+	double lx = arc_length(r, vars.ROI_angle);
 	/*calcs the height with a provisor for the mfa, ie a mfa of 0 will give no y length*/
-	double ly = vars.ROI_height * multi[1];
+	double tmp_theta = atan((vars.ROI_height*tan(fabs(mfa)))/r);
+	double lx_extra = arc_length(r, tmp_theta); /*might need to convert this to theta then calc the arc length*/
 	/*calcs the total length to distribute the particales along when corrected for the mfa*/
-	double vl = lx + ly;
+	double vl = lx + lx_extra;
 	/*clacs the number of points based on the vertual length above, the proportion of the particle type and its diameter*/
-	int nsp = (int) (vl/content)/vars.FA_dia;
+	double nsp = (vl*content)/vars.FA_dia;
 	/*calcs and returns the number of particles to be started on x and y axes*/
-	sarray[0] = nsp*multi[0];
-	sarray[1] = nsp*multi[1];
+	sarray[0] = (int) nsp*(lx/vl);
+	sarray[1] = (int) nsp*(lx_extra/vl);
 }
 
 int add_particles_to_chains(struct particle* p, int start_point, int end_point, struct point Po, struct point Pi){
@@ -94,6 +84,9 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 			new_r = old_r + vars.FA_dia*sin(cdepth);
 			tmp_c = vars.FA_dia*sin(cmfa);
 			delta_theta = acos((pow(old_r, 2) + pow(new_r, 2) - pow(tmp_c, 2) )/(2*old_r*new_r));
+			if(cmfa < 0){
+				delta_theta = -1*delta_theta;
+			}
 			new_theta = p[ii].theta + delta_theta;
 			new_h = p[ii].h + vars.FA_dia*cos(cmfa)*cos(cdepth);
 
@@ -135,8 +128,6 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	npx_maxmin[0] = (int) sarray_outer[0]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
 	npx_maxmin[1] = (int) sarray_inner[0]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
 	get_biggest_int(npx_maxmin); /* converting so that [0] is max number of points, [1] is min number */
-	printf("sarray_outer[0] = %i \n", sarray_outer[0]);
-	printf("sarray_inner[0] = %i \n", sarray_inner[0]);
 	int npy_maxmin[2];/* number of starting points in xy direction at 0 outer and [1] inner */
 	npy_maxmin[0] = (int) sarray_outer[1]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
 	npy_maxmin[1] = (int) sarray_inner[1]*((Po.rad - Pi.rad)/vars.FA_dia) + 0.5;
@@ -144,12 +135,9 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 
 	int pv_len_x = (int) (npx_maxmin[1] + ((npx_maxmin[0]-npx_maxmin[1])/2)); /* calc the total number of starting points in x direction */
 	int pv_len_y = (int) (npy_maxmin[1] + ((npy_maxmin[0]-npy_maxmin[1])/2)); /* calc the total number of starting points in y direction */
-	printf("npx_maxmin[0] = %i \n", npx_maxmin[0]);
-	printf("npx_maxmin[1] = %i \n", npx_maxmin[1]);
+
 	/*set memory aside to store the vector of x starting points*/
 	/* create starting points vectors*/
-	printf("pv_len_x = %i \n", pv_len_x);
-	printf("pv_len_y = %i \n", pv_len_y);
 	double *points_vec_x = calloc(pv_len_x, sizeof(double));
 	if(points_vec_x == NULL)
 	{
@@ -212,9 +200,6 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 		end_point = end_point + used;
 	}
 
-	printf("used %i \n", used);
-	printf("start_points %i \n", start_point);
-	printf("end_points %i \n", end_point);
 	update_pos_counter = end_point;
 	/* propogate starting points to chains, probably do this in a seperate function?*/
 
@@ -222,8 +207,6 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	 * adding one particle to each of the starting points, record the first and last in this sequence
 	 * loop between the new start and end of the particles, checking that they are in the ROI and adding
 	 * a new particle with a position defined by the previous */
-
-	printf("%i particles in CML \n", update_pos_counter);
 	return(update_pos_counter);
 }
 

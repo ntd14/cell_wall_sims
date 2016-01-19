@@ -14,7 +14,6 @@ void gen_uniform(int num_points, double* points_vec){
 	for(ii = 0; ii < num_points; ii++){
 		points_vec[ii] = (rand()/(double) RAND_MAX);
 	}
-	printf("uniform %i \n", ii);
 }
 
 void gen_tri(int starting_point, int max_points, double* points_vec){
@@ -23,7 +22,6 @@ void gen_tri(int starting_point, int max_points, double* points_vec){
 	for(ii = starting_point; ii < max_points; ii++){
 		points_vec[ii] = sqrt((rand()/(double) RAND_MAX));
 	}
-	printf("tri %i \n", ii - starting_point);
 }
 
 void get_biggest_double(double* maxmin){
@@ -59,8 +57,6 @@ void gen_starting_points(int np_inner, int np_outer, double phy_inner, double ph
 	phy_maxmin[1] = phy_outer;
 	get_biggest_double(phy_maxmin);
 	/*call a function to generate random uniform 0-1 numbers and populate points_vec */
-	printf("np_max = %i \n", np_maxmin[0]);
-	printf("np_min = %i \n", np_maxmin[1]);
 	gen_uniform(np_maxmin[1], points_vec);
 	/*call a function to generate a sqrt(random uniform 0-1 distribution) and populate the remaing space in points_vec*/
 	gen_tri(np_maxmin[1], np_maxmin[0], points_vec);

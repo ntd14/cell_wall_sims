@@ -19,7 +19,17 @@
 double get_interp_val_P(double r, double r_outer, double r_inner, double Poutervar, double Pinnervar)
 {
 
-	double val = Poutervar + (Pinnervar - Poutervar)*(r - r_outer)/(r_inner - r_outer);
+	double val;
+	double rn = (r - r_inner)/(r_outer - r_inner);
 
+	if(Poutervar > Pinnervar){
+		val = rn*(Poutervar - Pinnervar) + Pinnervar;
+	}else if(Poutervar == Pinnervar){
+		val = Poutervar;
+	}else if(Pinnervar > Poutervar){
+		val = rn*(Pinnervar - Poutervar) + Poutervar;
+	}else{
+		printf("error in get_interp_val_p, invalid P values \n");
+	}
 	return(val);
 }
