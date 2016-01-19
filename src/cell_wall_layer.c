@@ -72,6 +72,7 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 			/*call the interp function using r between the two points to get the mfa, mfa_sd and depth_sd*/
 			mfa = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.MFA, Pi.MFA);
 			mfa_sd = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.MFA_SD, Pi.MFA_SD);
+
 			depth_sd = get_interp_val_P(p[ii].r, Po.rad, Pi.rad, Po.depth_SD, Pi.depth_SD);
 
 			/* call random normal dist function for above to get vals for this chain and step*/
@@ -105,13 +106,62 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 	return(used);
 }
 
-/*
- * function to take in the inner and outer particle numbers, generate a random number,
- * and apply it to y = mx + c where x is the random number, m is the gradiant between the
- * inner and outer particle numbers and c is the inner rad.
- * return y, the rad of the particle to be generated
- * */
 
+
+/*need function to add water to the cell wall. */
+int add_water(struct particle* p, int start_particles, int end_particles, struct point Po, struct point Pi){
+	int ptot = end_particles;
+		/*split ro - ri into h2o.dia +1 chuncks starting at the outer wall, calc the change in theta at that rad to give a movement of 1 dia
+		 * split height into h2o.dia +1 chunks starting at the bottom ring, work up to h
+		 * once one shell is complete move in 1 rad, recalc the change in theta and do the next shell*/
+	int num_of_shells = (int) (Po.rad - Pi.rad)/vars.H2O_dia + 1;
+	int num_of_height_chunks = (int) vars.ROI_height / vars.H2O_dia + 1;
+	int ii, jj, kk, ll, used;
+	int num_particles_at_rad;
+	double particle_theta;
+	double tmp_coords[3];
+	double closest_r = vars.H2O_dia;
+	double closest_h = vars.H2O_dia;
+	for(ii = 0; ii < num_of_shells; ii++){
+		num_particles_at_rad = (int) (arc_length((Po.rad - vars.H2O_dia*ii), vars.ROI_angle) / vars.H2O_dia) + 1;
+		particle_theta = (vars.ROI_angle/(num_particles_at_rad - 1));
+		for(jj = 0; jj < num_of_height_chunks; jj++){
+			for(kk = 0; kk < num_particles_at_rad; kk++){
+				/*create tmp particle*/
+				tmp_coords[0] = Po.rad - vars.H2O_dia*ii;
+				tmp_coords[1] = particle_theta*kk;
+				tmp_coords[2] = vars.H2O_dia*jj;
+				/*check if tmp particle can be used, if yes add, if no delete*/
+				ll = start_particles;
+				used = 0;
+				while((ll < end_particles) && (used == 0)){
+					if((fabs(tmp_coords[0] - p[ll].r) < closest_r) &&
+							(fabs(tmp_coords[1] - p[ll].theta) < particle_theta) &&
+							(fabs(tmp_coords[2] - p[ll].h) < closest_h)){
+						used = 1;
+					}
+					ll++;
+				}
+				if(used == 0){
+					p[ptot].uid = ptot;
+					p[ptot].r = tmp_coords[0];
+					p[ptot].theta = tmp_coords[1];
+					p[ptot].h = tmp_coords[2]; /*should this have some noise added into it?*/
+					p[ptot].ptype = "H2O";
+					ptot++;
+				}
+			}
+		}
+	}
+
+	return(ptot);
+}
+
+
+/*then add what is currentlty in create_layer to a new function that creates the new points, and deals with water overlaps*/
+
+
+/*then write create layer to call the above functions and distribute to suitable file structure*/
 /* call CML_point to make the isotropic CML */
 int create_layer(struct particle* p, int num_of_particles, struct point Po, struct point Pi)
 {
@@ -201,12 +251,11 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	}
 
 	update_pos_counter = end_point;
-	/* propogate starting points to chains, probably do this in a seperate function?*/
 
-	/*take the starting point, num_of_particles and the end point update_pos_counter and loop between them,
-	 * adding one particle to each of the starting points, record the first and last in this sequence
-	 * loop between the new start and end of the particles, checking that they are in the ROI and adding
-	 * a new particle with a position defined by the previous */
+	/*call to function that adds water in available spaces*/
+	update_pos_counter = add_water(p, num_of_particles, update_pos_counter, Po, Pi);
+	/*call to search function which finds all connections and stores them*/
+
 	return(update_pos_counter);
 }
 

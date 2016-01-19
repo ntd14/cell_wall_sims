@@ -102,14 +102,6 @@ int main(void)
 	return 0;
 }
 
-/* structs */
-
-/* uid */
-/* Ptype */
-/* coords */
-/* conns */
-/* creation time */
-
 
 
 
