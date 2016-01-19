@@ -106,9 +106,20 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 	return(used);
 }
 
+/*Need global search function*/
+void global_search(struct particle* p, int start_particles, int end_particles){
+	int ii, jj;
+	for(ii = start_particles; ii < end_particles; ii++){
+		for(jj = ii + 1; jj < end_particles; jj++){
+			/*check if p[ii] and p [jj] are close enough to store eachother*/
+			/*if they are store the pointer to the other one in the p struct*/
+		}
+	}
+}
 
 
-/*need function to add water to the cell wall. */
+
+/*function to add water to the cell wall. */
 int add_water(struct particle* p, int start_particles, int end_particles, struct point Po, struct point Pi){
 	int ptot = end_particles;
 		/*split ro - ri into h2o.dia +1 chuncks starting at the outer wall, calc the change in theta at that rad to give a movement of 1 dia
@@ -254,6 +265,7 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 
 	/*call to function that adds water in available spaces*/
 	update_pos_counter = add_water(p, num_of_particles, update_pos_counter, Po, Pi);
+
 	/*call to search function which finds all connections and stores them*/
 
 	return(update_pos_counter);
