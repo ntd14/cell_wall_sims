@@ -18,8 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include "./helpers/get_ini_vars.h"
-
+#include "./helpers/lists.h"
 #include "./helpers/cart_and_cyl.h"
 #include "./helpers/make_arrays.h"
 #include "./helpers/normal_dist_gen.h"
@@ -106,13 +107,68 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 	return(used);
 }
 
-/*Need global search function*/
-void global_search(struct particle* p, int start_particles, int end_particles){
-	int ii, jj;
-	for(ii = start_particles; ii < end_particles; ii++){
-		for(jj = ii + 1; jj < end_particles; jj++){
-			/*check if p[ii] and p [jj] are close enough to store eachother*/
+double con_dist_from_name(char name[10]){
+	double dist = 0;
+	int ii = 0;
+	char pname[10];
+	strcpy(pname, list_cons[ii]);
+
+	while((strcmp(pname, name) != 0) & (ii < vars.num_cons_used)){
+		ii++;
+		strcpy(pname, list_cons[ii]);
+	}
+
+	if(ii >= vars.num_cons_used){
+		printf("no connection found between particle types \n");
+		exit(0);
+	}
+	dist = ptr_cons[ii]->dist;
+	return(dist);
+}
+
+void selective_search(struct particle* p, int sp1, int ep1, int sp2, int ep2){
+	int ii, jj, jjst;
+	double bd, rdist, hdist, tdist, dtheta;
+	char cons1[10];
+	char cons2[10];
+
+	for(ii = sp1; ii < ep1; ii++){
+		if((sp1 == sp2) & (ep1 == ep2)){
+			jjst = ii+1;
+		}else{
+			jjst = sp2;
+		}
+		/*get particle type*/
+		for(jj = jjst; jj < ep2; jj++){
+			strcpy(cons1, p[ii].ptype);
+			strcpy(cons2, p[jj].ptype);
+			strcat(cons1, cons2);
+			strcat(cons1, "con");
+			/*call function that gets bonding dist from connection name*/
+			bd = con_dist_from_name(cons1);
+			/*get dist between the two particles*/
+			rdist = fabs(p[ii].r - p[jj].r);
+			if(rdist <= bd){
+				hdist = fabs(p[ii].h - p[jj].h);
+				if(hdist <= bd){
+					/*convert theta to tdist*/
+					dtheta = fabs(p[ii].theta - p[jj].theta);
+					tdist = sqrt(pow(p[ii].r ,2) + pow(p[jj].r, 2) - 2*p[ii].r*p[jj].r*cos(dtheta));
+					if(tdist <= bd){
+						p[ii].nlist[p[ii].nlistlen] = &p[jj];
+						p[jj].nlist[p[jj].nlistlen] = &p[ii];
+						p[ii].nlistlen = p[ii].nlistlen + 1;
+						p[jj].nlistlen = p[jj].nlistlen + 1;
+
+					  /*store particle in p[ii] and p[jj] lists*/
+						/*update the particle connections list length*/
+						/*potentually have a num of bonds used cut off per particle*/
+					}
+				}
+			}
+			/*check if p[ii] and p[jj] are close enough to store eachother*/
 			/*if they are store the pointer to the other one in the p struct*/
+
 		}
 	}
 }
@@ -120,7 +176,7 @@ void global_search(struct particle* p, int start_particles, int end_particles){
 
 
 /*function to add water to the cell wall. */
-int add_water(struct particle* p, int start_particles, int end_particles, struct point Po, struct point Pi){
+int add_water(struct particle* p, struct particle** nlist_array, int start_particles, int end_particles, struct point Po, struct point Pi){
 	int ptot = end_particles;
 		/*split ro - ri into h2o.dia +1 chuncks starting at the outer wall, calc the change in theta at that rad to give a movement of 1 dia
 		 * split height into h2o.dia +1 chunks starting at the bottom ring, work up to h
@@ -159,6 +215,8 @@ int add_water(struct particle* p, int start_particles, int end_particles, struct
 					p[ptot].theta = tmp_coords[1];
 					p[ptot].h = tmp_coords[2]; /*should this have some noise added into it?*/
 					p[ptot].ptype = "H2O";
+					p[ptot].nlistlen = 0;
+					p[ptot].nlist = &nlist_array[ptot*vars.max_connections];
 					ptot++;
 				}
 			}
@@ -174,7 +232,7 @@ int add_water(struct particle* p, int start_particles, int end_particles, struct
 
 /*then write create layer to call the above functions and distribute to suitable file structure*/
 /* call CML_point to make the isotropic CML */
-int create_layer(struct particle* p, int num_of_particles, struct point Po, struct point Pi)
+int create_layer(struct particle* p, struct particle** nlist_array, int num_of_particles, struct point Po, struct point Pi)
 {
 	int ii;
 	int update_pos_counter = num_of_particles;
@@ -217,6 +275,8 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 		p[update_pos_counter].theta = vars.ROI_angle*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].h = 0; /*should this have some noise added into it?*/
 		p[update_pos_counter].ptype = "FA0";
+		p[update_pos_counter].nlistlen = 0;
+		p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
 		update_pos_counter++;
 	}
 	free(points_vec_x);
@@ -241,6 +301,8 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 		p[update_pos_counter].r = points_vec_y[ii];
 		p[update_pos_counter].h = vars.ROI_height*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].ptype = "FA0";
+		p[update_pos_counter].nlistlen = 0;
+		p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
 
 		if((Po.MFA + Pi.MFA)/2 > 0){
 			p[update_pos_counter].theta = 0;/*should this have some noise added into it?*/
@@ -251,6 +313,8 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	}
 	free(points_vec_y);
 	points_vec_y = NULL;
+
+	selective_search(p, num_of_particles, update_pos_counter, num_of_particles, update_pos_counter);
 
 	int start_point = num_of_particles;
 	int end_point = update_pos_counter;
@@ -264,9 +328,13 @@ int create_layer(struct particle* p, int num_of_particles, struct point Po, stru
 	update_pos_counter = end_point;
 
 	/*call to function that adds water in available spaces*/
-	update_pos_counter = add_water(p, num_of_particles, update_pos_counter, Po, Pi);
+	update_pos_counter = add_water(p, nlist_array, num_of_particles, update_pos_counter, Po, Pi);
+
 
 	/*call to search function which finds all connections and stores them*/
+	selective_search(p, num_of_particles, end_point, end_point, update_pos_counter);
+	selective_search(p, end_point, update_pos_counter, end_point, update_pos_counter);
+
 
 	return(update_pos_counter);
 }

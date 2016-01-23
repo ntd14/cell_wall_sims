@@ -8,6 +8,6 @@
 #ifndef SRC_CELL_WALL_LAYER_H_
 #define SRC_CELL_WALL_LAYER_H_
 
-int create_layer(struct particle* p, int num_of_particles, struct point Po, struct point Pi);
+int create_layer(struct particle* p, struct particle**, int num_of_particles, struct point Po, struct point Pi);
 
 #endif /* SRC_CELL_WALL_LAYER_H_ */

@@ -19,11 +19,22 @@ int main(void)
 		printf("exiting code due to lack of memory for given perameters \n");
 		exit(0);
 	}
+
+	/*calloc a block of memory for max connections worth of particles created here*/
+
+	struct particle** nlist_array = calloc(vars.max_connections*vars.max_particles, sizeof(struct particle*));
+	if(particles == NULL)
+	{
+		printf("calloc failed creating nlist_array in cell_wall_subsection, try and reduce max_particles and/or max_connections in ini file \n");
+		printf("exiting code due to lack of memory for given perameters \n");
+		exit(0);
+	}
+
 	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
 	/* should water be added before or after the FAs? could make whole domain fill with water before starting, but this will use a lot more memory */
 	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
-	num_of_particles = create_layer(particles, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
+	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 
@@ -52,6 +63,7 @@ int main(void)
 			fprintf(allp, "data[%i].r = %f; ", ii, particles[ii].r);
 			fprintf(allp, "data[%i].theta = %f; ",ii, particles[ii].theta);
 			fprintf(allp, "data[%i].h = %f; ", ii, particles[ii].h);
+			fprintf(allp, "data[%i].nlistlen = %i; ", ii, particles[ii].nlistlen);
 			fprintf(allp, "\n");
 		}
 		fclose(allp);
@@ -96,6 +108,8 @@ int main(void)
 /* at some point start lignification */
 	printf("finished main \n");
 
+	free(nlist_array);
+	nlist_array = NULL;
 	free(particles);
 	particles = NULL;
 

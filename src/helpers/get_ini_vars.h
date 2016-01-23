@@ -21,6 +21,7 @@ typedef struct var {
 	int num_cons_used;
 	int num_bounds_used;
 	int max_particles;
+	int max_connections;
 } var;
 struct var vars;
 
