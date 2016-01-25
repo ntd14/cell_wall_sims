@@ -22,7 +22,7 @@ int main(void)
 
 	/*calloc a block of memory for max connections worth of particles created here*/
 
-	struct particle** nlist_array = calloc(vars.max_connections*vars.max_particles, sizeof(struct particle*));
+	struct particle** nlist_array = calloc((vars.max_connections*vars.max_particles), sizeof(struct particle*));
 	if(particles == NULL)
 	{
 		printf("calloc failed creating nlist_array in cell_wall_subsection, try and reduce max_particles and/or max_connections in ini file \n");
@@ -46,7 +46,8 @@ int main(void)
 	/* to do lignification, randomly find water particles in the lignification zone, add a bit of noise, create lignin particle */
 
 	printf("total num_of_particles = %i \n", num_of_particles);
-	int ii;
+
+	int ii, jj;
 	FILE *allp = fopen("allp.js", "w");
 		if (allp == NULL)
 		{
@@ -64,6 +65,18 @@ int main(void)
 			fprintf(allp, "data[%i].theta = %f; ",ii, particles[ii].theta);
 			fprintf(allp, "data[%i].h = %f; ", ii, particles[ii].h);
 			fprintf(allp, "data[%i].nlistlen = %i; ", ii, particles[ii].nlistlen);
+
+			fprintf(allp, "data[%i].nlist = [", ii);
+			jj = 0;
+			while(jj < (particles[ii].nlistlen - 1)){
+					fprintf(allp, "%i, ", (*particles[ii].nlist[jj]).uid);
+					jj++;
+			}
+			if(jj == (particles[ii].nlistlen - 1)){
+				fprintf(allp, "%i", (*particles[ii].nlist[jj]).uid);
+			}
+			fprintf(allp, "];");
+
 			fprintf(allp, "\n");
 		}
 		fclose(allp);

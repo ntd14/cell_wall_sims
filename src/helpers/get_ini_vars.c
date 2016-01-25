@@ -72,7 +72,7 @@ void vars_import()
 	strcpy(tmp1, "vars:num_bounds_used");
 	vars.num_bounds_used = iniparser_getint(d, tmp1, 0);
 
-	strcpy(tmp1, "vars:max_conections");
+	strcpy(tmp1, "vars:max_connections");
 	vars.max_connections = iniparser_getint(d, tmp1, 0);
 
 	iniparser_freedict(d);

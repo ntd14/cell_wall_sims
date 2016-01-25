@@ -49,7 +49,7 @@ void get_num_starting_points_line(int* sarray, double mfa, double r, double cont
 	sarray[1] = (int) nsp*(lx_extra/vl);
 }
 
-int add_particles_to_chains(struct particle* p, int start_point, int end_point, struct point Po, struct point Pi){
+int add_particles_to_chains(struct particle* p, struct particle** nlist_array, int start_point, int end_point, struct point Po, struct point Pi){
 
 	int used = 0;
 	int update_pos_counter = end_point;
@@ -99,6 +99,7 @@ int add_particles_to_chains(struct particle* p, int start_point, int end_point, 
 			p[update_pos_counter].r = new_r;
 			p[update_pos_counter].theta = new_theta;
 			p[update_pos_counter].h = new_h;
+			p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
 
 			update_pos_counter++;
 			used++;
@@ -155,20 +156,20 @@ void selective_search(struct particle* p, int sp1, int ep1, int sp2, int ep2){
 					dtheta = fabs(p[ii].theta - p[jj].theta);
 					tdist = sqrt(pow(p[ii].r ,2) + pow(p[jj].r, 2) - 2*p[ii].r*p[jj].r*cos(dtheta));
 					if(tdist <= bd){
+						if((p[ii].nlistlen > vars.max_connections) || (p[jj].nlistlen > vars.max_connections)){
+							printf("max connections exceeded, try increaseing max_connections but dont exceed ram capacity\n");
+							printf("exiting code now \n");
+							exit(0);
+						}
+
 						p[ii].nlist[p[ii].nlistlen] = &p[jj];
 						p[jj].nlist[p[jj].nlistlen] = &p[ii];
+
 						p[ii].nlistlen = p[ii].nlistlen + 1;
 						p[jj].nlistlen = p[jj].nlistlen + 1;
-
-					  /*store particle in p[ii] and p[jj] lists*/
-						/*update the particle connections list length*/
-						/*potentually have a num of bonds used cut off per particle*/
 					}
 				}
 			}
-			/*check if p[ii] and p[jj] are close enough to store eachother*/
-			/*if they are store the pointer to the other one in the p struct*/
-
 		}
 	}
 }
@@ -282,7 +283,6 @@ int create_layer(struct particle* p, struct particle** nlist_array, int num_of_p
 	free(points_vec_x);
 	points_vec_x = NULL;
 
-
 	double* points_vec_y = calloc(pv_len_y, sizeof(double));
 	if(points_vec_y == NULL)
 	{
@@ -314,27 +314,43 @@ int create_layer(struct particle* p, struct particle** nlist_array, int num_of_p
 	free(points_vec_y);
 	points_vec_y = NULL;
 
-	selective_search(p, num_of_particles, update_pos_counter, num_of_particles, update_pos_counter);
+	int start_points_firstp = num_of_particles;
+	int start_points_lastp = update_pos_counter;
 
-	int start_point = num_of_particles;
-	int end_point = update_pos_counter;
+	int start_point = start_points_firstp;
+	int end_point = start_points_lastp;
 	int used = 1;
 	while(used > 0){
-		used = add_particles_to_chains(p, start_point, end_point, Po, Pi);
+		used = add_particles_to_chains(p, nlist_array, start_point, end_point, Po, Pi);
 		start_point = start_point + used;
 		end_point = end_point + used;
 	}
 
 	update_pos_counter = end_point;
+	int FAmain_startp = start_points_lastp;
+	int FAmain_endp = update_pos_counter;
+
+
+
 
 	/*call to function that adds water in available spaces*/
 	update_pos_counter = add_water(p, nlist_array, num_of_particles, update_pos_counter, Po, Pi);
 
+	int H2O_startp = FAmain_endp;
+	int H2O_endp = update_pos_counter;
 
 	/*call to search function which finds all connections and stores them*/
-	selective_search(p, num_of_particles, end_point, end_point, update_pos_counter);
-	selective_search(p, end_point, update_pos_counter, end_point, update_pos_counter);
 
+	/*checking starting FA points for connections with eachother*/
+	selective_search(p, start_points_firstp, start_points_lastp, start_points_firstp, start_points_lastp);
+	/*checking starting FA points for connectiosn with the FA chain particles*/
+	selective_search(p, start_points_firstp, start_points_lastp, FAmain_startp, FAmain_endp);
+	/*checking FA chain particles for starting points with them selfs*/
+	selective_search(p, FAmain_startp, FAmain_endp, FAmain_startp, FAmain_endp);
+	/*checking FA chain particles for connections to water*/
+	selective_search(p, FAmain_startp, FAmain_endp, H2O_startp, H2O_endp);
+	/*checking water for connections with themselfs*/
+	selective_search(p, H2O_startp, H2O_endp, H2O_startp, H2O_endp);
 
 	return(update_pos_counter);
 }
