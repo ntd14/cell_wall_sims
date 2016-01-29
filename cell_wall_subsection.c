@@ -4,8 +4,6 @@
 #include "./src/helpers/get_ini_vars.h"
 #include "./src/cell_wall_layer.h"
 
-#include "./src/helpers/cart_and_cyl.h"
-
 int main(void)
 {
 	printf("entering main \n");
@@ -35,6 +33,8 @@ int main(void)
 	/* should water be added before or after the FAs? could make whole domain fill with water before starting, but this will use a lot more memory */
 	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
 	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
+	/*from the seccond layer on need to check what in the layer has connected to the procedding layer*/
+
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 

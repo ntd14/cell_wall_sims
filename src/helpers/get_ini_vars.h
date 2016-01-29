@@ -64,19 +64,25 @@ struct con H2OH2Ocon;
 
 typedef struct bound {
 	char* name;
-	double r_start;
-	double r_end;
+	double theta_start;
+	double theta_end;
 	double force_FA0;
 	double force_LG0;
 	double force_H2O;
+	double dist_FA0;
+	double dist_LG0;
+	double dist_H2O;
 } bound;
 
 struct bound B_top;
 struct bound B_bot;
-struct bound B0;
-struct bound B1;
-struct bound B2;
-struct bound B3;
+struct bound B_theta_min;
+struct bound B_theta_max;
+struct bound B_luman;
+struct bound B_per0;
+struct bound B_per1;
+struct bound B_per2;
+struct bound B_per3;
 
 struct particle {
 	int uid;
@@ -86,6 +92,9 @@ struct particle {
 	char* ptype;
 	int nlistlen;
 	struct particle** nlist;
+	double new_r;
+	double new_theta;
+	double new_h;
 };
 
 

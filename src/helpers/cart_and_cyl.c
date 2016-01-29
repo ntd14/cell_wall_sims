@@ -30,8 +30,9 @@ double arc_length(double r, double angle)
 	return l;
 }
 
-/* calc total circunfrence given r at a point
- * calc the change in x in the cart system
- * deta theta = delta x / cir * 2*M_PI Might be able to calc this once for each point, along with the given SD at that point
- * change in depth and height coords are equel the change in cart coords -- check this --*/
-
+double calc_dist_between_points(double* a1, double* a2){ /*a[r], a[theta], a[h]*/
+	double td = sqrt(pow(a1[0], 2) + pow(a2[0], 2) - 2*a1[0]*a2[0]*cos(a2[1] - a1[1]));
+	double hd = a1[2] - a2[2];
+	double dist = sqrt(pow(td, 2) + pow(hd, 2));
+	return(dist);
+}

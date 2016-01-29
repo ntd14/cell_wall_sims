@@ -169,17 +169,18 @@ void bound_import(char* b, bound* B)
 
 	strcpy(tmp1, b);
 	B->name = tmp1;
+	if((strcmp(B->name, "B_bot") != 0) & (strcmp(B->name, "B_top") != 0) & (strcmp(B->name, "B_theta_min") != 0) &
+			(strcmp(B->name, "B_theta_max") != 0) & (strcmp(B->name, "B_luman") != 0)){
+		strcpy(tmp1, b);
+		strcpy(tmp2, ":r_start");
+		strcat(tmp1, tmp2);
+		B->theta_start = iniparser_getdouble(d, tmp1, 0);
 
-	strcpy(tmp1, b);
-	strcpy(tmp2, ":r_start");
-	strcat(tmp1, tmp2);
-	B->r_start = iniparser_getdouble(d, tmp1, 0);
-
-	strcpy(tmp1, b);
-	strcpy(tmp2, ":r_end");
-	strcat(tmp1, tmp2);
-	B->r_end = iniparser_getdouble(d, tmp1, 0);
-
+		strcpy(tmp1, b);
+		strcpy(tmp2, ":r_end");
+		strcat(tmp1, tmp2);
+		B->theta_end = iniparser_getdouble(d, tmp1, 0);
+	}
 	strcpy(tmp1, b);
 	strcpy(tmp2, ":force_FA0");
 	strcat(tmp1, tmp2);
@@ -194,6 +195,21 @@ void bound_import(char* b, bound* B)
 	strcpy(tmp2, ":force_H2O");
 	strcat(tmp1, tmp2);
 	B->force_H2O = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":dist_FA0");
+	strcat(tmp1, tmp2);
+	B->dist_FA0 = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":dist_LG0");
+	strcat(tmp1, tmp2);
+	B->dist_LG0 = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":dist_H2O");
+	strcat(tmp1, tmp2);
+	B->dist_H2O = iniparser_getdouble(d, tmp1, 0);
 
 	iniparser_freedict(d);
 

@@ -17,6 +17,6 @@ char* list_cons[6] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2
 
 con* ptr_cons[6] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
 
-char* list_bounds[6] = {"B_top", "B_bot", "B0", "B1", "B2", "B3"};
+char* list_bounds[9] = {"B_top", "B_bot", "B_theta_min", "B_theta_max", "B_luman", "B_per0", "B_per1", "B_per2", "B_per3"};
 
-bound* ptr_bounds[6] = {&B_top, &B_bot, &B0, &B1, &B2, &B3};
+bound* ptr_bounds[9] = {&B_top, &B_bot, &B_theta_min, &B_theta_max, &B_luman, &B_per0, &B_per1, &B_per2, &B_per3};

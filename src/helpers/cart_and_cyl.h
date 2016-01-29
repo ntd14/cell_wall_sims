@@ -14,4 +14,6 @@ void cyl_to_cart(double* rtz_array, double* xyz_array);
 
 double arc_length(double d, double angle);
 
+double calc_dist_between_points(double* a1, double* a2);
+
 #endif /* CART_AND_CYL_H_ */
