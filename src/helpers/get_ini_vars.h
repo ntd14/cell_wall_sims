@@ -83,6 +83,9 @@ struct particle {
 	double r;
 	double theta;
 	double h;
+	double nr;
+	double ntheta;
+	double nh;
 	char* ptype;
 	int nlistlen;
 	struct particle** nlist;

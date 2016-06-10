@@ -12,29 +12,10 @@
 #include "./get_ini_vars.h"
 #include "./lists.h"
 
-
-double con_dist_from_name(char name[10]){
-	double dist = 0;
-	int ii = 0;
-	char pname[10];
-	strcpy(pname, list_cons[ii]);
-
-	while((strcmp(pname, name) != 0) & (ii < vars.num_cons_used)){
-		ii++;
-		strcpy(pname, list_cons[ii]);
-	}
-
-	if(ii >= vars.num_cons_used){
-		printf("no connection found between particle types \n");
-		exit(0);
-	}
-	dist = ptr_cons[ii]->dist;
-	return(dist);
-}
-
 void selective_search(struct particle* p, int sp1, int ep1, int sp2, int ep2){
 	int ii, jj, jjst;
 	double bd, rdist, hdist, tdist, dtheta;
+	con* cptr;
 	char cons1[10];
 	char cons2[10];
 
@@ -51,7 +32,8 @@ void selective_search(struct particle* p, int sp1, int ep1, int sp2, int ep2){
 			strcat(cons1, cons2);
 			strcat(cons1, "con");
 			/*call function that gets bonding dist from connection name*/
-			bd = con_dist_from_name(cons1);
+			cptr = con_ptr_name(cons1);
+			bd = cptr->dist;
 			/*get dist between the two particles*/
 			rdist = fabs(p[ii].r - p[jj].r);
 			if(rdist <= bd){

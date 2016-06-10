@@ -144,6 +144,9 @@ int add_particles_to_chains(struct particle* p, struct particle** nlist_array, i
 			p[update_pos_counter].theta = new_theta;
 			p[update_pos_counter].h = new_h;
 			p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
+			p[update_pos_counter].nr = p[update_pos_counter].r;
+			p[update_pos_counter].ntheta = p[update_pos_counter].theta;
+			p[update_pos_counter].nh = p[update_pos_counter].h;
 
 			update_pos_counter++;
 			used++;

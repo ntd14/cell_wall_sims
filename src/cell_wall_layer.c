@@ -74,6 +74,9 @@ int create_layer(struct particle* p, struct particle** nlist_array, int num_of_p
 		p[update_pos_counter].r = points_vec_x[ii];
 		p[update_pos_counter].theta = vars.ROI_angle*(rand()/(double) RAND_MAX);
 		p[update_pos_counter].h = 0; /*should this have some noise added into it?*/
+		p[update_pos_counter].nr = p[update_pos_counter].r;
+		p[update_pos_counter].ntheta = p[update_pos_counter].theta;
+		p[update_pos_counter].nh = p[update_pos_counter].h;
 		p[update_pos_counter].ptype = "FA0";
 		p[update_pos_counter].nlistlen = 0;
 		p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
@@ -108,6 +111,11 @@ int create_layer(struct particle* p, struct particle** nlist_array, int num_of_p
 		}else{
 			p[update_pos_counter].theta = vars.ROI_angle; /*should this have some noise added into it?*/
 		}
+
+		p[update_pos_counter].nr = p[update_pos_counter].r;
+		p[update_pos_counter].ntheta = p[update_pos_counter].theta;
+		p[update_pos_counter].nh = p[update_pos_counter].h;
+
 		update_pos_counter++;
 	}
 	free(points_vec_y);

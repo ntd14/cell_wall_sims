@@ -52,6 +52,9 @@ int add_water(struct particle* p, struct particle** nlist_array, int start_parti
 					p[ptot].ptype = "H2O";
 					p[ptot].nlistlen = 0;
 					p[ptot].nlist = &nlist_array[ptot*vars.max_connections];
+					p[ptot].nr = p[ptot].r;
+					p[ptot].ntheta = p[ptot].theta;
+					p[ptot].nh = p[ptot].h;
 					ptot++;
 				}
 			}

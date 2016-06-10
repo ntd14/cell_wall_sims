@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
 #include "./src/cell_wall_layer.h"
-
+#include "./src/get_movement.h"
 #include "./src/helpers/cart_and_cyl.h"
 
 int main(void)
@@ -37,6 +37,8 @@ int main(void)
 	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
+
+	update_pos_burnin(0, num_of_particles, particles, 0.000001, 5);
 
 	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
 	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that

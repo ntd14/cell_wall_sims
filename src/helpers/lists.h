@@ -17,4 +17,9 @@ con* ptr_cons[6];
 char* list_bounds[6];
 bound* ptr_bounds[6];
 
+point* point_ptr_name(char name[10]);
+con* con_ptr_name(char name[10]);
+bound* bound_ptr_name(char name[10]);
+
+
 #endif /* LISTS_H_ */
