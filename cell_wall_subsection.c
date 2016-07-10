@@ -38,7 +38,11 @@ int main(void)
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 
-	update_pos_burnin(0, num_of_particles, particles, 0.000001, 5);
+	update_pos_burnin(0, num_of_particles, particles, 1, 30);
+	printf("fin 1\n");
+	update_pos_burnin(0, num_of_particles, particles, 1, 30);
+	printf("fin 2\n");
+
 
 	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
 	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that

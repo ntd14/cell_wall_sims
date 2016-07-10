@@ -5,12 +5,13 @@
 #include "./helpers/interp_funs.h"
 #include "./helpers/get_ini_vars.h"
 #include "./helpers/lists.h"
+#include "./helpers/search_funcs.h"
 #include "get_movement.h"
 
 double calc_dist(struct particle* p0, struct particle* p1){
 	/* calc the distance between p0 and p1 */
-	double dtheta = abs(p0->theta - p1->theta);
-	double dh = abs(p0->h - p1->h);
+	double dtheta = fabs(p0->theta - p1->theta);
+	double dh = fabs(p0->h - p1->h);
 	double hdist = sqrt(pow(p0->r, 2) + pow(p1->r, 2) - 2*p0->r*p1->r*cos(dtheta));
 	double dist = sqrt(pow(hdist, 2) + pow(dh ,2));
 	return(dist);
@@ -24,12 +25,33 @@ double calc_force(struct particle* p0, struct particle* p1, double dist){
 	strcat(cons1, cons2);
 	strcat(cons1, "con");
 	con* conptr = con_ptr_name(cons1);
-	if(dist < conptr->met){
-		force = get_interp_val_P(dist, conptr->met, 0, conptr->met_force, conptr->max_force);
-	}else if((dist >= conptr->met) && (dist <= conptr->dist)){
-		force = get_interp_val_P(dist, conptr->dist, conptr->met, conptr->met_force, 0);
+
+	if(dist < conptr->dist){
+
+		force = 4*conptr->max_force*(pow((conptr->max_force)/(dist),12) - (pow((conptr->max_force)/(dist),6))); /*VERY DUBIOUS AS DIRECTLY SUB FORCE AND ENERGY*/
+
+		/*assume energy = - work, ie no energy is lost as heat, 1st law thermo
+		 * Work = force*displacment*/
 	}else{
 		force = 0;
+	}
+	return(force);
+}
+
+double bound_force(struct particle* p0, struct particle* p1, double dist){ /* update */
+	double force;
+	char cons1[10], cons2[10]; /*update*/
+	strcpy(cons1, p0->ptype); /*update*/
+	strcpy(cons2, p1->ptype); /*update*/
+	strcat(cons1, cons2); /*update*/
+	strcat(cons1, "con"); /*update*/
+	con* conptr = con_ptr_name(cons1); /*update*/
+	if(dist < conptr->dist){ /*update*/
+
+		force = 4*conptr->max_force*(pow((conptr->max_force)/(dist),12) - (pow((conptr->max_force)/(dist),6))); /*update*/
+
+	}else{
+		force = 0; /*update*/
 	}
 	return(force);
 }
@@ -85,17 +107,69 @@ void move_to_new_pos(int pstart, int pend, struct particle* p){
 }
 
 
-void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
+/*void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
 	double burnin_time_step = time_step/num_burnin_steps;
 	int ii = 0;
 	double dist_e;
 	do{
 		dist_e = 0;
 		dist_e = get_new_locations(pstart, pend, p, burnin_time_step);
-		printf("%f \n", dist_e);
 		move_to_new_pos(pstart, pend, p);
 		ii++;
-	}while(ii < num_burnin_steps); /* && dist_e > some minimum */
+	}while(ii < num_burnin_steps);
+}*/
+
+void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
+	double dist, force, speed, energy, dmove;
+	double mass = 1;
+	double Emax = 1; /*set this within the energy calc as the -1*max_force*/
+	double time = time_step/num_burnin_steps;
+	int ii, jj;
+	int bs = 0;
+	double fdir[3];
+	double tdlim = 1;
+	double td = tdlim*2;
+
+	while((td > tdlim) && (bs < num_burnin_steps)){
+		td = 0;
+		for(ii = pstart; ii < pend; ii++){
+			fdir[0] = 0;
+			fdir[1] = 0;
+			fdir[2] = 0;
+				for(jj = 0; jj < p[ii].nlistlen; jj++){
+					dist = calc_dist(&p[ii], p[ii].nlist[jj]);
+					energy = calc_force(&p[ii], p[ii].nlist[jj], dist);
+					if(energy > Emax){
+						energy = Emax;
+					}
+					speed = sqrt(fabs(2*energy/mass));
+					dmove = (speed*time)/dist;
+					td = td+dmove;
+					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
+					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
+					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
+				}
+
+			/* add boundary condidtions here; bound_force */
+			/*
+			 * if particle is outside of boundary, apply specified max force, via
+			 * else ignore
+			 * */
+
+			p[ii].r = p[ii].r + fdir[0];
+			p[ii].theta = p[ii].theta + fdir[1];
+			p[ii].h = p[ii].h + fdir[2];
+		}
+		printf("%f \n", td);
+		bs++;
+	}
+	selective_search(p, pstart, pend, pstart, pend);
 }
 
 /*Note should the forces be negative when two particles overlap?, or the other way around*/
+
+/*
+ *fdir = fidr + pmove * p0.r-p1.r
+ *fdir = fidr +  pmove * p0.theta - p1.theta
+ *fdir = fidr +  pmove * p0.h - p1.h
+ */
