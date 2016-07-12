@@ -181,6 +181,26 @@ void bound_import(char* b, bound* B)
 	B->r_end = iniparser_getdouble(d, tmp1, 0);
 
 	strcpy(tmp1, b);
+	strcpy(tmp2, ":theta_start");
+	strcat(tmp1, tmp2);
+	B->theta_start = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":theat_end");
+	strcat(tmp1, tmp2);
+	B->theta_end = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":h_start");
+	strcat(tmp1, tmp2);
+	B->h_start = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
+	strcpy(tmp2, ":h_end");
+	strcat(tmp1, tmp2);
+	B->h_end = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, b);
 	strcpy(tmp2, ":force_FA0");
 	strcat(tmp1, tmp2);
 	B->force_FA0 = iniparser_getdouble(d, tmp1, 0);

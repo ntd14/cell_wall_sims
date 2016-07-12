@@ -21,9 +21,9 @@ char* list_cons[6] = {"FA0FA0con", "FA0LG0con", "FA0H2Ocon", "LG0LG0con", "LG0H2
 
 con* ptr_cons[6] = {&FA0FA0con, &FA0LG0con, &FA0H2Ocon, &LG0LG0con, &LG0H2Ocon, &H2OH2Ocon};
 
-char* list_bounds[6] = {"B_top", "B_bot", "B0", "B1", "B2", "B3"};
+char* list_bounds[6] = {"B0", "B1", "B2", "B3", "B4", "B5"};
 
-bound* ptr_bounds[6] = {&B_top, &B_bot, &B0, &B1, &B2, &B3};
+bound* ptr_bounds[6] = {&B0, &B1, &B2, &B3, &B4, &B5};
 
 
 

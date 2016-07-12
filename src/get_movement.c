@@ -38,23 +38,6 @@ double calc_force(struct particle* p0, struct particle* p1, double dist){
 	return(force);
 }
 
-double bound_force(struct particle* p0, struct particle* p1, double dist){ /* update */
-	double force;
-	char cons1[10], cons2[10]; /*update*/
-	strcpy(cons1, p0->ptype); /*update*/
-	strcpy(cons2, p1->ptype); /*update*/
-	strcat(cons1, cons2); /*update*/
-	strcat(cons1, "con"); /*update*/
-	con* conptr = con_ptr_name(cons1); /*update*/
-	if(dist < conptr->dist){ /*update*/
-
-		force = 4*conptr->max_force*(pow((conptr->max_force)/(dist),12) - (pow((conptr->max_force)/(dist),6))); /*update*/
-
-	}else{
-		force = 0; /*update*/
-	}
-	return(force);
-}
 
 void calc_rel_pos(struct particle* p0, struct particle* p1, double* fdir, double time){
 	double dist_bp = calc_dist(p0, p1);
@@ -119,9 +102,10 @@ void move_to_new_pos(int pstart, int pend, struct particle* p){
 	}while(ii < num_burnin_steps);
 }*/
 
+
 void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
-	double dist, force, speed, energy, dmove;
-	double mass = 1;
+	double dist, speed, energy, dmove;
+	double mass = 1; /*a lot of this function needs to have the ini updated around how it works*/
 	double Emax = 1; /*set this within the energy calc as the -1*max_force*/
 	double time = time_step/num_burnin_steps;
 	int ii, jj;
@@ -151,9 +135,38 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 				}
 
 			/* add boundary condidtions here; bound_force */
-			/*
-			 * if particle is outside of boundary, apply specified max force, via
-			 * else ignore
+			/* for 1:all bounds
+			 * 		for each bound condition ie r_start -> h_end
+			 * 			if bound = -1
+			 * 				move to next iteration of bound conditions
+			 * 			else if bound = -2
+			 * 				set current COPY of bound to have current inner value
+			 * 			else if bound !>= 0
+			 * 				error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1
+			 * 				set to -1
+			 *
+			 * 			get particle coords
+			 * 			set use boundary flag = 1 (use)
+			 *
+			 * 			for each bound condition ie r_start -> h_end
+			 * 				if boundary flag = -1
+			 * 					break out of loop
+			 * 				else if bound = -1
+			 * 					move to next iteration of bound conditions
+			 * 				else if particle is inside of boundary
+			 * 					set use boundary flag = -1
+			 *
+			 * 			if set use boundary flag = -1
+			 *
+			 * 					apply specified force
+			 * 					speed = sqrt(fabs(2*energy/mass));
+			 *					dmove = (speed*time)/dist;
+			 *					td = td+dmove;
+			 *					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
+			 *					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
+			 *					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
+			 *			else:
+			 *
 			 * */
 
 			p[ii].r = p[ii].r + fdir[0];

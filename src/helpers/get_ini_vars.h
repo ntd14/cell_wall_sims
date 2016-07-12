@@ -66,17 +66,21 @@ typedef struct bound {
 	char* name;
 	double r_start;
 	double r_end;
+	double theta_start;
+	double theta_end;
+	double h_start;
+	double h_end;
 	double force_FA0;
 	double force_LG0;
 	double force_H2O;
 } bound;
 
-struct bound B_top;
-struct bound B_bot;
 struct bound B0;
 struct bound B1;
 struct bound B2;
 struct bound B3;
+struct bound B4;
+struct bound B5;
 
 struct particle {
 	int uid;
