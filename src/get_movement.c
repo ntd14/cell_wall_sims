@@ -90,32 +90,23 @@ void move_to_new_pos(int pstart, int pend, struct particle* p){
 }
 
 
-/*void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
-	double burnin_time_step = time_step/num_burnin_steps;
-	int ii = 0;
-	double dist_e;
-	do{
-		dist_e = 0;
-		dist_e = get_new_locations(pstart, pend, p, burnin_time_step);
-		move_to_new_pos(pstart, pend, p);
-		ii++;
-	}while(ii < num_burnin_steps);
-}*/
-
-
-void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps){
+void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps, double inner_edge){
 	double dist, speed, energy, dmove;
 	double mass = 1; /*a lot of this function needs to have the ini updated around how it works*/
-	double Emax = 1; /*set this within the energy calc as the -1*max_force*/
+	double Emax = 20; /*set this within the energy calc as the -1*max_force*/
 	double time = time_step/num_burnin_steps;
-	int ii, jj;
+	double bc_energy;
+	int ii, jj, bb, bc;
 	int bs = 0;
+	int sbf;
 	double fdir[3];
-	double tdlim = 1;
+	double pos_vec[3];
+	double bc_list[6];
+	double tdlim = 5;
 	double td = tdlim*2;
 
 	while((td > tdlim) && (bs < num_burnin_steps)){
-		td = 0;
+		td = 0; /* for a auto cutoff it might be better to say, any one particle should move more than x */
 		for(ii = pstart; ii < pend; ii++){
 			fdir[0] = 0;
 			fdir[1] = 0;
@@ -128,46 +119,73 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 					}
 					speed = sqrt(fabs(2*energy/mass));
 					dmove = (speed*time)/dist;
-					td = td+dmove;
+					td = td + dmove*dist;
 					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
 					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
 					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
 				}
 
-			/* add boundary condidtions here; bound_force */
-			/* for 1:all bounds
-			 * 		for each bound condition ie r_start -> h_end
-			 * 			if bound = -1
-			 * 				move to next iteration of bound conditions
-			 * 			else if bound = -2
-			 * 				set current COPY of bound to have current inner value
-			 * 			else if bound !>= 0
-			 * 				error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1
-			 * 				set to -1
-			 *
-			 * 			get particle coords
-			 * 			set use boundary flag = 1 (use)
-			 *
-			 * 			for each bound condition ie r_start -> h_end
-			 * 				if boundary flag = -1
-			 * 					break out of loop
-			 * 				else if bound = -1
-			 * 					move to next iteration of bound conditions
-			 * 				else if particle is inside of boundary
-			 * 					set use boundary flag = -1
-			 *
-			 * 			if set use boundary flag = -1
-			 *
-			 * 					apply specified force
-			 * 					speed = sqrt(fabs(2*energy/mass));
-			 *					dmove = (speed*time)/dist;
-			 *					td = td+dmove;
-			 *					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
-			 *					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
-			 *					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
-			 *			else:
-			 *
-			 * */
+				pos_vec[0] = p[ii].r;
+				pos_vec[1] = p[ii].theta;
+				pos_vec[2] = p[ii].h;
+
+				for(bb=0; bb < vars.num_bounds_used; bb++){
+					bc_list[0] = ptr_bounds[bb]->r_start;
+					bc_list[1] = ptr_bounds[bb]->r_end;
+					bc_list[2] = ptr_bounds[bb]->theta_start;
+					bc_list[3] = ptr_bounds[bb]->theta_end;
+					bc_list[4] = ptr_bounds[bb]->h_start;
+					bc_list[5] = ptr_bounds[bb]->h_end;
+
+
+					for(bc=0; bc<6; bc++){
+						if((bc_list[bc] == -1)){
+						} else if((bc_list[bc] == -2) && (bc == 0)){
+							bc_list[bc] = inner_edge;
+						} else if(bc_list[bc] < 0){
+							printf("error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1 \n");
+							bc_list[bc] = -1;
+						}
+					}
+					sbf = -1;
+					for(bc=0; bc<6; bc++){
+						if(bc_list[bc] != -1){
+							if((bc % 2 == 0) && ((bc_list[bc] - pos_vec[bc/2]) > 0)){
+								sbf = 1;
+							}else if((bc % 2 == 1) && ((bc_list[bc] - pos_vec[bc/2]) < 0)){
+								sbf = 1;
+							}
+						}
+					}
+
+					if(sbf == 1){
+						if(strcmp(p[ii].ptype, "FA0") == 0){
+							bc_energy = ptr_bounds[bb]->force_FA0; /* change using linear interp ? */
+						}else if(strcmp(p[ii].ptype, "LG0") == 0){
+							bc_energy = ptr_bounds[bb]->force_LG0;
+						}else if(strcmp(p[ii].ptype, "H2O") == 0){
+							bc_energy = ptr_bounds[bb]->force_H2O;
+						}else{
+							printf("error particle type has no defined boundray force, ignoring \n");
+						}
+						for(bc=0; bc<6; bc++){
+							if(bc_list[bc] != -1){
+								dist = fabs(bc_list[bc] - pos_vec[bc/2]);
+								energy = bc_energy*dist;
+								if(energy > Emax){
+									energy = Emax;
+									printf("emax ");
+								}
+								speed = sqrt(fabs(2*(energy)/mass));
+								dmove = (speed*time)/dist;
+								td = td + dmove*dist;
+								fdir[bc/2] = fdir[bc/2] - dmove*(pos_vec[bc/2] - bc_list[bc]);
+							}
+						}
+					}
+
+				}
+
 
 			p[ii].r = p[ii].r + fdir[0];
 			p[ii].theta = p[ii].theta + fdir[1];
@@ -179,10 +197,3 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 	selective_search(p, pstart, pend, pstart, pend);
 }
 
-/*Note should the forces be negative when two particles overlap?, or the other way around*/
-
-/*
- *fdir = fidr + pmove * p0.r-p1.r
- *fdir = fidr +  pmove * p0.theta - p1.theta
- *fdir = fidr +  pmove * p0.h - p1.h
- */

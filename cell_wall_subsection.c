@@ -9,6 +9,7 @@
 int main(void)
 {
 	printf("entering main \n");
+	int ii, jj;
 
 	build_structs();
 
@@ -38,11 +39,34 @@ int main(void)
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 
-	update_pos_burnin(0, num_of_particles, particles, 1, 30);
-	printf("fin 1\n");
-	update_pos_burnin(0, num_of_particles, particles, 1, 30);
-	printf("fin 2\n");
 
+	printf("p0 p1 pos update \n");
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+
+/*
+ * 	int np = num_of_particles;
+
+	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P1, P2);
+	printf("exiting P1 P2 with %i particles created \n", num_of_particles);
+
+	printf("p1 p2 pos update \n");
+	update_pos_burnin(np, num_of_particles, particles, 1, 3, P2.rad);
+	np = num_of_particles;
+
+	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P2, P3);
+	printf("exiting P2 P3 with %i particles created \n", num_of_particles);
+
+	printf("p2 p3 pos update \n");
+	update_pos_burnin(np, num_of_particles, particles, 1, 3, P3.rad);
+
+	printf("p0 p3 pos update \n");
+	update_pos_burnin(0, num_of_particles, particles, 1, 3, P3.rad);
+ * */
 
 	/*with the FAs allow a good amount of overlap with the connections to give the distributions in exp measruments of the thickneses,
 	 * ie to other FAs an FA may only appear as say 10nm wide, so when they combine they are 20nm, or something like that
@@ -53,7 +77,7 @@ int main(void)
 
 	printf("total num_of_particles = %i \n", num_of_particles);
 
-	int ii, jj;
+
 	FILE *allp = fopen("allp.js", "w");
 		if (allp == NULL)
 		{

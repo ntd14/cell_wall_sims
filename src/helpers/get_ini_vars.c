@@ -186,7 +186,7 @@ void bound_import(char* b, bound* B)
 	B->theta_start = iniparser_getdouble(d, tmp1, 0);
 
 	strcpy(tmp1, b);
-	strcpy(tmp2, ":theat_end");
+	strcpy(tmp2, ":theta_end");
 	strcat(tmp1, tmp2);
 	B->theta_end = iniparser_getdouble(d, tmp1, 0);
 
@@ -216,7 +216,6 @@ void bound_import(char* b, bound* B)
 	B->force_H2O = iniparser_getdouble(d, tmp1, 0);
 
 	iniparser_freedict(d);
-
 }
 
 void build_structs()
@@ -246,6 +245,7 @@ void build_structs()
 	{
 		strcpy(b, list_bounds[ii]);
 		bound_import(b, ptr_bounds[ii]);
+
 	}
 
 	printf("finished building structs from ini file \n");

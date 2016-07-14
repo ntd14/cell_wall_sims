@@ -34,6 +34,7 @@
 /* call CML_point to make the isotropic CML */
 int create_layer(struct particle* p, struct particle** nlist_array, int num_of_particles, struct point Po, struct point Pi)
 {
+
 	int ii;
 	int update_pos_counter = num_of_particles;
 	int sarray_outer[2]; /* [0] number of points to start on the outer surface x axis, [1] y axis */
