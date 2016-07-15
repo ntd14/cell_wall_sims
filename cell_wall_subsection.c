@@ -41,12 +41,11 @@ int main(void)
 
 
 	printf("p0 p1 pos update \n");
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
-	update_pos_burnin(0, num_of_particles, particles, 1, 1, P1.rad);
+	for(ii = 0; ii < 100; ii++){
+		update_pos_burnin(0, num_of_particles, particles, 10, 10, P1.rad);
+		printf("ii = %i \n", ii);
+	}
+
 
 /*
  * 	int np = num_of_particles;

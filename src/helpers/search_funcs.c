@@ -25,6 +25,7 @@ void selective_search(struct particle* p, int sp1, int ep1, int sp2, int ep2){
 		}else{
 			jjst = sp2;
 		}
+		p[ii].nlistlen = 0;
 		/*get particle type*/
 		for(jj = jjst; jj < ep2; jj++){
 			strcpy(cons1, p[ii].ptype);
