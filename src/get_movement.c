@@ -13,7 +13,7 @@ double calc_dist(struct particle* p0, struct particle* p1){
 	double dtheta = fabs(p0->theta - p1->theta);
 
 	double dh = fabs(p0->h - p1->h);
-	double hdist = sqrt(pow(p0->r, 2) + pow(p1->r, 2) - 2*p0->r*p1->r*cos(dtheta));
+	double hdist = sqrt(fabs(pow(p0->r, 2) + pow(p1->r, 2) - 2*p0->r*p1->r*cos(dtheta)));
 	double dist = sqrt(pow(hdist, 2) + pow(dh ,2));
 	return(dist);
 }
@@ -55,9 +55,9 @@ void move_to_new_pos(int pstart, int pend, struct particle* p){
 }
 
 
-void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps, double inner_edge){
+void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps, double inner_edge, double outer_edge){
 	double dist, force, dmove, prad;
-	double mass = 100; /*a lot of this function needs to have the ini updated around how it works*/
+	double mass;
 	double time = time_step/num_burnin_steps;
 	double bc_force;
 	int ii, jj, bb, bc;
@@ -76,8 +76,17 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 			fdir[1] = 0;
 			fdir[2] = 0;
 
-				for(jj = 0; jj < p[ii].nlistlen; jj++){
-					/* something funky going on here, need to check nlistlen = length of nlist*/
+			if(strcmp(p[ii].ptype, "FA0") == 0){
+				mass = vars.FA_mass;
+			}else if(strcmp(p[ii].ptype, "LG0") == 0){
+				mass = vars.LG_mass;
+			}else if(strcmp(p[ii].ptype, "H2O") == 0){
+				mass = vars.H2O_mass;
+			}else{
+				printf("error particle type has no defined mass, using default of 100 \n");
+				mass = 100;
+			}
+			for(jj = 0; jj < p[ii].nlistlen; jj++){
 					dist = calc_dist(&p[ii], p[ii].nlist[jj]);
 					force = calc_force(&p[ii], p[ii].nlist[jj], dist);
 					dmove = fabs((0.5*(force/mass)*time*time))/dist;
@@ -86,6 +95,7 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
 					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
 					if((p[ii].theta != p[ii].theta) || (p[ii].nlist[jj]->theta != p[ii].nlist[jj]->theta)){
+						printf("theta is nan at particle %i \n", ii);
 						printf("%f, ", p[ii].theta);
 						printf("%f \n", p[ii].nlist[jj]->theta);
 					}
@@ -109,6 +119,8 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 						if((bc_list[bc] == -1)){
 						} else if((bc_list[bc] == -2) && (bc == 0)){
 							bc_list[bc] = inner_edge;
+						} else if((bc_list[bc] == -2) && (bc == 1)){
+							bc_list[bc] = outer_edge;
 						} else if(bc_list[bc] < 0){
 							printf("error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1 \n");
 							bc_list[bc] = -1;

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "./src/helpers/get_ini_vars.h"
+#include "./src/helpers/lists.h"
 #include "./src/cell_wall_layer.h"
 #include "./src/get_movement.h"
 #include "./src/helpers/cart_and_cyl.h"
@@ -9,7 +10,7 @@
 int main(void)
 {
 	printf("entering main \n");
-	int ii, jj;
+	int ii, jj, npu, np;
 
 	build_structs();
 
@@ -35,17 +36,45 @@ int main(void)
 	int num_of_particles = 0;
 	/* should water be added before or after the FAs? could make whole domain fill with water before starting, but this will use a lot more memory */
 	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
-	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P0, P1); /*have to thing about the cml, maybe this should have its own function that uses create layers functions*/
 	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
-	printf("exiting P0 P1 with %i particles created \n", num_of_particles);
 
-
-	printf("p0 p1 pos update \n");
-	for(ii = 0; ii < 100; ii++){
-		update_pos_burnin(0, num_of_particles, particles, 10, 10, P1.rad);
+	for(npu = 0; npu < vars.num_points_used - 1; npu++){
+		np = num_of_particles;
+		num_of_particles = create_layer(particles, nlist_array, num_of_particles, *ptr_points[npu], *ptr_points[npu+1]);
+		printf("exiting P%i ", npu);
+		printf("P%i ", npu+1);
+		printf("with %i particles created, ", num_of_particles - np);
+		printf("with %i particles in total \n ", num_of_particles);
+		printf("p%i ", npu);
+		printf("p%i pos update \n", npu+1);
+		for(ii = 0; ii < vars.time_per_step; ii++){
+			update_pos_burnin(np, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu+1]->rad, ptr_points[npu]->rad);
+			printf("ii = %i \n", ii);
+		}
+	}
+	printf("bringing all layers togeather \n");
+	for(ii = 0; ii < vars.time_per_step; ii++){
+		update_pos_burnin(0, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu]->rad, P0.rad);
 		printf("ii = %i \n", ii);
 	}
 
+
+/*
+	num_of_particles = create_layer(particles, nlist_array, num_of_particles, P1, P2);
+	printf("exiting P1 P2 with %i particles created \n", num_of_particles);
+
+	printf("p1 p2 pos update \n");
+	for(ii = 0; ii < 10; ii++){
+		update_pos_burnin(np, num_of_particles, particles, 10, 5, P2.rad, P1.rad);
+		printf("ii = %i \n", ii);
+	}
+
+	printf("p0 p2 pos update \n");
+	for(ii = 0; ii < 10; ii++){
+		update_pos_burnin(0, num_of_particles, particles, 10, 5, P2.rad, P0.rad);
+		printf("ii = %i \n", ii);
+	}
+*/
 
 /*
  * 	int np = num_of_particles;

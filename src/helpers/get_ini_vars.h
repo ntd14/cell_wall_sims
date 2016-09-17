@@ -11,9 +11,14 @@
 typedef struct var {
 	double ROI_angle;
 	double ROI_height;
+	int time_per_step;
+	int burnin_time;
 	double H2O_dia;
+	double H2O_mass;
 	double FA_dia;
+	double FA_mass;
 	double LG_dia;
+	double LG_mass;
 	int FA_steps_PT;
 	int LG_steps_PT;
 	int LG_start_time;

@@ -45,11 +45,26 @@ void vars_import()
 	strcpy(tmp1, "vars:H2O_dia");
 	vars.H2O_dia = iniparser_getdouble(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:time_per_step");
+	vars.time_per_step = iniparser_getint(d, tmp1, 0);
+
+	strcpy(tmp1, "vars:burnin_time");
+	vars.burnin_time = iniparser_getint(d, tmp1, 0);
+
+	strcpy(tmp1, "vars:H2O_mass");
+	vars.H2O_mass = iniparser_getdouble(d, tmp1, 0);
+
 	strcpy(tmp1, "vars:FA_dia");
 	vars.FA_dia = iniparser_getdouble(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:FA_mass");
+	vars.FA_mass = iniparser_getdouble(d, tmp1, 0);
+
 	strcpy(tmp1, "vars:LG_dia");
 	vars.LG_dia = iniparser_getdouble(d, tmp1, 0);
+
+	strcpy(tmp1, "vars:LG_mass");
+	vars.LG_mass = iniparser_getdouble(d, tmp1, 0);
 
 	strcpy(tmp1, "vars:FA_steps_PT");
 	vars.FA_steps_PT = iniparser_getint(d, tmp1, 0);
