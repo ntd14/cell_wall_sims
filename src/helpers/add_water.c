@@ -35,16 +35,7 @@ int add_water(struct particle* p, struct particle** nlist_array, int start_parti
 				tmp_coords[2] = vars.H2O_dia*jj;
 				/*check if tmp particle can be used, if yes add, if no delete*/
 				ll = start_particles;
-				used = 0;
-/*				while((ll < end_particles) && (used == 0)){
-					if((fabs(tmp_coords[0] - p[ll].r) < closest_r) &&
-							(fabs(tmp_coords[1] - p[ll].theta) < particle_theta) &&
-							(fabs(tmp_coords[2] - p[ll].h) < closest_h)){
-						used = 1;
-					}
-					ll++;
-				}*/
-				if(used == 0){
+
 					p[ptot].uid = ptot;
 					p[ptot].r = tmp_coords[0];
 					p[ptot].theta = tmp_coords[1];
@@ -56,7 +47,7 @@ int add_water(struct particle* p, struct particle** nlist_array, int start_parti
 					p[ptot].ntheta = p[ptot].theta;
 					p[ptot].nh = p[ptot].h;
 					ptot++;
-				}
+
 			}
 		}
 	}
