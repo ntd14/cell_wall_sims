@@ -36,14 +36,14 @@ int add_water(struct particle* p, struct particle** nlist_array, int start_parti
 				/*check if tmp particle can be used, if yes add, if no delete*/
 				ll = start_particles;
 				used = 0;
-/*				while((ll < end_particles) && (used == 0)){
+				while((ll < end_particles) && (used == 0)){
 					if((fabs(tmp_coords[0] - p[ll].r) < closest_r) &&
 							(fabs(tmp_coords[1] - p[ll].theta) < particle_theta) &&
 							(fabs(tmp_coords[2] - p[ll].h) < closest_h)){
 						used = 1;
 					}
 					ll++;
-				}*/
+				}
 				if(used == 0){
 					p[ptot].uid = ptot;
 					p[ptot].r = tmp_coords[0];
