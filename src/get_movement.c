@@ -55,7 +55,7 @@ void move_to_new_pos(int pstart, int pend, struct particle* p){
 }
 
 
-void update_pos_burnin(int pstart, int pend, struct particle* p, double time_step, int num_burnin_steps, double inner_edge, double outer_edge){
+void update_pos_burnin(int pend, struct particle* p, double time_step, int num_burnin_steps){
 	double dist, force, dmove, prad;
 	double mass;
 	double time = time_step/num_burnin_steps;
@@ -66,12 +66,16 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 	double fdir[3];
 	double pos_vec[3];
 	double bc_list[6];
-	double tdlim = 5;
+	double tdlim = 1;
 	double td = tdlim*2;
 
+	selective_search(p, 0, pend, 0, pend);
+
+
 	while((td > tdlim) && (bs < num_burnin_steps)){
+
 		td = 0; /* for a auto cutoff it might be better to say, any one particle should move more than x */
-		for(ii = pstart; ii < pend; ii++){
+		for(ii = 0; ii < pend; ii++){
 			fdir[0] = 0;
 			fdir[1] = 0;
 			fdir[2] = 0;
@@ -86,22 +90,46 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 				printf("error particle type has no defined mass, using default of 100 \n");
 				mass = 100;
 			}
-			for(jj = 0; jj < p[ii].nlistlen; jj++){
-					dist = calc_dist(&p[ii], p[ii].nlist[jj]);
-					force = calc_force(&p[ii], p[ii].nlist[jj], dist);
-					dmove = fabs((0.5*(force/mass)*time*time))/dist;
 
-					td = td + dmove*dist;
+			for(jj = 0; jj < p[ii].nlistlen; jj++){
+				dist = calc_dist(&p[ii], p[ii].nlist[jj]);
+				force = calc_force(&p[ii], p[ii].nlist[jj], dist);
+				dmove = ((0.5*(force/mass)*time*time))/dist;
+
+				td = td + dmove*dist;
+
+				if((p[ii].theta != p[ii].theta) || (p[ii].nlist[jj]->theta != p[ii].nlist[jj]->theta)){
+					printf("theta is nan at particle %i \n", ii);
+					printf("%f, ", p[ii].theta);
+					printf("%f \n", p[ii].nlist[jj]->theta);
+				}
+				if((p[ii].r - p[ii].nlist[jj]->r) > 0){
+					fdir[0] = fdir[0] - dmove*(p[ii].r - p[ii].nlist[jj]->r);
+				} else if((p[ii].r - p[ii].nlist[jj]->r) <= 0){
 					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
+				} else if((p[ii].theta - p[ii].nlist[jj]->theta) > 0){
+					fdir[1] = fdir[1] - dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
+				} else if((p[ii].theta - p[ii].nlist[jj]->theta) <= 0){
 					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
-					if((p[ii].theta != p[ii].theta) || (p[ii].nlist[jj]->theta != p[ii].nlist[jj]->theta)){
-						printf("theta is nan at particle %i \n", ii);
-						printf("%f, ", p[ii].theta);
-						printf("%f \n", p[ii].nlist[jj]->theta);
-					}
+				} else if ((p[ii].h - p[ii].nlist[jj]->h) > 0){
+					fdir[2] = fdir[2] - dmove*(p[ii].h - p[ii].nlist[jj]->h);
+				} else if ((p[ii].h - p[ii].nlist[jj]->h) <= 0) {
 					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
 				}
+			}
 
+			sbf = -1;
+			for(bc=0; bc<6; bc++){
+				if(bc_list[bc] != -1){
+					if((bc % 2 == 0) && ((bc_list[bc] - pos_vec[bc/2]) > 0)){
+						sbf = 1;
+					}else if((bc % 2 == 1) && ((bc_list[bc] - pos_vec[bc/2]) < 0)){
+						sbf = 1;
+					}
+				}
+			}
+
+			if(sbf == 1){
 				pos_vec[0] = p[ii].r;
 				pos_vec[1] = p[ii].theta;
 				pos_vec[2] = p[ii].h;
@@ -114,69 +142,77 @@ void update_pos_burnin(int pstart, int pend, struct particle* p, double time_ste
 					bc_list[4] = ptr_bounds[bb]->h_start;
 					bc_list[5] = ptr_bounds[bb]->h_end;
 
-
-					for(bc=0; bc<6; bc++){
-						if((bc_list[bc] == -1)){
-						} else if((bc_list[bc] == -2) && (bc == 0)){
-							bc_list[bc] = inner_edge;
-						} else if((bc_list[bc] == -2) && (bc == 1)){
-							bc_list[bc] = outer_edge;
-						} else if(bc_list[bc] < 0){
-							printf("error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1 \n");
-							bc_list[bc] = -1;
-						}
+					if(strcmp(p[ii].ptype, "FA0") == 0){
+						bc_force = ptr_bounds[bb]->force_FA0;
+						prad = vars.FA_dia;
+					}else if(strcmp(p[ii].ptype, "LG0") == 0){
+						bc_force = ptr_bounds[bb]->force_LG0;
+						prad = vars.LG_dia;
+					}else if(strcmp(p[ii].ptype, "H2O") == 0){
+						bc_force = ptr_bounds[bb]->force_H2O;
+						prad = vars.H2O_dia;
+					}else{
+						printf("error particle type has no defined boundray force, ignoring \n");
 					}
-					sbf = -1;
-					for(bc=0; bc<6; bc++){
-						if(bc_list[bc] != -1){
-							if((bc % 2 == 0) && ((bc_list[bc] - pos_vec[bc/2]) > 0)){
-								sbf = 1;
-							}else if((bc % 2 == 1) && ((bc_list[bc] - pos_vec[bc/2]) < 0)){
-								sbf = 1;
-							}
-						}
-					}
-
-					if(sbf == 1){
-						if(strcmp(p[ii].ptype, "FA0") == 0){
-							bc_force = ptr_bounds[bb]->force_FA0;
-							prad = vars.FA_dia;
-						}else if(strcmp(p[ii].ptype, "LG0") == 0){
-							bc_force = ptr_bounds[bb]->force_LG0;
-							prad = vars.LG_dia;
-						}else if(strcmp(p[ii].ptype, "H2O") == 0){
-							bc_force = ptr_bounds[bb]->force_H2O;
-							prad = vars.H2O_dia;
-						}else{
-							printf("error particle type has no defined boundray force, ignoring \n");
-						}
-						for(bc=0; bc<6; bc++){
-							if(bc_list[bc] != -1){
-								dist = fabs(bc_list[bc] - pos_vec[bc/2]);
-								if(dist < prad){
-									force = bc_force*(dist/prad);
-								}else{
-									force = bc_force;
-								}
-
-								dmove = fabs((0.5*(force/mass)*time*time))/dist;
-
-								td = td + dmove*dist;
-								fdir[bc/2] = fdir[bc/2] - dmove*(pos_vec[bc/2] - bc_list[bc]);
-							}
-						}
-					}
-
 				}
 
+				for(bc=0; bc<6; bc++){
+					if((bc_list[bc] == -1)){
+					} else if((bc_list[bc] == -2) && (bc == 0)){
+						bc_list[bc] = ptr_points[vars.num_points_used -1]->rad - vars.H2O_dia*vars.luman_safe_depth;
+					} else if((bc_list[bc] == -2) && (bc == 1)){
+						bc_list[bc] = ptr_points[0]->rad;
+					} else if((bc_list[bc] == -2) && (bc == 2)){
+						bc_list[bc] = 0;
+					} else if((bc_list[bc] == -2) && (bc == 3)){
+						bc_list[bc] = vars.ROI_angle;
+					} else if((bc_list[bc] == -2) && (bc == 4)){
+						bc_list[bc] = 0;
+					} else if((bc_list[bc] == -2) && (bc == 5)){
+						bc_list[bc] = vars.ROI_height;
+					} else if(bc_list[bc] < 0){
+						printf("error undefined boundary code, check ini file for mistakes in boundary conditions, setting to -1 \n");
+						bc_list[bc] = -1;
+					}
+				}
 
-			p[ii].r = p[ii].r + fdir[0];
-			p[ii].theta = p[ii].theta + fdir[1];
-			p[ii].h = p[ii].h + fdir[2];
+				for(bc=0; bc<6; bc++){
+					if(bc_list[bc] != -1){
+						dist = fabs(bc_list[bc] - pos_vec[bc/2]);
+						if(dist < prad){
+							force = bc_force*(dist/prad);
+						}else{
+							force = bc_force;
+						}
+						dmove = fabs((0.5*(force/mass)*time*time))/dist;
+						td = td + dmove*dist;
+						/*fdir[bc/2] = fdir[bc/2] - dmove*(pos_vec[bc/2] - bc_list[bc]);*/
+						if((bc_list[bc] == 0)){
+							fdir[0] = fdir[0] + dmove*dist;
+						} else if((bc_list[bc] == 1)){
+							fdir[0] = fdir[0] - dmove*dist;
+						} else if((bc_list[bc] == 2)){
+							fdir[1] = fdir[1] + dmove*dist;
+						} else if((bc_list[bc] == 3)){
+							fdir[1] = fdir[1] - dmove*dist;
+						}else if((bc_list[bc] == 4)){
+							fdir[2] = fdir[2] + dmove*dist;
+						} else if((bc_list[bc] == 5)){
+							fdir[2] = fdir[2] - dmove*dist;
+						}
+					}
+				}
+			}
+
+		p[ii].r = p[ii].r + fdir[0];
+		p[ii].theta = p[ii].theta + fdir[1];
+		p[ii].h = p[ii].h + fdir[2];
+
 		}
-		printf("%f \n", td);
 		bs++;
+		printf("td = %f \n", td);
 	}
-	selective_search(p, pstart, pend, pstart, pend);
+
 }
+
 

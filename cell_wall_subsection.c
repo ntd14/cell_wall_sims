@@ -6,6 +6,7 @@
 #include "./src/cell_wall_layer.h"
 #include "./src/get_movement.h"
 #include "./src/helpers/cart_and_cyl.h"
+#include "./src/helpers/add_water.h"
 
 int main(void)
 {
@@ -32,7 +33,18 @@ int main(void)
 		exit(0);
 	}
 
-	printf("build particles struct, creating CML \n");
+	printf("adding water to domain \n");
+	npu = vars.num_points_used -1;
+	int num_of_particles = add_water(particles, nlist_array, *ptr_points[0], *ptr_points[npu]);
+	printf("finished adding water to domain \n");
+
+	for(ii = 0; ii < 30; ii++){
+		printf("ii = %i \n", ii);
+		update_pos_burnin(num_of_particles, particles, vars.time_per_step, vars.burnin_time);
+	}
+
+
+/*	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
 
 	for(npu = 0; npu < vars.num_points_used - 1; npu++){
@@ -55,7 +67,7 @@ int main(void)
 				update_pos_burnin(0, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu]->rad, P0.rad);
 			}
 		}
-	}
+	}*/
 
 
 /*

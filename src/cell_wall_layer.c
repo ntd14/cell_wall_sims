@@ -142,7 +142,7 @@ int create_layer(struct particle* p, struct particle** nlist_array, int num_of_p
 
 
 	/*call to function that adds water in available spaces*/
-	update_pos_counter = add_water(p, nlist_array, num_of_particles, update_pos_counter, Po, Pi);
+	/*update_pos_counter = add_water(p, nlist_array, num_of_particles, update_pos_counter, Po, Pi);*/
 
 	int H2O_startp = FAmain_endp;
 	int H2O_endp = update_pos_counter;

@@ -90,6 +90,9 @@ void vars_import()
 	strcpy(tmp1, "vars:max_connections");
 	vars.max_connections = iniparser_getint(d, tmp1, 0);
 
+	strcpy(tmp1, "vars:luman_safe_depth");
+	vars.luman_safe_depth = iniparser_getint(d, tmp1, 0);
+
 	iniparser_freedict(d);
 
 }

@@ -8,6 +8,6 @@
 #ifndef SRC_ADD_WATER_H_
 #define SRC_ADD_WATER_H_
 
-int add_water(struct particle* p, struct particle** nlist_array, int start_particles, int end_particles, struct point Po, struct point Pi);
+int add_water(struct particle* p, struct particle** nlist_array, struct point Po, struct point Pi);
 
 #endif /* SRC_ADD_WATER_H_ */

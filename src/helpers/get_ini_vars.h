@@ -27,6 +27,7 @@ typedef struct var {
 	int num_bounds_used;
 	int max_particles;
 	int max_connections;
+	int luman_safe_depth;
 } var;
 struct var vars;
 
