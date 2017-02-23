@@ -34,9 +34,6 @@ int main(void)
 
 	printf("build particles struct, creating CML \n");
 	int num_of_particles = 0;
-	/* should water be added before or after the FAs? could make whole domain fill with water before starting, but this will use a lot more memory */
-	/* set up a boundary condition at the current P_inner radius that has an outward force equle to the amount of force needed to displace the water from the cell, uer defiend */
-	/* could create cml in normal way, then go through and change some of the water to pectan, but would have to add a pectan particle type*/
 
 	for(npu = 0; npu < vars.num_points_used - 1; npu++){
 		np = num_of_particles;
@@ -48,14 +45,16 @@ int main(void)
 		printf("p%i ", npu);
 		printf("p%i pos update \n", npu+1);
 		for(ii = 0; ii < vars.time_per_step; ii++){
-			update_pos_burnin(np, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu+1]->rad, ptr_points[npu]->rad);
 			printf("ii = %i \n", ii);
+			update_pos_burnin(np, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu+1]->rad, ptr_points[npu]->rad);
 		}
-	}
-	printf("bringing all layers togeather \n");
-	for(ii = 0; ii < vars.time_per_step; ii++){
-		update_pos_burnin(0, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu]->rad, P0.rad);
-		printf("ii = %i \n", ii);
+		if(npu != 0){
+			printf("bringing all current layers togeather \n");
+			for(ii = 0; ii < vars.time_per_step; ii++){
+				printf("ii = %i \n", ii);
+				update_pos_burnin(0, num_of_particles, particles, vars.time_per_step, vars.burnin_time, ptr_points[npu]->rad, P0.rad);
+			}
+		}
 	}
 
 

@@ -107,7 +107,9 @@ int add_particles_to_chains(struct particle* p, struct particle** nlist_array, i
 	double new_r;
 	double old_r;
 	double tmp_c;
+	double tmp_d;
 	double delta_theta;
+	double delta_depth;
 	double new_theta;
 	double new_h;
 
@@ -130,26 +132,30 @@ int add_particles_to_chains(struct particle* p, struct particle** nlist_array, i
 			new_r = old_r + vars.FA_dia*sin(cdepth);
 			tmp_c = vars.FA_dia*sin(cmfa);
 			delta_theta = acos((pow(old_r, 2) + pow(new_r, 2) - pow(tmp_c, 2) )/(2*old_r*new_r));
+/*			delta_theta = atan(tmp_c/old_r);
+			tmp_d = delta_theta*tan(cdepth);
+			delta_depth = */
 			if(cmfa < 0){
 				delta_theta = -1*delta_theta;
 			}
 			new_theta = p[ii].theta + delta_theta;
 			new_h = p[ii].h + vars.FA_dia*cos(cmfa)*cos(cdepth);
 
+			if((new_theta >= 0) & (new_theta <= vars.ROI_angle) & (new_h >= 0) & (new_h <= vars.ROI_height)){
+				/* add new point to the particles struct */
+				p[update_pos_counter].uid = update_pos_counter;
+				p[update_pos_counter].ptype = "FA0";
+				p[update_pos_counter].r = new_r;
+				p[update_pos_counter].theta = new_theta;
+				p[update_pos_counter].h = new_h;
+				p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
+				p[update_pos_counter].nr = p[update_pos_counter].r;
+				p[update_pos_counter].ntheta = p[update_pos_counter].theta;
+				p[update_pos_counter].nh = p[update_pos_counter].h;
 
-			/* add new point to the particles struct */
-			p[update_pos_counter].uid = update_pos_counter;
-			p[update_pos_counter].ptype = "FA0";
-			p[update_pos_counter].r = new_r;
-			p[update_pos_counter].theta = new_theta;
-			p[update_pos_counter].h = new_h;
-			p[update_pos_counter].nlist = &nlist_array[update_pos_counter*vars.max_connections];
-			p[update_pos_counter].nr = p[update_pos_counter].r;
-			p[update_pos_counter].ntheta = p[update_pos_counter].theta;
-			p[update_pos_counter].nh = p[update_pos_counter].h;
-
-			update_pos_counter++;
-			used++;
+				update_pos_counter++;
+				used++;
+			}
 		}
 	}
 	return(used);
