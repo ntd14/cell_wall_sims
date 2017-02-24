@@ -234,6 +234,22 @@ void bound_import(char* b, bound* B)
 	B->force_H2O = iniparser_getdouble(d, tmp1, 0);
 
 	iniparser_freedict(d);
+
+	int npu;
+	if(B->r_start == -2){
+		npu = vars.num_points_used -1;
+		B->r_start = ptr_points[npu]->rad; /*may change this to include the safe zone yet*/
+	}if(B->r_end == -2){
+		B->r_end = P0.rad;
+	}if(B->theta_start == -2){
+		B->theta_start = 0;
+	}if(B->theta_end == -2){
+		B->theta_end = vars.ROI_angle;
+	}if(B->h_start == -2){
+		B->h_start = 0;
+	}if(B->h_end == -2){
+		B->h_end = vars.ROI_height;
+	}
 }
 
 void build_structs()

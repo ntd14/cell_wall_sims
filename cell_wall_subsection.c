@@ -38,7 +38,7 @@ int main(void)
 	int num_of_particles = add_water(particles, nlist_array, *ptr_points[0], *ptr_points[npu]);
 	printf("finished adding water to domain \n");
 
-	for(ii = 0; ii < 30; ii++){
+	for(ii = 0; ii < 50; ii++){
 		printf("ii = %i \n", ii);
 		update_pos_burnin(num_of_particles, particles, vars.time_per_step, vars.burnin_time);
 	}

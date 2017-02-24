@@ -30,6 +30,7 @@ double calc_force(struct particle* p0, struct particle* p1, double dist){
 	if(dist < conptr->dist){
 
 		force = ((24*conptr->met_force)/(conptr->met))*(2*pow((conptr->met)/(dist),13) - (pow((conptr->met)/(dist),7)));
+
 		if(force > fabs(conptr->max_force)){
 			force = fabs(conptr->max_force);
 		}else if(force < -1*fabs(conptr->max_force)){
@@ -60,6 +61,7 @@ void update_pos_burnin(int pend, struct particle* p, double time_step, int num_b
 	double mass;
 	double time = time_step/num_burnin_steps;
 	double bc_force;
+	double delta_r, delta_theta, delta_h;
 	int ii, jj, bb, bc;
 	int bs = 0;
 	int sbf;
@@ -87,16 +89,16 @@ void update_pos_burnin(int pend, struct particle* p, double time_step, int num_b
 			}else if(strcmp(p[ii].ptype, "H2O") == 0){
 				mass = vars.H2O_mass;
 			}else{
-				printf("error particle type has no defined mass, using default of 100 \n");
-				mass = 100;
+				printf("error particle type has no defined mass, using default of water \n");
+				mass = vars.H2O_mass;
 			}
 
 			for(jj = 0; jj < p[ii].nlistlen; jj++){
 				dist = calc_dist(&p[ii], p[ii].nlist[jj]);
 				force = calc_force(&p[ii], p[ii].nlist[jj], dist);
-				dmove = ((0.5*(force/mass)*time*time))/dist;
+				dmove = 0.5*(force/mass)*time*time/dist;
 
-				td = td + dmove*dist;
+				td = td + fabs(dmove);
 
 				if((p[ii].theta != p[ii].theta) || (p[ii].nlist[jj]->theta != p[ii].nlist[jj]->theta)){
 					printf("theta is nan at particle %i \n", ii);
@@ -107,18 +109,131 @@ void update_pos_burnin(int pend, struct particle* p, double time_step, int num_b
 					fdir[0] = fdir[0] - dmove*(p[ii].r - p[ii].nlist[jj]->r);
 				} else if((p[ii].r - p[ii].nlist[jj]->r) <= 0){
 					fdir[0] = fdir[0] + dmove*(p[ii].r - p[ii].nlist[jj]->r);
-				} else if((p[ii].theta - p[ii].nlist[jj]->theta) > 0){
+				} if((p[ii].theta - p[ii].nlist[jj]->theta) > 0){
 					fdir[1] = fdir[1] - dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
 				} else if((p[ii].theta - p[ii].nlist[jj]->theta) <= 0){
 					fdir[1] = fdir[1] + dmove*(p[ii].theta - p[ii].nlist[jj]->theta);
-				} else if ((p[ii].h - p[ii].nlist[jj]->h) > 0){
+				} if ((p[ii].h - p[ii].nlist[jj]->h) > 0){
 					fdir[2] = fdir[2] - dmove*(p[ii].h - p[ii].nlist[jj]->h);
 				} else if ((p[ii].h - p[ii].nlist[jj]->h) <= 0) {
 					fdir[2] = fdir[2] + dmove*(p[ii].h - p[ii].nlist[jj]->h);
 				}
 			}
 
-			sbf = -1;
+
+
+			for(bb=0; bb < vars.num_bounds_used; bb++){
+				sbf = -1;
+				dmove = 0;
+
+				if(strcmp(p[ii].ptype, "FA0") == 0){
+					bc_force = ptr_bounds[bb]->force_FA0;
+					prad = vars.FA_dia;
+				}else if(strcmp(p[ii].ptype, "LG0") == 0){
+					bc_force = ptr_bounds[bb]->force_LG0;
+					prad = vars.LG_dia;
+				}else if(strcmp(p[ii].ptype, "H2O") == 0){
+					bc_force = ptr_bounds[bb]->force_H2O;
+					prad = vars.H2O_dia;
+				}else{
+					printf("error particle type has no defined boundray force, ignoring \n");
+					}
+
+				if((ptr_bounds[bb]->r_start != -1) && (p[ii].r < ptr_bounds[bb]->r_start)){
+					delta_r = ptr_bounds[bb]->r_start - p[ii].r;
+					sbf = 1;
+
+					if(delta_r < prad){
+						force = bc_force*(delta_r/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = 0.5*force/mass*time*time;
+					fdir[0] = fdir[0] + dmove;
+
+				}if((ptr_bounds[bb]->r_end != -1) && (p[ii].r > ptr_bounds[bb]->r_end)){
+					if(delta_r != 0){
+						printf("something strange is going on, a particle is defined as below r_start and above r_end at the same time \n");
+					}
+					delta_r = ptr_bounds[bb]->r_end - p[ii].r;
+					sbf = 1;
+
+					if(delta_r < prad){
+						force = bc_force*(delta_r/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = 0.5*force/mass*time*time;
+					fdir[0] = fdir[0] + dmove;
+
+				}if((ptr_bounds[bb]->theta_start != -1) && (p[ii].theta < ptr_bounds[bb]->theta_start)){
+					delta_theta = sqrt(pow(p[ii].r,2) + pow(p[ii].r,2) - 2*p[ii].r*p[ii].r*cos(p[ii].theta - ptr_bounds[bb]->theta_start));
+					sbf = 1;
+
+					if(delta_theta < prad){
+						force = bc_force*(delta_theta/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = acos((pow(p[ii].r,2) + pow(p[ii].r,2) - pow((0.5*force/mass*time*time), 2))/(2*(0.5*force/mass*time*time)*p[ii].r));
+					fdir[1] = fdir[1] + dmove;
+
+				}if((ptr_bounds[bb]->theta_end != -1) && (p[ii].theta > ptr_bounds[bb]->theta_end)){
+					if(delta_theta != 0){
+						printf("something strange is going on, a particle is defined as below theta_start and above theta_end at the same time \n");
+					}
+					delta_theta = sqrt(pow(p[ii].r,2) + pow(p[ii].r,2) - 2*p[ii].r*p[ii].r*cos(p[ii].theta - ptr_bounds[bb]->theta_end));
+					sbf = 1;
+
+					if(delta_theta < prad){
+						force = bc_force*(delta_theta/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = acos((pow(p[ii].r,2) + pow(p[ii].r,2) - pow((0.5*force/mass*time*time), 2))/(2*(0.5*force/mass*time*time)*p[ii].r));
+					fdir[1] = fdir[1] + dmove;
+
+				}if((ptr_bounds[bb]->h_start != -1) && (p[ii].h < ptr_bounds[bb]->h_start)){
+					delta_h = ptr_bounds[bb]->h_start - p[ii].h;
+					sbf = 1;
+
+					if(delta_h < prad){
+						force = bc_force*(delta_h/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = 0.5*force/mass*time*time;
+					fdir[2] = fdir[2] + dmove;
+
+				}if((ptr_bounds[bb]->h_end != -1) && (p[ii].h > ptr_bounds[bb]->h_end)){
+					if(delta_h != 0){
+						printf("something strange is going on, a particle is defined as below h_start and above h_end at the same time \n");
+					}
+					delta_h = ptr_bounds[bb]->h_end - p[ii].h;
+					sbf = 1;
+
+					if(delta_h < prad){
+						force = bc_force*(delta_h/prad);
+					}else{
+						force = bc_force;
+					}
+					dmove = 0.5*force/mass*time*time;
+					fdir[2] = fdir[2] + dmove;
+				}
+
+			}
+
+			p[ii].r = p[ii].r + fdir[0];
+			p[ii].theta = p[ii].theta + fdir[1];
+			p[ii].h = p[ii].h + fdir[2];
+		}
+		bs++;
+		/*printf("td = %f \n", td);*/
+	}
+
+}
+
+/*			sbf = -1;
 			for(bc=0; bc<6; bc++){
 				if(bc_list[bc] != -1){
 					if((bc % 2 == 0) && ((bc_list[bc] - pos_vec[bc/2]) > 0)){
@@ -184,35 +299,20 @@ void update_pos_burnin(int pend, struct particle* p, double time_step, int num_b
 						}else{
 							force = bc_force;
 						}
-						dmove = fabs((0.5*(force/mass)*time*time))/dist;
-						td = td + dmove*dist;
-						/*fdir[bc/2] = fdir[bc/2] - dmove*(pos_vec[bc/2] - bc_list[bc]);*/
+						dmove = (0.5*(force/mass)*time*time);
+						td = td + fabs(dmove);
 						if((bc_list[bc] == 0)){
-							fdir[0] = fdir[0] + dmove*dist;
+							fdir[0] = fdir[0] + dmove;
 						} else if((bc_list[bc] == 1)){
-							fdir[0] = fdir[0] - dmove*dist;
+							fdir[0] = fdir[0] - dmove;
 						} else if((bc_list[bc] == 2)){
-							fdir[1] = fdir[1] + dmove*dist;
+							fdir[1] = fdir[1] + dmove;
 						} else if((bc_list[bc] == 3)){
-							fdir[1] = fdir[1] - dmove*dist;
+							fdir[1] = fdir[1] - dmove;
 						}else if((bc_list[bc] == 4)){
-							fdir[2] = fdir[2] + dmove*dist;
+							fdir[2] = fdir[2] + dmove;
 						} else if((bc_list[bc] == 5)){
-							fdir[2] = fdir[2] - dmove*dist;
+							fdir[2] = fdir[2] - dmove;
 						}
 					}
-				}
-			}
-
-		p[ii].r = p[ii].r + fdir[0];
-		p[ii].theta = p[ii].theta + fdir[1];
-		p[ii].h = p[ii].h + fdir[2];
-
-		}
-		bs++;
-		printf("td = %f \n", td);
-	}
-
-}
-
-
+				}*/
